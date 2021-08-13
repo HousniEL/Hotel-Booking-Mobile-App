@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 
 const Context = React.createContext();
 
@@ -14,6 +14,13 @@ export function RoomsProvider({ children }) {
             childrens: 0
         }
     ]
+
+    const [appliedRooms, setAppliedRooms] = useState([
+        {
+            adults: 2,
+            childrens: 0
+        }
+    ]);
 
     const [rooms, setRooms] = useState(byDefault);
 
@@ -31,8 +38,6 @@ export function RoomsProvider({ children }) {
         }
     }
 
-
-
     function deleteRoom(){
         let roomCopy = rooms;
         roomCopy.pop();
@@ -48,12 +53,35 @@ export function RoomsProvider({ children }) {
         setRooms(roomCopy);
     }
 
+    function resetRooms(){
+        var appliedRCopy = appliedRooms;
+        setRooms(appliedRCopy);
+    }
+
+    function totalPandR(){
+        var numberOfRooms = appliedRooms.length;
+        var numberOfPersons = 0;
+        for(let room of appliedRooms){
+            numberOfPersons += Number(room.adults) + Number(room.childrens);
+        }
+        var strNOR = ( numberOfRooms > 1 ) ? `${numberOfRooms} chambers` : `${numberOfRooms} chamber`;
+        var strNOP = `${numberOfPersons} persons`;
+        return strNOP + ' - ' + strNOR;
+    }
+
+    function ApplyRooms(){
+        setAppliedRooms(rooms);
+    }
 
     const value = {
         rooms,
+        appliedRooms,
         addRoom,
         deleteRoom,
-        modifieRoom
+        modifieRoom,
+        totalPandR,
+        ApplyRooms,
+        resetRooms
     }
 
     return (

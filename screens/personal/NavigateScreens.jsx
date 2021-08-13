@@ -29,18 +29,8 @@ export default function NavigateScreens() {
         <>
         <NavigationContainer independent={true} >
             <Drawer.Navigator
-                /*activeColor={'#488A86'}
-                inactiveColor="#BBB"
-                initialRouteName='Home'
-                barStyle={{
-                    backgroundColor: "#FFF",
-                    borderTopColor: '#CCC',
-                    borderTopWidth: 1
-                }}*/
-            
                 screenOptions={{
                     drawerType: isLargeScreen ? 'permanent' : 'back',
-                    drawerStyle: isLargeScreen ? null : { width: '100%' },
                     overlayColor: 'transparent',
                     drawerActiveBackgroundColor: '#5CA19A',
                     drawerActiveTintColor: 'white'

@@ -28,6 +28,7 @@ export function DateProvider({ children }){
 
     const [ startDay, setStartDay ] = useState({});
     const [ endDay, setEndDay ] = useState({});
+    
     const [ startAgain, setStartAgain ] = useState(true);
 
     function getDayWellFormat(dayObj){
@@ -55,6 +56,11 @@ export function DateProvider({ children }){
         }
     }
 
+    function resetPeriod(){
+        setStartDay(appliedStartDay);
+        setEndDay(appliedEndDay);
+    }
+
     function applyPeriod(){
         setAppliedStartDay(startDay);
         setAppliedEndDay(endDay);
@@ -69,7 +75,8 @@ export function DateProvider({ children }){
         startAgain,
         setCurrentPeriod,
         applyPeriod,
-        setStartAgain
+        setStartAgain,
+        resetPeriod
     }
 
     return (

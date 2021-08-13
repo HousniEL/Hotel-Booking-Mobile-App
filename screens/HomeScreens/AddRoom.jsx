@@ -16,10 +16,10 @@ import { useRooms } from './contexts/RoomsContext';
 
 export default function AddRoom({ number }) {
 
-    const { rooms, modifieRoom } = useRooms();
+    const { appliedRooms, modifieRoom } = useRooms();
 
-    const [adultsNum, setAdultsNum] = React.useState(rooms[number - 1].adults);
-    const [childrensNum, setChildrensNum] = React.useState(rooms[number - 1].childrens);
+    const [adultsNum, setAdultsNum] = React.useState(appliedRooms[number - 1].adults);
+    const [childrensNum, setChildrensNum] = React.useState(appliedRooms[number - 1].childrens);
 
     function handleAddition(type){
         if( type === 'adult' ){

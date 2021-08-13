@@ -13,16 +13,26 @@ import { Button, Overlay } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useFilter } from '../contexts/FilterContext';
+import { useLocation } from '../contexts/LocationContext';
 
 import Global from '../../Global';
 
-import { useLocation } from '../contexts/LocationContext';
-
 export default function Location() {
 
-    const { AddFilter, DeleteFilter } = useFilter();
+    const { AddFilter, DeleteFilter, appliedFilter } = useFilter();
 
     const { location, visibleList, toggleOverlay, updateLocation } = useLocation();
+
+    useEffect(() => {
+        const ff = function(){
+            if( appliedFilter.get('location') ){
+                updateLocation(appliedFilter.get('location').value);
+            }
+            appliedFilter.delete('location');
+        };
+
+        ff();
+    }, []);
 
     useEffect( () => {
         setFilter();
@@ -103,18 +113,8 @@ function LocationList(){
         'Casablanca',
         'Rabat',
         'Fès',
-        'Tanger',
-        'Marrakech',
-        'Casablanca',
-        'Rabat',
-        'Fès',
-        'Tanger',
-        'Marrakech',
-        'Casablanca',
-        'Rabat',
-        'Fès',
-        'Tanger',
-    ]
+        'Tanger'
+    ];
 
     function handleItemPressed(value){
         updateLocation(value);

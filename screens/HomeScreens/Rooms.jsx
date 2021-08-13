@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
     View,
@@ -20,10 +20,23 @@ import { useRooms } from './contexts/RoomsContext';
 
 export default function Rooms({ navigation }) {
 
-    var { rooms, addRoom, deleteRoom } = useRooms();
+    var { rooms, addRoom, deleteRoom, appliedRooms, resetRooms, ApplyRooms } = useRooms();
 
-    const [ roomsNum, setRoomsNum ] = React.useState(rooms.length);
-    const [ table, setTable ] = React.useState([1]);
+    const [ roomsNum, setRoomsNum ] = React.useState(appliedRooms.length);
+    const [ table, setTable ] = React.useState([]);
+
+    useEffect(() => {
+        const ff = function(){
+            resetRooms();
+            var tableCopy = [];
+            for(let i = 1; i < appliedRooms.length + 1; i++){
+                tableCopy.push(i);
+            }
+            setTable(tableCopy);
+        }
+
+        ff();
+    }, [])
 
     function handleRooms(type){
         if(type === "minus"){
@@ -42,43 +55,46 @@ export default function Rooms({ navigation }) {
     }
 
     function handleApply(){
-        console.log(rooms);
+        ApplyRooms();
+        navigation.push('homeMain');
     }
 
     return (
         <>
             <StatusBar backgroundColor={Global.primary} /> 
-            <View style={{
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderBottomColor: 'rgba(0,0,0,0.2)',
-                borderBottomWidth: 1
-            }}>
-                <TouchableHighlight
-                    underlayColor={'transparent'}
-                    activeOpacity={1}
-                    style={{
-                        marginLeft: 5,
-                        paddingVertical: 10,
-                        height: '100%'
-                    }}
-                    onPress={() => { navigation.pop() }}
-                >
-                        <MaterialCommunityIcons name='arrow-left' color={'#000'} size={30} />
-                </TouchableHighlight>
+            <View style={styles.bigContainer}>
                 <Text
                     style={{
-                        marginLeft: 20,
-                        fontSize: 22,
-                        paddingBottom: 3
+                        fontSize: 19,
+                        color: '#FFF',
+                        position: 'absolute',
+                        width: '100%',
+                        textAlign: 'center'
                     }}
                 >Rooms {'&'} persons</Text>
+                <TouchableHighlight
+                    underlayColor={'transparent'}
+                    style={{
+                        paddingVertical: 15,
+                        paddingLeft: 10,
+                        height: '100%',
+                        width: '10%',
+                    }}
+                    onPress={() => navigation.pop()}
+                >
+                    <MaterialCommunityIcons name='arrow-left' color={'white'} size={24}
+                        style={{
+                            padding: 0,
+                            width: 24,
+                            height: 24
+                        }}
+                    />
+                </TouchableHighlight>
             </View>
             <ScrollView
                 style={{
                     flex: 1,
-                    backgroundColor: Global.primary
+                    backgroundColor: '#DDD'
                 }}
                 contentContainerStyle={{
                     flexGrow: 1,
@@ -138,11 +154,13 @@ export default function Rooms({ navigation }) {
                             buttonStyle={{
                                 backgroundColor: Global.secondary,
                                 width: '100%',
-                                paddingVertical: 10
+                                paddingVertical: 10,
+                                borderRadius: 20
                             }}
                             titleStyle={{
                                 fontSize: 17
                             }}
+                            onPress={handleApply}
                         />
                     </View>
             </ScrollView>
@@ -152,6 +170,12 @@ export default function Rooms({ navigation }) {
 
 
 const styles = StyleSheet.create({
+    bigContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: Global.primary
+    },
     buttonstyle: {
         alignSelf: 'center',
         backgroundColor: 'transparent',

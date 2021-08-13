@@ -9,6 +9,7 @@ export function useFilter(){
 export function FilterProvider({ children }){
 
     const [filter, setFilter] = useState(new Map());
+    const [appliedFilter, setAppliedFilter] = useState(new Map());
 
     function AddFilter(type, object){
         var filterCopy = filter;
@@ -50,16 +51,19 @@ export function FilterProvider({ children }){
         }
     }
 
-    function getFilter(){
-        return filter;
+
+    function ApplyIt(){
+        setAppliedFilter(new Map());
+        setAppliedFilter(filter);
     }
 
     var value = {
         filter,
+        appliedFilter,
         AddFilter,
         DeleteFilter,
         unsetPrice,
-        getFilter
+        ApplyIt
     }
 
     return (

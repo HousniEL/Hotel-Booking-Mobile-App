@@ -10,5 +10,5 @@ export default {
     tabactive: '#2EA498',
     iconInputColor: '#777',
     inputBg: '#DDD',
-    black: '#000'
+    black: '#0C2E52'
 }

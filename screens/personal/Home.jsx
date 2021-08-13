@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { isEmpty } from 'lodash';
 
@@ -7,26 +7,41 @@ import {
     Text,
     TouchableHighlight,
     StyleSheet,
-    StatusBar
+    StatusBar,
+    ScrollView,
+    Animated
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import MaterialComunnityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Global from '../Global';
 
 import { useDate } from '../HomeScreens/contexts/DateContext';
+import { useFilter } from '../HomeScreens/contexts/FilterContext';
+import { useRooms } from '../HomeScreens/contexts/RoomsContext';
 
 import Filter from '../HomeScreens/Filter';
 import DateD from '../HomeScreens/Date';
 import Rooms from '../HomeScreens/Rooms';
 import SortByMain from '../HomeScreens/SortBy';
-
+import LessDetail from '../HotelAd/LessDetail';
 
 import { createStackNavigator } from '@react-navigation/stack';
+
+import { FilterProvider } from '../HomeScreens/contexts/FilterContext';
+import { RoomsProvider } from '../HomeScreens/contexts/RoomsContext';
 import { DateProvider } from '../HomeScreens/contexts/DateContext';
+import { SortProvider } from '../HomeScreens/contexts/SortByContext';
 
 const Stack = createStackNavigator();
 
 function HomeMain({ navigation }) {
+
+    const translationHeader = useRef(new Animated.Value(Number(-180))).current;
+    const translationContent = useRef(new Animated.Value(Number(190))).current;
+
+    const [headerShown, setHeaderShown] = useState(true);
+
+    const { totalPandR } = useRooms();
 
     const { appliedStartDay, appliedEndDay } = useDate();
 
@@ -44,12 +59,36 @@ function HomeMain({ navigation }) {
         }
     }, [])
 
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(translationHeader, {
+                toValue: headerShown ? 0 : -180,
+                duration: 300,
+                useNativeDriver: true
+            }),
+            Animated.timing(translationContent, {
+                toValue: headerShown ? 190 : 0,
+                duration: 300,
+                useNativeDriver: true
+            })
+        ]).start();
+    }, [headerShown])
+
     return (
         <>
             <StatusBar backgroundColor={Global.primary} />
-            <View style={{flex: 1}}>
+            <Animated.View style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                transform: [
+                  { translateY: translationHeader },
+                ]
+            }}>
                 <View style={{
-                    width: "100%",
+                    width: '100%',
+                    alignSelf: 'center',
                     alignItems: 'center',
                     backgroundColor: Global.primary,
                     paddingTop: 15
@@ -77,16 +116,7 @@ function HomeMain({ navigation }) {
                         }}
                     />
                     <View style={{marginTop: 20, width: '100%', backgroundColor: 'transparent'}}>
-                        <View style={[styles.buttonscontainer,
-                            {
-                                paddingVertical: 8,
-                                borderColor: 'transparent',
-                                borderBottomColor: Global.buttonbg1,
-                                borderBottomWidth: 1,
-                                borderTopColor: Global.buttonbg1,
-                                borderTopWidth: 1 
-                            }
-                        ]} >
+                        <View style={styles.dateANDroomcontainer} >
                             <TouchableHighlight
                                 underlayColor={'transparent'}
                                 style={{ width: '50%'}}
@@ -106,7 +136,9 @@ function HomeMain({ navigation }) {
                             >
                                 <View style={{ paddingHorizontal: 20 }}>
                                     <Text style={styles.tags}>Rooms</Text>
-                                    <Text style={styles.choice} numberOfLines={1}>2 persons - 1 chamber</Text>
+                                    <Text style={styles.choice} numberOfLines={1}>
+                                        { totalPandR() }
+                                    </Text>
                                 </View>
                             </TouchableHighlight> 
                         </View>
@@ -119,7 +151,11 @@ function HomeMain({ navigation }) {
                                     title='FILTER'
                                     buttonStyle={styles.buttonstyle}
                                     icon={
-                                        <MaterialComunnityIcons name={'tune'} color={Global.buttonbg1} size={20} />
+                                        <MaterialComunnityIcons 
+                                            name={'tune'} 
+                                            color={Global.buttonbg1} 
+                                            size={20}
+                                        />
                                     }
                                     titleStyle={styles.buttontitlestyle}
                                     onPress={ () => { navigation.push('filter') } }
@@ -129,7 +165,29 @@ function HomeMain({ navigation }) {
                         </View>
                     </View>
                 </View>
-            </View>
+            </Animated.View>
+            <Animated.ScrollView
+                onScroll={(event) => {
+                    const scrolling = event.nativeEvent.contentOffset.y;
+                    
+                    if (scrolling > 30) {
+                        setHeaderShown(false);
+                    } else {
+                        setHeaderShown(true);
+                    }
+                }}
+                // onScroll will be fired every 16ms
+                scrollEventThrottle={16}
+                style={{ flex: 1, paddingVertical:10,  transform: [ { translateY: translationContent } ] }}
+            >
+                <View style={{flex: 1}}>
+                    {
+                        [1, 2, 3, 4, 5].map(value => (
+                            <LessDetail key={value.toString()} />
+                        ))
+                    }
+                </View>
+            </Animated.ScrollView>
         </>
     )
 }
@@ -137,18 +195,24 @@ function HomeMain({ navigation }) {
 export default function Home({ navigation, route }){
 
     return (
-        <DateProvider>
-            <Stack.Navigator
-                initialRouteName="homeMain"
-                screenOptions={{ headerShown: false }}
-            >
-                <Stack.Screen name="homeMain" component={HomeMain} />
-                <Stack.Screen name="filter" component={Filter} />
-                <Stack.Screen name="date" component={DateD} />
-                <Stack.Screen name="rooms" component={Rooms} />
+        <FilterProvider>
+            <RoomsProvider>
+                <DateProvider>
+                    <SortProvider>
+                        <Stack.Navigator
+                            initialRouteName="homeMain"
+                            screenOptions={{ headerShown: false }}
+                        >
+                            <Stack.Screen name="homeMain" component={HomeMain} />
+                            <Stack.Screen name="filter" component={Filter} />
+                            <Stack.Screen name="date" component={DateD} />
+                            <Stack.Screen name="rooms" component={Rooms} />
 
-            </Stack.Navigator>
-        </DateProvider>
+                        </Stack.Navigator>
+                    </SortProvider>
+                </DateProvider>
+            </RoomsProvider>
+        </FilterProvider>
     )
 }
 
@@ -172,9 +236,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent'
     },
     buttonscontainer: {
-        display: 'flex',
+        position: 'relative',
         flexDirection: 'row',
         width: '100%'
+    },
+    dateANDroomcontainer: {
+        position: 'relative',
+        flexDirection: 'row',
+        width: '100%',
+        paddingVertical: 8,
+        borderColor: 'transparent',
+        borderBottomColor: Global.buttonbg1,
+        borderBottomWidth: 1,
+        borderTopColor: Global.buttonbg1,
+        borderTopWidth: 1 
     },
     buttontitlestyle: {
         color: Global.buttonbg1, 

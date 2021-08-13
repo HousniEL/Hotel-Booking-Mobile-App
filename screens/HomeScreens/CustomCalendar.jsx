@@ -17,12 +17,13 @@ import { useDate } from './contexts/DateContext';
 
 export default function CustomCalendar() {
 
-    const { startDay, endDay, appliedStartDay, appliedEndDay, startAgain, setCurrentPeriod, setStartAgain } = useDate();
+    const { startDay, endDay, appliedStartDay, appliedEndDay, startAgain, setCurrentPeriod, setStartAgain, resetPeriod } = useDate();
 
     const [ period, setPeriod ] = useState();
 
     useEffect(() => {
         if(!isEmpty(appliedStartDay) && !isEmpty(appliedEndDay)){
+            resetPeriod();
             setPeriod(getPeriod(appliedStartDay.day.timestamp, appliedEndDay.day.timestamp));
         } else if(!isEmpty(startDay) && !isEmpty(endDay)){
             setPeriod(getPeriod(startDay.day.timestamp, endDay.day.timestamp));
@@ -105,6 +106,7 @@ export default function CustomCalendar() {
     return (
         <>
             <Calendar
+                minDate={ new Date() }
                 markingType={'period'}
                 markedDates={period}
                 style={{
@@ -128,7 +130,7 @@ export default function CustomCalendar() {
                 }}
             >   
                 {
-                    !isEmpty(startDay) && !isEmpty(endDay) && (
+                    (!isEmpty(startDay) && !isEmpty(endDay)) && (
                         <>
                             <Text
                                 style={{
@@ -138,7 +140,7 @@ export default function CustomCalendar() {
                                     color: '#666',
                                     alignSelf: 'center'
                                 }}
-                            >{startDay.dayFormat}</Text>
+                            >{ startDay.dayFormat }</Text>
                             <MaterialCommunityIcons 
                                 name="ray-start-arrow" color={Global.buttonbg1} size={30} 
                                 style={{width: 30, height: 30, alignSelf: 'center'}}    
@@ -151,7 +153,7 @@ export default function CustomCalendar() {
                                     color: '#666',
                                     alignSelf: 'center'
                                 }}
-                            >{endDay.dayFormat}</Text>
+                            >{ endDay.dayFormat }</Text>
                         </>
                     )
                 }

@@ -1,8 +1,7 @@
 import React from 'react';
 
 import {
-    View,
-    Dimensions
+    View
 } from 'react-native';
 
 import { Button } from 'react-native-elements';
@@ -11,14 +10,13 @@ import Global from '../../Global';
 
 import { useFilter } from '../contexts/FilterContext';
 
-export default function Apply(){
+export default function Apply({ navigation }){
 
-    const { getFilter } = useFilter();
-
-    var height = Dimensions.get('window').height;
+    const { ApplyIt } = useFilter();
 
     function handleApply(){
-        console.log(getFilter());
+        ApplyIt();
+        navigation.push('homeMain')
     }
 
     return (

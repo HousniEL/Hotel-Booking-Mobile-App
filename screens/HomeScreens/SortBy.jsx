@@ -6,7 +6,7 @@ import MaterialComunnityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { Overlay, Button, CheckBox } from 'react-native-elements';
 import Global from '../Global';
-import { SortProvider, useSort } from './contexts/SortByContext';
+import { useSort } from './contexts/SortByContext';
 
 
 const sortOptions = [
@@ -17,14 +17,6 @@ const sortOptions = [
 ]
 
 export default function SortByMain() {
-    return (
-        <SortProvider>
-            <SortBy />
-        </SortProvider>
-    )
-}
-
-function SortBy(){
 
     const { sort, visibleList, toggleOverlay, updateSort } = useSort();
 

@@ -26,9 +26,9 @@ const starsInactive = [
 
 export default function Rating() {
 
-    const { filter, AddFilter } = useFilter();
+    const { appliedFilter, AddFilter } = useFilter();
 
-    var starsState = [
+    const starsState = [
         true,
         true,
         true,
@@ -36,7 +36,24 @@ export default function Rating() {
         true
     ]
 
-    var [ratings, setRatings] = useState(starsState);
+    const [ratings, setRatings] = useState(starsState);
+
+    useEffect(() => {
+
+        const ff =  function() {
+            if( appliedFilter.get('category')){
+                let newStarsState = [false, false, false, false, false];
+                var selectedCategories = appliedFilter.get('category').value;
+                for(let i = 0; i < selectedCategories.length; i++){
+                    newStarsState[selectedCategories[i] - 1] = true;
+                }
+                setRatings(newStarsState);
+            }
+            appliedFilter.delete('category');
+        }
+
+        ff();
+    }, [])
 
     useEffect( () => {
         setFilter();

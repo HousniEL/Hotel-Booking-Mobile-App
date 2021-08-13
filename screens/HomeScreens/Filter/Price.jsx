@@ -16,14 +16,30 @@ import { useFilter } from '../contexts/FilterContext';
 
 export default function Price() {
 
-    const { AddFilter, DeleteFilter, unsetPrice } = useFilter();
+    const { AddFilter, DeleteFilter, unsetPrice, appliedFilter } = useFilter();
 
-    var defaultValue = [10, 500];
+    var defaultValue=[10, 500];
 
     const [priceRange, setPriceRange] = React.useState(defaultValue);
 
-    var [minInput, setMinInput] = React.useState(priceRange[0].toString());
-    var [maxInput, setMaxInput] = React.useState(priceRange[1].toString());
+    const [minInput, setMinInput] = React.useState(priceRange[0].toString());
+    const [maxInput, setMaxInput] = React.useState(priceRange[1].toString());
+
+    useEffect(() => {
+        const ff = function(){
+            if( appliedFilter.get('price') ){
+                var minmax = appliedFilter.get('price').value;
+                var min = (minmax.min) ? minmax.min : 10;
+                var max = (minmax.max) ? minmax.max : 500;
+                setMinInput(min.toString());
+                setMaxInput(max.toString());
+                setPriceRange([min, max]);
+            }
+            appliedFilter.delete('price');
+        };
+
+        ff();
+    }, [])
 
     useEffect(() => {
         if(Number(minInput) < Number(maxInput)){
@@ -77,7 +93,6 @@ export default function Price() {
     }
 
     function managePrice(type, value){
-        submitted = true;
         const val = Number(value);
         if ( type === 'min' ){
             ( val != 0 && val >= 10 && val <= priceRange[1] && val <= 500 ) ? (

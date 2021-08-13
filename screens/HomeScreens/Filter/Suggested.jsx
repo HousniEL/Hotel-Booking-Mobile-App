@@ -19,7 +19,6 @@ const filters = [
     { select : "Wi-Fi", selected: false},
     { select : "Air conditioning", selected: false},
     { select : "Bathroom with bathtub", selected: false},
-    { select : "Balcony", selected: false},
     { select : "Hotel by the sea", selected: false},
     { select : "Spa", selected: false},
     { select : "Handicapped access", selected: false},
@@ -35,6 +34,25 @@ export default function Suggested() {
 
     const [filtersSuggested, setFiltersSuggested] = useState(filters);
 
+    /*useEffect(() => {
+        const ff = function(){
+            if( appliedFilter.get('suggested') ) {
+                var filtersCopy = filters;
+                var choosed = appliedFilter.get('suggested').value;
+                for(let i = 0; i < choosed.length; i++){
+                    for(let j = 0; j < filtersCopy.length; j++){
+                        if(filtersCopy[j].select === choosed[i]){
+                            filtersCopy[j].selected = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        };
+
+        ff();
+    }, []);*/
+
     useEffect( () => {
         setFilter();
     }, [filtersSuggested] );
@@ -44,7 +62,7 @@ export default function Suggested() {
         for(let value of filtersSuggested){
             if( value.selected ) suggestedSet.push(value.select);
         }
-        ( suggestedSet.length != 0 ) ? AddFilter('suggested', suggestedSet) : DeleteFilter('suggested');
+        ( suggestedSet.length != 0 ) ? AddFilter('suggested', { value: suggestedSet }) : DeleteFilter('suggested');
     }
 
     function toggleOptions(value){

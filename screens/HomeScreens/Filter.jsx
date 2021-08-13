@@ -16,12 +16,10 @@ import Rating from './Filter/Rating';
 import Location from './Filter/Location';
 import Price from './Filter/Price';
 import Suggested from './Filter/Suggested';
+import Apply from './Filter/Apply';
 
 import { LocationProvider } from './contexts/LocationContext';
 
-import { FilterProvider } from './contexts/FilterContext';
-
-import Apply from './Filter/Apply';
 import Global from '../Global';
 
 
@@ -30,27 +28,35 @@ export default function Filter({ navigation }) {
 
     return (
         <>
-        <FilterProvider>
             <StatusBar backgroundColor={Global.primary} /> 
             <View style={styles.bigContainer}>
+                <Text
+                    style={{
+                        fontSize: 21,
+                        color: '#FFF',
+                        position: 'absolute',
+                        width: '100%',
+                        textAlign: 'center'
+                    }}
+                >Filter</Text>
                 <TouchableHighlight
                     underlayColor={'transparent'}
                     style={{
-                        marginLeft: 5,
-                        paddingVertical: 10,
-                        height: '100%'
+                        paddingVertical: 15,
+                        paddingLeft: 10,
+                        height: '100%',
+                        width: '10%',
                     }}
-                    onPress={ () => { navigation.pop() } }
+                    onPress={() => navigation.pop()}
                 >
-                        <MaterialCommunityIcons name='arrow-left' color={'#000'} size={30} />
+                    <MaterialCommunityIcons name='arrow-left' color={'white'} size={24}
+                        style={{
+                            padding: 0,
+                            width: 24,
+                            height: 24
+                        }}
+                    />
                 </TouchableHighlight>
-                <Text
-                    style={{
-                        marginLeft: 20,
-                        fontSize: 22,
-                        paddingBottom: 3
-                    }}
-                >Filter</Text>
             </View>
             <ScrollView
                 style={{
@@ -100,8 +106,7 @@ export default function Filter({ navigation }) {
                     </View>
                 </View>
             </ScrollView>
-            <Apply />
-        </FilterProvider>
+            <Apply navigation={navigation} />
         </>
     )
 }
@@ -111,8 +116,7 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomColor: 'rgba(0,0,0,0.2)',
-        borderBottomWidth: 2
+        backgroundColor: Global.primary
     },
     container: {
         flex: 1,
