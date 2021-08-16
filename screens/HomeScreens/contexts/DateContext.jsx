@@ -23,11 +23,65 @@ const months = [
 
 export function DateProvider({ children }){
 
-    const [ appliedStartDay, setAppliedStartDay ] = useState({});
-    const [ appliedEndDay, setAppliedEndDay ] = useState({});
+    function getDateString(timestamp){
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
 
-    const [ startDay, setStartDay ] = useState({});
-    const [ endDay, setEndDay ] = useState({});
+        let dateString = `${year}-`;
+        if( month < 10 ){
+            dateString += `0${month}-`;
+        } else {
+            dateString += `${month}-`;
+        }
+
+        if( day < 10 ){
+            dateString += `0${day}`;
+        } else {
+            dateString += `${day}`;
+        }
+
+        return dateString;
+    }
+
+    const today = new Date();
+    const firststart = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2);
+    const firstend = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4);
+
+
+    const defaultStart = {
+        day: { 
+            day: firststart.getDate(),
+            month: firststart.getMonth() + 1,
+            year: firststart.getFullYear(),
+            timestamp : firststart.getTime() 
+        },
+        dayFormat:  getDayWellFormat({
+            day: firststart.getDate(),
+            month: firststart.getMonth() + 1,
+            year: firststart.getFullYear()
+        })
+    }
+    const defaultEnd = {
+        day: { 
+            day: firstend.getDate(),
+            month: firstend.getMonth() + 1,
+            year: firstend.getFullYear() + 1,
+            timestamp : firstend.getTime() 
+        },
+        dayFormat:  getDayWellFormat({
+            day: firstend.getDate(),
+            month: firstend.getMonth() + 1,
+            year: firstend.getFullYear()
+        })  
+    }
+
+    const [ appliedStartDay, setAppliedStartDay ] = useState(defaultStart);
+    const [ appliedEndDay, setAppliedEndDay ] = useState(defaultEnd);
+
+    const [ startDay, setStartDay ] = useState(defaultStart);
+    const [ endDay, setEndDay ] = useState(defaultEnd);
     
     const [ startAgain, setStartAgain ] = useState(true);
 

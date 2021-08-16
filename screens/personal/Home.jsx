@@ -8,8 +8,8 @@ import {
     TouchableHighlight,
     StyleSheet,
     StatusBar,
-    ScrollView,
-    Animated
+    Animated,
+    Dimensions
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import MaterialComunnityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,6 +24,9 @@ import DateD from '../HomeScreens/Date';
 import Rooms from '../HomeScreens/Rooms';
 import SortByMain from '../HomeScreens/SortBy';
 import LessDetail from '../HotelAd/LessDetail';
+import MoreDetail from '../HotelAd/MoreDetail';
+import RoomType from '../HotelAd/RoomType';
+import CheckPage from '../Book/CheckPage';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -32,14 +35,17 @@ import { RoomsProvider } from '../HomeScreens/contexts/RoomsContext';
 import { DateProvider } from '../HomeScreens/contexts/DateContext';
 import { SortProvider } from '../HomeScreens/contexts/SortByContext';
 
+import { hotels } from '../../varGlobal';
+
 const Stack = createStackNavigator();
 
-function HomeMain({ navigation }) {
+function HomeMain({ navigation, hotels }) {
 
     const translationHeader = useRef(new Animated.Value(Number(-180))).current;
     const translationContent = useRef(new Animated.Value(Number(190))).current;
 
     const [headerShown, setHeaderShown] = useState(true);
+    const [wait, setWait] = useState(false);
 
     const { totalPandR } = useRooms();
 
@@ -73,6 +79,10 @@ function HomeMain({ navigation }) {
             })
         ]).start();
     }, [headerShown])
+
+    async function navigateTo(screenName){
+        navigation.navigate(screenName);
+    }
 
     return (
         <>
@@ -120,7 +130,8 @@ function HomeMain({ navigation }) {
                             <TouchableHighlight
                                 underlayColor={'transparent'}
                                 style={{ width: '50%'}}
-                                onPress={ () => { navigation.push('date') } }
+                                disabled={wait}
+                                onPress={ () => navigateTo('date') }
                             >
                                 <View style={{ borderRightColor: Global.buttonbg1, borderRightWidth: 1, paddingHorizontal: 20 }}>
                                     <Text style={styles.tags} >Dates</Text>
@@ -132,7 +143,8 @@ function HomeMain({ navigation }) {
                             <TouchableHighlight
                                 underlayColor={'transparent'}
                                 style={{width: '50%'}}
-                                onPress={ () => { navigation.push('rooms') } }
+                                disabled={wait}
+                                onPress={ () => navigateTo('rooms')}
                             >
                                 <View style={{ paddingHorizontal: 20 }}>
                                     <Text style={styles.tags}>Rooms</Text>
@@ -158,7 +170,8 @@ function HomeMain({ navigation }) {
                                         />
                                     }
                                     titleStyle={styles.buttontitlestyle}
-                                    onPress={ () => { navigation.push('filter') } }
+                                    disabled={wait}
+                                    onPress={ () => navigateTo('filter') }
                                 />  
                             </TouchableHighlight>
                             <SortByMain />
@@ -169,8 +182,7 @@ function HomeMain({ navigation }) {
             <Animated.ScrollView
                 onScroll={(event) => {
                     const scrolling = event.nativeEvent.contentOffset.y;
-                    
-                    if (scrolling > 30) {
+                    if (scrolling > 200 ) {
                         setHeaderShown(false);
                     } else {
                         setHeaderShown(true);
@@ -178,21 +190,63 @@ function HomeMain({ navigation }) {
                 }}
                 // onScroll will be fired every 16ms
                 scrollEventThrottle={16}
-                style={{ flex: 1, paddingVertical:10,  transform: [ { translateY: translationContent } ] }}
+                style={{ 
+                    flex: 1, 
+                    paddingVertical:10,
+                    maxHeight: headerShown === true ?  Dimensions.get('window').height - 174 : null ,
+                    transform: [ { translateY: translationContent } ] }}
             >
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1}}>
                     {
-                        [1, 2, 3, 4, 5].map(value => (
-                            <LessDetail key={value.toString()} />
+                        hotels.map((value, idx) => (
+                            <LessDetail key={idx.toString()} hotel={value} navigation={navigation} />
                         ))
                     }
                 </View>
             </Animated.ScrollView>
+            {
+                headerShown === false ? (
+                    <View
+                        style={{
+                            position: 'absolute',
+                            width: 60,
+                            bottom: 10,
+                            left: 10
+                        }}
+                    >
+                        <Button
+                            title=''
+                            titleStyle={{ display: 'none' }}
+                            icon={
+                                <MaterialComunnityIcons 
+                                    name="book-search"
+                                    color={'white'}
+                                    size={25}
+                                />
+                            }
+                            containerStyle={{
+                                borderRadius: 200,
+                                elevation: 10
+                            }}
+                            buttonStyle={{
+                                backgroundColor: Global.tabactive,
+                                borderRadius: 200,
+                                width: 60,
+                                height: 60
+                            }}
+                            onPress={() => setHeaderShown(true) }
+                        />
+                    </View>
+                ) : (null)
+            }
+            
         </>
     )
 }
 
-export default function Home({ navigation, route }){
+export default function Home(){
+
+    const [allHotels, setAllHotels] = useState(hotels)
 
     return (
         <FilterProvider>
@@ -203,11 +257,15 @@ export default function Home({ navigation, route }){
                             initialRouteName="homeMain"
                             screenOptions={{ headerShown: false }}
                         >
-                            <Stack.Screen name="homeMain" component={HomeMain} />
+                            <Stack.Screen name="homeMain">
+                                { props => <HomeMain {...props} hotels={allHotels} /> }    
+                            </Stack.Screen>
                             <Stack.Screen name="filter" component={Filter} />
                             <Stack.Screen name="date" component={DateD} />
                             <Stack.Screen name="rooms" component={Rooms} />
-
+                            <Stack.Screen name="hotelInfo" component={MoreDetail} />
+                            <Stack.Screen name="roomInfo" component={RoomType} />
+                            <Stack.Screen name="checkPage" component={CheckPage} />
                         </Stack.Navigator>
                     </SortProvider>
                 </DateProvider>

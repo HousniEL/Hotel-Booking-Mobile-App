@@ -3,7 +3,7 @@
     "name": "Booking",
     "slug": "Booking",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",

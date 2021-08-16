@@ -9,13 +9,12 @@ import {
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
 import { Calendar } from 'react-native-calendars';
 import Global from '../Global';
 
 import { useDate } from './contexts/DateContext';
 
-export default function CustomCalendar() {
+export default function CustomCalendar({ search }) {
 
     const { startDay, endDay, appliedStartDay, appliedEndDay, startAgain, setCurrentPeriod, setStartAgain, resetPeriod } = useDate();
 
@@ -103,25 +102,95 @@ export default function CustomCalendar() {
         }
     }
 
+    var today = new Date();
+
     return (
         <>
             <Calendar
-                minDate={ new Date() }
+                minDate={ new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2) }
                 markingType={'period'}
                 markedDates={period}
+
                 style={{
-                    width: 340,
+                    width: '100%',
                     alignSelf: 'center',
                     marginTop: 10,
                     elevation: 5,
                     borderRadius: 5
                 }}
                 theme={{
-                    todayTextColor: Global.buttonbg1
+                    todayTextColor: Global.buttonbg1,
+                    'stylesheet.calendar.main': {
+                        week:{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            backgroundColor: '#fff',
+                            height: 40,
+                        }
+                    },
+                    'stylesheet.calendar.header': {
+                        header: {
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            height: 45
+                          },
+                          monthText: {
+                            fontSize: 16,
+                            fontWeight: '700',
+                            color: '#555'
+                          }
+                    }
                 }}
                 onDayPress={(date) => setDate(date)}
             />
             <View
+                style={{
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                    marginTop: 20
+                }}
+            >   
+                { !search && <Text style={{ fontWeight: '700', fontSize: 18, color: '#555', marginBottom: 8 }}>Date</Text> }
+                <View style={[
+                    { flexDirection: 'row', justifyContent: 'space-between' },
+                    search && { justifyContent: 'space-evenly', marginTop: 50 }
+                ]}>
+                            <Text
+                                style={{
+                                    marginRight: 10,
+                                    fontSize: 15,
+                                    fontWeight: '700',
+                                    color: '#666',
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                { !isEmpty(startDay) ? startDay.dayFormat : "Check In" }
+                            </Text>
+                            <MaterialCommunityIcons 
+                                name="ray-start-arrow" color={Global.buttonbg1} size={30} 
+                                style={{width: 30, height: 30, alignSelf: 'center'}}    
+                            />
+                            <Text
+                                style={{
+                                    marginLeft: 10,
+                                    fontSize: 15,
+                                    fontWeight: '700',
+                                    color: '#666',
+                                    alignSelf: 'center'
+                                }}
+                            >
+                                { !isEmpty(endDay) ? endDay.dayFormat : "Check Out" }
+                            </Text>
+                   </View> 
+            </View>
+        </>
+    )
+}
+
+
+/*
+    <View
                 style={{
                     flexDirection: 'row',
                     alignContent: 'center',
@@ -158,6 +227,4 @@ export default function CustomCalendar() {
                     )
                 }
             </View>
-        </>
-    )
-}
+*/

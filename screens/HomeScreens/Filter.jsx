@@ -33,6 +33,7 @@ export default function Filter({ navigation }) {
                 <Text
                     style={{
                         fontSize: 21,
+                        fontWeight: '700',
                         color: '#FFF',
                         position: 'absolute',
                         width: '100%',

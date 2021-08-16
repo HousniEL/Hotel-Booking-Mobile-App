@@ -10,14 +10,14 @@ export function RoomsProvider({ children }) {
 
     const byDefault = [
         {
-            adults: 2,
+            adults: 1,
             childrens: 0
         }
     ]
 
     const [appliedRooms, setAppliedRooms] = useState([
         {
-            adults: 2,
+            adults: 1,
             childrens: 0
         }
     ]);
@@ -47,7 +47,7 @@ export function RoomsProvider({ children }) {
     function addRoom(){
         let roomCopy = rooms;
         roomCopy.push({
-            adults: 2,
+            adults: 1,
             childrens: 0
         })
         setRooms(roomCopy);
@@ -58,6 +58,11 @@ export function RoomsProvider({ children }) {
         setRooms(appliedRCopy);
     }
 
+    function getTotalPsPerRoom(roomId){
+        var total = Number(rooms[roomId].adults) + Number(rooms[roomId].childrens);
+        return total;
+    }
+
     function totalPandR(){
         var numberOfRooms = appliedRooms.length;
         var numberOfPersons = 0;
@@ -65,7 +70,7 @@ export function RoomsProvider({ children }) {
             numberOfPersons += Number(room.adults) + Number(room.childrens);
         }
         var strNOR = ( numberOfRooms > 1 ) ? `${numberOfRooms} chambers` : `${numberOfRooms} chamber`;
-        var strNOP = `${numberOfPersons} persons`;
+        var strNOP = ( numberOfPersons > 1 ) ? `${numberOfPersons} guests` : `${numberOfRooms} guest`;
         return strNOP + ' - ' + strNOR;
     }
 
@@ -81,7 +86,8 @@ export function RoomsProvider({ children }) {
         modifieRoom,
         totalPandR,
         ApplyRooms,
-        resetRooms
+        resetRooms,
+        getTotalPsPerRoom
     }
 
     return (

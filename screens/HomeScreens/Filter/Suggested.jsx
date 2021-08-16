@@ -14,9 +14,10 @@ import { useFilter } from '../contexts/FilterContext';
 
 const filters = [
     { select : "Free of charge cancellation", selected: false},
-    { select : "Parking", selected: false},
+    { select : "Pay at the institution", selected: false},
     { select : "Free breakfast", selected: false},
     { select : "Wi-Fi", selected: false},
+    { select : "Parking", selected: false},
     { select : "Air conditioning", selected: false},
     { select : "Bathroom with bathtub", selected: false},
     { select : "Hotel by the sea", selected: false},

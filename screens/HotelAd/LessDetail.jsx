@@ -11,98 +11,108 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import Global from '../Global';
 
-import servicesIcons from '../constants';
+import { servicesIcon } from '../constants';
 
-export default function LessDetail() {
+export default function LessDetail({ hotel, navigation }) {
 
     const [heartFilling, setHeartFilling] = useState(false);
 
     return (
-        <View
-            style={styles.container}
+        <TouchableHighlight
+            underlayColor={'transparent'}
+            onPress={() => {
+                navigation.push('hotelInfo', {
+                    hotel: hotel
+                })
+            }}
         >
-            <View style={{ height: 130, alignItems: "center" }} >
-                <Image
-                    resizeMethod={'auto'}
-                    resizeMode={'cover'} 
-                    style={styles.imageStyle}
-                    source={{ uri: 'https://imgcy.trivago.com/c_limit,d_dummy.jpeg,f_auto,h_1300,q_auto,w_2000/partnerimages/28/55/285581588.jpeg' }}
-                />
-                <TouchableHighlight
-                    style={{ position: 'absolute', top: 5, right: 5 }}
-                    underlayColor={'transparent'}
-                    onPress={() => setHeartFilling(!heartFilling)}
-                >
-                    <View>
-                        <MaterialCommunityIcons 
-                            name={ (heartFilling === true) ? "heart" : "heart-outline"} 
-                            color={ (heartFilling === true ) ? "tomato" : Global.black}
-                            size={30}
-                        />
-                    </View>
-                </TouchableHighlight>
-            </View>
+
             <View
-                style={{
-                    padding: 5,
-                    flex: 1
-                }}
+                style={styles.container}
             >
-                <Text style={{fontSize: 20, fontWeight: '700', paddingHorizontal: 2, color: Global.black}}>
-                    Royal Atlas & Spa
-                </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <MaterialCommunityIcons name="map-marker" color={Global.black} size={12} style={{padding: 0}} />
-                    <Text style={{ color: Global.black, fontSize: 13 }}>
-                        Baie d'Agadir, Agadir
-                    </Text>
+                <View style={{ height: 130, alignItems: "center" }} >
+                    <Image
+                        resizeMethod={'auto'}
+                        resizeMode={'cover'} 
+                        style={styles.imageStyle}
+                        source={{ uri : hotel.images[0].url }}
+                    />
+                    <TouchableHighlight
+                        style={{ position: 'absolute', top: 5, right: 5 }}
+                        underlayColor={'transparent'}
+                        onPress={() => setHeartFilling(!heartFilling)}
+                    >
+                        <View>
+                            <MaterialCommunityIcons 
+                                name={ (heartFilling === true) ? "heart" : "heart-outline"} 
+                                color={ (heartFilling === true ) ? "tomato" : Global.black}
+                                size={30}
+                            />
+                        </View>
+                    </TouchableHighlight>
                 </View>
                 <View
                     style={{
-                        flexDirection: 'row',
-                        position: 'absolute',
-                        top: 10,
-                        right: 7
+                        padding: 5,
+                        flex: 1
                     }}
                 >
-                    {
-                        [1, 2, 3, 4].map((value) => (
-                            <MaterialCommunityIcons
-                                name='star'
-                                color='gold'
-                                size={16}
-                                key={value.toString()}
-                            />
-                        ))
-                    }
-                </View>
-                <Text style={styles.servicesContainer} numberOfLines={3} >
-                    {
-                        ['Free of charge cancellation', 'Wi-Fi', 'Restaurant', 'Parking', 'Swimming pool'].map( (value, idx) => (
-                            <View key={idx.toString()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons 
-                                    name={servicesIcons.get(value)} 
-                                    color={'#666'} 
-                                    size={(value === "Free of charge cancellation") ? 14 : 12} 
-                                    style={{ padding: 0 }} 
-                                    />
-                                <Text style={{ color: '#666', fontSize: 14 }}>
-                                    {' ' + value + '  '}
-                                </Text>
-                            </View>
-                        ) )
-                    }
-                </Text>
-                <View style={styles.priceContainer} >
-                    <Text style={styles.priceHeader}>
-                        Starting price per night
+                    <Text style={{fontSize: 20, fontWeight: '700', paddingHorizontal: 2, color: Global.black}}>
+                        {hotel.Hotel_Name}
                     </Text>
-                    <Text style={styles.price} >
-                        200$
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <MaterialCommunityIcons name="map-marker" color={Global.black} size={12} style={{padding: 0}} />
+                        <Text style={{ color: Global.black, fontSize: 13 }}>
+                            { hotel.Address + ', ' + hotel.City }
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            position: 'absolute',
+                            top: 10,
+                            right: 7
+                        }}
+                    >
+                        {
+                            hotel.getStars().map((value, idx) => (
+                                <MaterialCommunityIcons
+                                    name='star'
+                                    color={ value ? 'gold' : '#BBB'}
+                                    size={16}
+                                    key={idx.toString()}
+                                />
+                            ))
+                        }
+                    </View>
+                    <Text style={styles.servicesContainer} numberOfLines={3} >
+                        {
+                            hotel.getServices().map( (value, idx) => (
+                                <View key={idx.toString()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <MaterialCommunityIcons 
+                                        name={servicesIcon.get(value)} 
+                                        color={'#666'} 
+                                        size={(value === "Free of charge cancellation") ? 14 : 12} 
+                                        style={{ padding: 0 }} 
+                                        />
+                                    <Text style={{ color: '#666', fontSize: 14 }}>
+                                        {' ' + value + '  '}
+                                    </Text>
+                                </View>
+                            ) )
+                        }
                     </Text>
+                    <View style={styles.priceContainer} >
+                        <Text style={styles.priceHeader}>
+                            Starting price per night
+                        </Text>
+                        <Text style={styles.price} >
+                            {hotel.getMinPrice() + '$'}
+                        </Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableHighlight>
     )
 }
 
@@ -113,8 +123,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 25,
         borderRadius:5,
+        borderColor: '#ddd',
+        borderWidth: 1,
         elevation: 5,
-        position: 'relative',
         backgroundColor: 'white'
     },
     imageStyle: {
@@ -135,7 +146,7 @@ const styles = StyleSheet.create({
     },
     priceContainer: {
         position: 'absolute',
-        bottom: 16,
+        bottom: 12,
         right: 10,
         alignItems: 'flex-end'
     },

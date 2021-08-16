@@ -65,7 +65,8 @@ export default function Rooms({ navigation }) {
             <View style={styles.bigContainer}>
                 <Text
                     style={{
-                        fontSize: 19,
+                        fontSize: 18,
+                        fontWeight: '700',
                         color: '#FFF',
                         position: 'absolute',
                         width: '100%',

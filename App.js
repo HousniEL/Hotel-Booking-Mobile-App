@@ -16,8 +16,6 @@ import { RoomsProvider } from './screens/HomeScreens/contexts/RoomsContext';
 
 import NavigateScreens from './screens/personal/NavigateScreens';
 
-//import LessDetail from './screens/HotelAd/LessDetail';
-
 import 'react-native-gesture-handler';
 
 

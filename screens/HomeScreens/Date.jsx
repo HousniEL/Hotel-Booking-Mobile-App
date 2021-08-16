@@ -27,7 +27,8 @@ export default function DateD({ navigation }) {
             <View style={styles.bigContainer}>
                 <Text
                     style={{
-                        fontSize: 21,
+                        fontSize: 22,
+                        fontWeight: '700',
                         color: '#FFF',
                         position: 'absolute',
                         width: '100%',
@@ -53,14 +54,19 @@ export default function DateD({ navigation }) {
                     />
                 </TouchableHighlight>
             </View>
-            <View style={{flex: 1}}>
-                <CustomCalendar />
-                <View>
+            <View style={{flex: 1, marginTop: 20, alignItems: 'center'}}>
+                <View style={{ width: 340 }}>
+                    <CustomCalendar search={true} />
+                </View>
+                <View style={{ flex: 1, justifyContent: 'flex-end', width: 340 }}>
                     <Button 
                         title='Apply'
+                        containerStyle={{
+                            width: '100%'
+                        }}
                         buttonStyle={{
                             backgroundColor: Global.buttonbg1,
-                            width: 150,
+                            width: '100%',
                             borderRadius: 100,
                             marginBottom: 30,
                             alignSelf: 'center'
