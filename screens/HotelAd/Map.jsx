@@ -4,7 +4,7 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 
 import Geocoder from 'react-native-geocoding';
 
-Geocoder.init('AIzaSyDyluv3zU9P2-zYT3IUSPDmLFDA8Fj0t2g');
+Geocoder.init(process.env.GOOGLE_API_KEY);
 
 import MapView, { Marker, ProviderPropType  } from 'react-native-maps';
 

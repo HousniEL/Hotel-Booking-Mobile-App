@@ -43,12 +43,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         paddingHorizontal: 0,
-        borderColor: "#999",
+        borderColor: "#BBB"
     },
     dropdown1BtnTxtStyle: { color: "#444", textAlign: "left", fontSize: 16 },
     dropdown1DropdownStyle: { 
         backgroundColor: "#EFEFEF",
-        borderRadius: 3
+        borderRadius: 3,
+        marginTop: -24
     },
     dropdown1RowStyle: {
         backgroundColor: "#EFEFEF",

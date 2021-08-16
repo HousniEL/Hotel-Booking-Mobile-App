@@ -59,10 +59,11 @@ export default function CheckPage({ route, navigation }) {
     return (
         <>
             <StatusBar backgroundColor={Global.primary} barStyle={'default'} />
-            <View style={styles.greenArea}>
-            </View>
+
             <ScrollView>
                 <View style={{flex: 1}}>
+                    <View style={styles.greenArea}>
+                    </View>
                     <TouchableOpacity onPress={() => navigation.pop()}>
                         <MaterialCommunityIcons name='arrow-left' style={{
                             marginLeft: 10
@@ -173,8 +174,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 150,
         backgroundColor: Global.primary,
-        position: 'absolute',
-        elevation: -1
+        position: 'absolute'
     },
     mainHeader : {
         alignSelf: 'center',
