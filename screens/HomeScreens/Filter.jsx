@@ -25,7 +25,6 @@ import Global from '../Global';
 
 export default function Filter({ navigation }) {
 
-
     return (
         <>
             <StatusBar backgroundColor={Global.primary} /> 

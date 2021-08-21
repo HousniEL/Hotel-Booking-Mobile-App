@@ -3,7 +3,7 @@ export const services = [
     "Free of charge cancellation", 
     "Pay at the institution", 
     "Free breakfast", 
-    "Wi-Fi", 
+    "Free Wi-Fi", 
     "Parking", 
     "Air conditioning", 
     "Bathroom with bathtub", 
@@ -13,14 +13,15 @@ export const services = [
     "Swimming pool", 
     "Pets allowed", 
     "Restaurant", 
-    "Gym"
+    "Gym",
+    "Bar"
 ]
 
 var servicesIcons = new Map();
 servicesIcons.set('Free of charge cancellation', 'close-circle-outline');
 servicesIcons.set('Parking', 'parking');
 servicesIcons.set('Free breakfast', 'coffee');
-servicesIcons.set('Wi-Fi', 'wifi');
+servicesIcons.set('Free Wi-Fi', 'wifi');
 servicesIcons.set('Pay at the institution', 'credit-card')
 servicesIcons.set('Air conditioning', 'air-conditioner');
 servicesIcons.set('Bathroom with bathtub', 'shower');
@@ -31,6 +32,7 @@ servicesIcons.set('Swimming pool', 'pool');
 servicesIcons.set('Pets allowed', 'paw');
 servicesIcons.set('Restaurant', 'silverware-clean');
 servicesIcons.set('Gym', 'dumbbell');
+servicesIcons.set('Bar', 'glass-cocktail');
 
 
 export const servicesIcon = servicesIcons;
@@ -38,10 +40,10 @@ export const servicesIcon = servicesIcons;
 export const roomCharacteristics = [
     "Safe",
     "Television",
-    "Outlet near the bed",
+    "Fridge",
     "Phone",
     "Wake-up service",
-    "Bathrobe",
+    "Microwave",
     "Shower",
     "Complimentary toiletries",
     "Desktop",

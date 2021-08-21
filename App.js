@@ -16,7 +16,9 @@ import { RoomsProvider } from './screens/HomeScreens/contexts/RoomsContext';
 
 import NavigateScreens from './screens/personal/NavigateScreens';
 
-import PaymentPage from './screens/Book/PaymentPage';
+//import PaymentPage from './screens/Book/PaymentPage';
+
+//import StripePayment from './screens/Book/StripePayment';
 
 import 'react-native-gesture-handler';
 
@@ -39,7 +41,7 @@ export default function App() {
                 marginTop: Platform.OS === "android"? StatusBar.currentHeight : 0
               }}
             >
-                <PaymentPage />
+                <NavigateScreens />
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

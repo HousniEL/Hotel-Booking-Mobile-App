@@ -15,12 +15,15 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import Global from '../Global';
 import AddRoom from './AddRoom';
+import { useGeneral } from './contexts/GeneralFilterContext';
 
 import { useRooms } from './contexts/RoomsContext';
 
 export default function Rooms({ navigation }) {
 
-    var { rooms, addRoom, deleteRoom, appliedRooms, resetRooms, ApplyRooms } = useRooms();
+    const { setNewValue } = useGeneral();
+
+    var { rooms, addRoom, deleteRoom, appliedRooms, getTotalPsPerRoom, resetRooms, ApplyRooms } = useRooms();
 
     const [ roomsNum, setRoomsNum ] = React.useState(appliedRooms.length);
     const [ table, setTable ] = React.useState([]);
@@ -56,6 +59,12 @@ export default function Rooms({ navigation }) {
 
     function handleApply(){
         ApplyRooms();
+        var valueApp = [];
+        for(let i = 0; i < rooms.length; i++){
+            valueApp.push({ persons : getTotalPsPerRoom(i) });
+        }
+        console.log(valueApp);
+        setNewValue('rooms', { value : valueApp });
         navigation.push('homeMain');
     }
 

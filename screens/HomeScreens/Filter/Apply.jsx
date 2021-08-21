@@ -9,13 +9,16 @@ import { Button } from 'react-native-elements';
 import Global from '../../Global';
 
 import { useFilter } from '../contexts/FilterContext';
+import { useGeneral } from '../contexts/GeneralFilterContext';
 
 export default function Apply({ navigation }){
 
-    const { ApplyIt } = useFilter();
+    const { setNewValue } = useGeneral();
+    const { filter, ApplyIt, getAppliedFilter } = useFilter();
 
     function handleApply(){
         ApplyIt();
+        setNewValue('filter', filter);
         navigation.push('homeMain')
     }
 

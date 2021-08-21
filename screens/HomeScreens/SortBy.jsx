@@ -16,14 +16,14 @@ const sortOptions = [
     "Sort by oldest to newest"
 ]
 
-export default function SortByMain() {
+export default function SortByMain({ handleApply }) {
 
-    const { sort, visibleList, toggleOverlay, updateSort } = useSort();
+    const { sort, visibleList, toggleOverlay } = useSort();
 
-    function handleItemPressed(value){
+    /*function handleItemPressed(value){
         updateSort(value);
         toggleOverlay();
-    }
+    }*/
 
     return (
         <>
@@ -60,7 +60,7 @@ export default function SortByMain() {
                                 checked={value === sort}
                                 textStyle= {styles.radioText}
                                 size={20}
-                                onPress={() => handleItemPressed(value)}
+                                onPress={() => handleApply(value)}
                             />
                         </TouchableHighlight>
                     ) )

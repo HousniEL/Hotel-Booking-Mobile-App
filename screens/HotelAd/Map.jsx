@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { GOOGLE_API_KEY } from '@env';
+
+import { Dimensions } from 'react-native';
 
 import Geocoder from 'react-native-geocoding';
 
-Geocoder.init(process.env.GOOGLE_API_KEY);
+Geocoder.init(GOOGLE_API_KEY);
 
 import MapView, { Marker, ProviderPropType  } from 'react-native-maps';
 

@@ -13,11 +13,8 @@ import {
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import MaterialComunnityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Global from '../Global';
 
-import { useDate } from '../HomeScreens/contexts/DateContext';
-import { useFilter } from '../HomeScreens/contexts/FilterContext';
-import { useRooms } from '../HomeScreens/contexts/RoomsContext';
+import Global from '../Global';
 
 import Filter from '../HomeScreens/Filter';
 import DateD from '../HomeScreens/Date';
@@ -30,10 +27,11 @@ import CheckPage from '../Book/CheckPage';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { FilterProvider } from '../HomeScreens/contexts/FilterContext';
-import { RoomsProvider } from '../HomeScreens/contexts/RoomsContext';
-import { DateProvider } from '../HomeScreens/contexts/DateContext';
-import { SortProvider } from '../HomeScreens/contexts/SortByContext';
+import { GeneralFilterProvider, useGeneral } from '../HomeScreens/contexts/GeneralFilterContext';
+import { FilterProvider, useFilter } from '../HomeScreens/contexts/FilterContext';
+import { RoomsProvider, useRooms } from '../HomeScreens/contexts/RoomsContext';
+import { DateProvider, useDate } from '../HomeScreens/contexts/DateContext';
+import { SortProvider, useSort } from '../HomeScreens/contexts/SortByContext';
 
 import { hotels } from '../../varGlobal';
 
@@ -44,14 +42,18 @@ function HomeMain({ navigation, hotels }) {
     const translationHeader = useRef(new Animated.Value(Number(-180))).current;
     const translationContent = useRef(new Animated.Value(Number(190))).current;
 
+    const [searchValue, setSearchValue] = useState("");
     const [headerShown, setHeaderShown] = useState(true);
-    const [wait, setWait] = useState(false);
-
-    const { totalPandR } = useRooms();
-
-    const { appliedStartDay, appliedEndDay } = useDate();
+    const [load, setload] = useState(false);
 
     const [ dateString, setDateString ] = useState("From - To");
+
+    // Contexts
+    const { generalFilter, setNewValue } = useGeneral();
+    const { getAppliedFilter } = useFilter();
+    const { totalPandR, appliedRooms } = useRooms();
+    const { appliedStartDay, appliedEndDay } = useDate();
+    const { toggleOverlay, updateSort, sort } = useSort();
 
     useEffect(() => {
         if(!isEmpty(appliedStartDay) && !isEmpty(appliedEndDay)){
@@ -78,12 +80,31 @@ function HomeMain({ navigation, hotels }) {
                 useNativeDriver: true
             })
         ]).start();
-    }, [headerShown])
+    }, [headerShown]);
+
+    useEffect(() => {
+        console.log(generalFilter);
+        if(!isEmpty(generalFilter.get('search'))){
+            setSearchValue(generalFilter.get('search').value);
+        }
+    }, [load]);
 
     async function navigateTo(screenName){
         navigation.navigate(screenName);
     }
 
+
+    function handleSortApply(value){
+        updateSort(value);
+        toggleOverlay();
+        setNewValue('sortby', { value });
+        setload(!load);
+    }
+    function handleSearchApply(event){
+        setNewValue('search', { value : event.nativeEvent.text });
+        setload(!load);
+    }
+    
     return (
         <>
             <StatusBar backgroundColor={Global.primary} />
@@ -105,6 +126,7 @@ function HomeMain({ navigation, hotels }) {
                 }}>
                     <Input 
                         placeholder="Search"
+                        value={searchValue}
                         keyboardAppearance={'default'}
                         keyboardType={'default'}
                         autoCorrect={false}
@@ -124,13 +146,14 @@ function HomeMain({ navigation, hotels }) {
                         errorStyle={{
                             display: 'none'
                         }}
+                        onChangeText={(text) => setSearchValue(text)}
+                        onSubmitEditing={(e) => handleSearchApply(e)}
                     />
                     <View style={{marginTop: 20, width: '100%', backgroundColor: 'transparent'}}>
                         <View style={styles.dateANDroomcontainer} >
                             <TouchableHighlight
                                 underlayColor={'transparent'}
                                 style={{ width: '50%'}}
-                                disabled={wait}
                                 onPress={ () => navigateTo('date') }
                             >
                                 <View style={{ borderRightColor: Global.buttonbg1, borderRightWidth: 1, paddingHorizontal: 20 }}>
@@ -143,7 +166,6 @@ function HomeMain({ navigation, hotels }) {
                             <TouchableHighlight
                                 underlayColor={'transparent'}
                                 style={{width: '50%'}}
-                                disabled={wait}
                                 onPress={ () => navigateTo('rooms')}
                             >
                                 <View style={{ paddingHorizontal: 20 }}>
@@ -170,11 +192,10 @@ function HomeMain({ navigation, hotels }) {
                                         />
                                     }
                                     titleStyle={styles.buttontitlestyle}
-                                    disabled={wait}
                                     onPress={ () => navigateTo('filter') }
                                 />  
                             </TouchableHighlight>
-                            <SortByMain />
+                            <SortByMain handleApply={handleSortApply} />
                         </View>
                     </View>
                 </View>
@@ -249,28 +270,30 @@ export default function Home(){
     const [allHotels, setAllHotels] = useState(hotels)
 
     return (
-        <FilterProvider>
-            <RoomsProvider>
-                <DateProvider>
-                    <SortProvider>
-                        <Stack.Navigator
-                            initialRouteName="homeMain"
-                            screenOptions={{ headerShown: false }}
-                        >
-                            <Stack.Screen name="homeMain">
-                                { props => <HomeMain {...props} hotels={allHotels} /> }    
-                            </Stack.Screen>
-                            <Stack.Screen name="filter" component={Filter} />
-                            <Stack.Screen name="date" component={DateD} />
-                            <Stack.Screen name="rooms" component={Rooms} />
-                            <Stack.Screen name="hotelInfo" component={MoreDetail} />
-                            <Stack.Screen name="roomInfo" component={RoomType} />
-                            <Stack.Screen name="checkPage" component={CheckPage} />
-                        </Stack.Navigator>
-                    </SortProvider>
-                </DateProvider>
-            </RoomsProvider>
-        </FilterProvider>
+        <GeneralFilterProvider>
+            <FilterProvider>
+                <RoomsProvider>
+                    <DateProvider>
+                        <SortProvider>
+                            <Stack.Navigator
+                                initialRouteName="homeMain"
+                                screenOptions={{ headerShown: false }}
+                            >
+                                <Stack.Screen name="homeMain">
+                                    { props => <HomeMain {...props} hotels={allHotels} /> }    
+                                </Stack.Screen>
+                                <Stack.Screen name="filter" component={Filter} />
+                                <Stack.Screen name="date" component={DateD} />
+                                <Stack.Screen name="rooms" component={Rooms} />
+                                <Stack.Screen name="hotelInfo" component={MoreDetail} />
+                                <Stack.Screen name="roomInfo" component={RoomType} />
+                                <Stack.Screen name="checkPage" component={CheckPage} />
+                            </Stack.Navigator>
+                        </SortProvider>
+                    </DateProvider>
+                </RoomsProvider>
+            </FilterProvider>
+        </GeneralFilterProvider>
     )
 }
 

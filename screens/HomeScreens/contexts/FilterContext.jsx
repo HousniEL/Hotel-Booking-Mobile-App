@@ -57,13 +57,18 @@ export function FilterProvider({ children }){
         setAppliedFilter(filter);
     }
 
+    function getAppliedFilter(){
+        return appliedFilter;
+    }
+
     var value = {
         filter,
         appliedFilter,
         AddFilter,
         DeleteFilter,
         unsetPrice,
-        ApplyIt
+        ApplyIt,
+        getAppliedFilter
     }
 
     return (

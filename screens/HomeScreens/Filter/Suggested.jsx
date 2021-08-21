@@ -16,7 +16,7 @@ const filters = [
     { select : "Free of charge cancellation", selected: false},
     { select : "Pay at the institution", selected: false},
     { select : "Free breakfast", selected: false},
-    { select : "Wi-Fi", selected: false},
+    { select : "Free Wi-Fi", selected: false},
     { select : "Parking", selected: false},
     { select : "Air conditioning", selected: false},
     { select : "Bathroom with bathtub", selected: false},
@@ -26,16 +26,17 @@ const filters = [
     { select : "Swimming pool", selected: false},
     { select : "Pets allowed", selected: false},
     { select : "Restaurant", selected: false},
-    { select : "Gym", selected: false}
+    { select : "Gym", selected: false},
+    { select : "Bar", selected: false}
 ]
 
 export default function Suggested() {
 
-    const { AddFilter, DeleteFilter } = useFilter();
+    const { appliedFilter, AddFilter, DeleteFilter } = useFilter();
 
     const [filtersSuggested, setFiltersSuggested] = useState(filters);
 
-    /*useEffect(() => {
+    useEffect(() => {
         const ff = function(){
             if( appliedFilter.get('suggested') ) {
                 var filtersCopy = filters;
@@ -52,7 +53,7 @@ export default function Suggested() {
         };
 
         ff();
-    }, []);*/
+    }, []);
 
     useEffect( () => {
         setFilter();

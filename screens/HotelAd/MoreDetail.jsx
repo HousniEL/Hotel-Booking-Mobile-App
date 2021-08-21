@@ -87,6 +87,7 @@ export default function MoreDetail({ route, navigation }) {
                             {
                                 hotel.rooms.map( (room, idx) => (
                                     <TouchableHighlight
+                                        key={idx.toString()}
                                         underlayColor={'transparent'}
                                         onPress={() => {
                                             navigation.push('roomInfo', {
