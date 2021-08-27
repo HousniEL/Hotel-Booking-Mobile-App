@@ -41,15 +41,15 @@ export default function Rating() {
     useEffect(() => {
 
         const ff =  function() {
-            if( appliedFilter.get('category')){
+            if( appliedFilter['category']){
                 let newStarsState = [false, false, false, false, false];
-                var selectedCategories = appliedFilter.get('category').value;
+                var selectedCategories = appliedFilter['category'].value;
                 for(let i = 0; i < selectedCategories.length; i++){
                     newStarsState[selectedCategories[i] - 1] = true;
                 }
                 setRatings(newStarsState);
             }
-            appliedFilter.delete('category');
+            delete appliedFilter['category'];
         }
 
         ff();

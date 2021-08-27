@@ -12,21 +12,22 @@ import {
 
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-import { RoomsProvider } from './screens/HomeScreens/contexts/RoomsContext';
-
-import NavigateScreens from './screens/personal/NavigateScreens';
+//import NavigateScreens from './screens/personal/NavigateScreens';
 
 //import PaymentPage from './screens/Book/PaymentPage';
 
 //import StripePayment from './screens/Book/StripePayment';
 
+import Signup from './screens/personal/Signup';
+
 import 'react-native-gesture-handler';
+import First from './screens/FirstConnection';
 
 
 export default function App() {
 
   return (
-    <RoomsProvider>
+    <>
       <StatusBar translucent barStyle={'default'} />
       <SafeAreaView style={[styles.container]}>
         <KeyboardAvoidingView 
@@ -41,12 +42,12 @@ export default function App() {
                 marginTop: Platform.OS === "android"? StatusBar.currentHeight : 0
               }}
             >
-                <NavigateScreens />
+                <First />
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </RoomsProvider>
+    </>
   );
 }
 

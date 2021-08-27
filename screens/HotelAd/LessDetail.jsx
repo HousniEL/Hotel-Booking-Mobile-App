@@ -13,18 +13,56 @@ import Global from '../Global';
 
 import { servicesIcon } from '../constants';
 
+import { services } from "../constants";
+
+import HotelService from '../../services/HotelService';
+import { Alert } from 'react-native';
+
+import Hotel from '../../models/Hotel';
+
+import Rate from './Rate';
+
 export default function LessDetail({ hotel, navigation }) {
 
     const [heartFilling, setHeartFilling] = useState(false);
 
+    function getStars(Stars){
+        var starArray = [false, false, false, false, false];
+        for(let i = 0; i < Stars; i++){
+            starArray[i] = true;
+        }
+        return starArray;
+    }
+
+    function getServices(Services){
+        let i = 0;
+        var setSer = []
+        for(let char of Services){
+            if(char === "1") setSer.push(services[i]);
+            i++;
+        }
+        return setSer;
+    }
+
+    function handlePress(){
+        var id = hotel.id;
+        const hotelService = new HotelService();
+        hotelService.getHotelById(id, (HInfo, roomsType) => {
+            var hotelInfo = new Hotel(HInfo);
+            hotelInfo.setRooms(roomsType);
+            navigation.push('hotelInfo', {
+                hotel: hotelInfo
+            })
+        }, (error) => {
+            Alert.alert("Alert", error.message);
+        } )
+
+    }
+
     return (
         <TouchableHighlight
             underlayColor={'transparent'}
-            onPress={() => {
-                navigation.push('hotelInfo', {
-                    hotel: hotel
-                })
-            }}
+            onPress={handlePress}
         >
 
             <View
@@ -35,21 +73,24 @@ export default function LessDetail({ hotel, navigation }) {
                         resizeMethod={'auto'}
                         resizeMode={'cover'} 
                         style={styles.imageStyle}
-                        source={{ uri : hotel.images[0].url }}
+                        source={{ uri : hotel.image.img1 }}
                     />
                     <TouchableHighlight
                         style={{ position: 'absolute', top: 5, right: 5 }}
                         underlayColor={'transparent'}
                         onPress={() => setHeartFilling(!heartFilling)}
                     >
-                        <View>
+                        <View style={{ backgroundColor: 'rgba(0,0,0,.5)', padding: 5, borderRadius: 30 }}>
                             <MaterialCommunityIcons 
                                 name={ (heartFilling === true) ? "heart" : "heart-outline"} 
-                                color={ (heartFilling === true ) ? "tomato" : Global.black}
+                                color={ (heartFilling === true ) ? "tomato" : '#ddd'}
                                 size={30}
                             />
                         </View>
                     </TouchableHighlight>
+                    <View style={{ position: "absolute", bottom: 5, left: 5 }}>
+                        <Rate value={hotel.Rate}/>
+                    </View>
                 </View>
                 <View
                     style={{
@@ -57,7 +98,7 @@ export default function LessDetail({ hotel, navigation }) {
                         flex: 1
                     }}
                 >
-                    <Text style={{fontSize: 20, fontWeight: '700', paddingHorizontal: 2, color: Global.black}}>
+                    <Text style={{fontSize: 19, fontWeight: '700', maxWidth: '75%', paddingHorizontal: 2, color: Global.black}}>
                         {hotel.Hotel_Name}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -75,7 +116,7 @@ export default function LessDetail({ hotel, navigation }) {
                         }}
                     >
                         {
-                            hotel.getStars().map((value, idx) => (
+                            getStars(hotel.Stars).map((value, idx) => (
                                 <MaterialCommunityIcons
                                     name='star'
                                     color={ value ? 'gold' : '#BBB'}
@@ -87,7 +128,7 @@ export default function LessDetail({ hotel, navigation }) {
                     </View>
                     <Text style={styles.servicesContainer} numberOfLines={3} >
                         {
-                            hotel.getServices().map( (value, idx) => (
+                            getServices(hotel.Services).map( (value, idx) => (
                                 <View key={idx.toString()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <MaterialCommunityIcons 
                                         name={servicesIcon.get(value)} 
@@ -107,7 +148,7 @@ export default function LessDetail({ hotel, navigation }) {
                             Starting price per night
                         </Text>
                         <Text style={styles.price} >
-                            {hotel.getMinPrice() + '$'}
+                            {hotel.minPrice + '$'}
                         </Text>
                     </View>
                 </View>
@@ -118,8 +159,9 @@ export default function LessDetail({ hotel, navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        width: 320,
-        height: 275,
+        width: '90%',
+        maxWidth: 400,
+        paddingBottom: 5,
         alignSelf: 'center',
         marginBottom: 25,
         borderRadius:5,
@@ -146,7 +188,7 @@ const styles = StyleSheet.create({
     },
     priceContainer: {
         position: 'absolute',
-        bottom: 12,
+        bottom: 8,
         right: 10,
         alignItems: 'flex-end'
     },
@@ -155,10 +197,11 @@ const styles = StyleSheet.create({
         fontSize: 12,
         alignSelf: 'flex-end',
         textAlign: 'right',
-        width: 80,
+        width: 100,
+        marginBottom: 10
     },
     price: {
-        fontSize: 23,
+        fontSize: 21,
         color: '#2a7800',
         fontWeight: '700'
     }

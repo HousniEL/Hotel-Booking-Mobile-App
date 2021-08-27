@@ -21,7 +21,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Personal from './personal/Personal';
 import Login from './personal/Login';
 import Signup from './personal/Signup';
-import NavigateScreens from './NavigateScreens';
+import NavigateScreens from './personal/NavigateScreens';
 
 import { AuthProvider } from '../contexts/AuthContext';
 
@@ -136,7 +136,7 @@ export default function First(){
                     <Root.Screen  name="personal" component={Personal} />
                     <Root.Screen  name="signup" component={Signup} />
                     <Root.Screen  name="login" component={Login} />
-                    <Root.Screen name="navigatescreens" component={NavigateScreens} />
+                    <Root.Screen  name="navigatescreens" component={NavigateScreens} />
                 </Root.Navigator>
             </NavigationContainer>
         </AuthProvider>

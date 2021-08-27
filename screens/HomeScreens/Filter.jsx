@@ -65,42 +65,41 @@ export default function Filter({ navigation }) {
                 }}
                 contentContainerStyle={{
                     flexGrow: 1,
-                    alignItems: 'center',
-                    padding: 20
+                    alignItems: 'center'
                 }}
             >
                 <View style={styles.container}>
-                    <View style={{marginBottom: 15}}>
+                    <View style={{marginBottom: 15, width: '100%'}}>
                         <Text 
                             style={{fontSize: 14, fontWeight: '700', marginBottom: 10}}
                         >PRICE PER NIGHT</Text>
-                        <View style={{alignSelf: 'flex-start'}}>
+                        <View style={{alignSelf: 'flex-start', width: '100%'}}>
                             <Price />
                         </View>
                     </View>
-                    <View style={{marginBottom: 30}}>
+                    <View style={{marginBottom: 30, width: '100%'}}>
                         <Text 
                             style={{fontSize: 14, fontWeight: '700', marginBottom: 10}}
                         >HOTEL CATEGORY</Text>
-                        <View style={{alignSelf: 'flex-start', flexDirection: 'row', width: 320, justifyContent: 'space-between'}}>
+                        <View style={{alignSelf: 'flex-start', flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
                             <Rating />
                         </View>
                     </View>
-                    <View style={{marginBottom: 30}}>
+                    <View style={{marginBottom: 30, width: '100%'}}>
                         <Text 
                             style={{fontSize: 14, fontWeight: '700', marginBottom: 10}}
                         >LOCATION</Text>
-                        <View style={{alignSelf: 'flex-start', flexDirection: 'row', width: 320, justifyContent: 'space-between'}}>
+                        <View style={{alignSelf: 'flex-start', flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
                             <LocationProvider>
                                 <Location />
                             </LocationProvider>
                         </View>
                     </View>
-                    <View>
+                    <View style={{ width: '100%' }}>
                         <Text 
                             style={{fontSize: 14, fontWeight: '700', marginBottom: 10}}
                         >SUGGESTED FILTERS</Text>
-                        <View style={{flexDirection: 'row', flexWrap: 'wrap', width: 320}}>
+                        <View style={{flexDirection: 'row', flexWrap: 'wrap', width: '100%'}}>
                             <Suggested />
                         </View>
                     </View>
@@ -113,15 +112,16 @@ export default function Filter({ navigation }) {
 
 const styles = StyleSheet.create({
     bigContainer: {
-        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Global.primary
     },
     container: {
         flex: 1,
-        width: 350,
-        alignItems: 'center'
+        width: '90%',
+        maxWidth: 400,
+        alignItems: 'center',
+        paddingTop: 10
     },
     inputContainerPrice: {
         width: 80,

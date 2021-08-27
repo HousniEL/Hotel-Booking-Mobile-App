@@ -38,9 +38,9 @@ export default function Suggested() {
 
     useEffect(() => {
         const ff = function(){
-            if( appliedFilter.get('suggested') ) {
+            if( appliedFilter['suggested'] ) {
                 var filtersCopy = filters;
-                var choosed = appliedFilter.get('suggested').value;
+                var choosed = appliedFilter['suggested'].value;
                 for(let i = 0; i < choosed.length; i++){
                     for(let j = 0; j < filtersCopy.length; j++){
                         if(filtersCopy[j].select === choosed[i]){

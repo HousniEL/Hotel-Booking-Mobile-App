@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import {
     View,
     Text,
-    StyleSheet
+    StyleSheet,
+    Dimensions
 } from 'react-native';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
@@ -27,15 +28,15 @@ export default function Price() {
 
     useEffect(() => {
         const ff = function(){
-            if( appliedFilter.get('price') ){
-                var minmax = appliedFilter.get('price').value;
+            if( appliedFilter['price'] ){
+                var minmax = appliedFilter['price'].value;
                 var min = (minmax.min) ? minmax.min : 10;
                 var max = (minmax.max) ? minmax.max : 500;
                 setMinInput(min.toString());
                 setMaxInput(max.toString());
                 setPriceRange([min, max]);
             }
-            appliedFilter.delete('price');
+            delete appliedFilter['price'];
         };
 
         ff();
@@ -169,7 +170,7 @@ export default function Price() {
                 position: 'relative'
             }}
             onValuesChange={priceRangeChange}
-            sliderLength={320}
+            sliderLength={(Dimensions.get('screen').width * 9/10 > 400 ) ? 400 : Dimensions.get('screen').width * 9/10 }
             min={10}
             max={500}
             step={1}
@@ -193,7 +194,7 @@ export default function Price() {
 
 const styles = StyleSheet.create({
     inputContainerPrice: {
-        width: 80,
+        width: 100,
         height: 30,
         paddingVertical: 0,
         marginVertical: 0,

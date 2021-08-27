@@ -63,8 +63,7 @@ export default function Rooms({ navigation }) {
         for(let i = 0; i < rooms.length; i++){
             valueApp.push({ persons : getTotalPsPerRoom(i) });
         }
-        console.log(valueApp);
-        setNewValue('rooms', { value : valueApp });
+        setNewValue('rooms', valueApp );
         navigation.push('homeMain');
     }
 

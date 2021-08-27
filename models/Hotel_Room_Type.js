@@ -6,7 +6,7 @@ export default class Hotel_Room_Type{
         this.Room_Type = object.Room_Type;
         this.Num_Persons = object.Num_Persons;
         this.Price = object.Price ;
-        this.Characteristics = object.Characteristics;
+        this.Characteristics = object.characteristics;
         this.Size = object.Size;
     }
 

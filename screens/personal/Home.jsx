@@ -33,11 +33,13 @@ import { RoomsProvider, useRooms } from '../HomeScreens/contexts/RoomsContext';
 import { DateProvider, useDate } from '../HomeScreens/contexts/DateContext';
 import { SortProvider, useSort } from '../HomeScreens/contexts/SortByContext';
 
-import { hotels } from '../../varGlobal';
+import HotelService from '../../services/HotelService';
 
 const Stack = createStackNavigator();
 
-function HomeMain({ navigation, hotels }) {
+function HomeMain({ navigation }) {
+
+    const [hotels, setHotels] = useState();
 
     const translationHeader = useRef(new Animated.Value(Number(-180))).current;
     const translationContent = useRef(new Animated.Value(Number(190))).current;
@@ -50,10 +52,9 @@ function HomeMain({ navigation, hotels }) {
 
     // Contexts
     const { generalFilter, setNewValue } = useGeneral();
-    const { getAppliedFilter } = useFilter();
-    const { totalPandR, appliedRooms } = useRooms();
+    const { totalPandR, rooms, getTotalPsPerRoom } = useRooms();
     const { appliedStartDay, appliedEndDay } = useDate();
-    const { toggleOverlay, updateSort, sort } = useSort();
+    const { toggleOverlay, updateSort } = useSort();
 
     useEffect(() => {
         if(!isEmpty(appliedStartDay) && !isEmpty(appliedEndDay)){
@@ -83,9 +84,19 @@ function HomeMain({ navigation, hotels }) {
     }, [headerShown]);
 
     useEffect(() => {
-        console.log(generalFilter);
-        if(!isEmpty(generalFilter.get('search'))){
-            setSearchValue(generalFilter.get('search').value);
+        var valueApp = [];
+        for(let i = 0; i < rooms.length; i++){
+            valueApp.push({ persons : getTotalPsPerRoom(i) });
+        }
+        setNewValue('rooms', valueApp);
+        const hotelService = new HotelService();
+        hotelService.getLessDetailHotels(JSON.stringify(generalFilter), (response) => {
+            setHotels(response);
+        }, (error) => {
+            console.log("Error ------------" + error);
+        });
+        if(!isEmpty(generalFilter['search'])){
+            setSearchValue(generalFilter['search'].value);
         }
     }, [load]);
 
@@ -203,7 +214,7 @@ function HomeMain({ navigation, hotels }) {
             <Animated.ScrollView
                 onScroll={(event) => {
                     const scrolling = event.nativeEvent.contentOffset.y;
-                    if (scrolling > 200 ) {
+                    if (scrolling > 300 ) {
                         setHeaderShown(false);
                     } else {
                         setHeaderShown(true);
@@ -214,14 +225,15 @@ function HomeMain({ navigation, hotels }) {
                 style={{ 
                     flex: 1, 
                     paddingVertical:10,
-                    maxHeight: headerShown === true ?  Dimensions.get('window').height - 174 : null ,
-                    transform: [ { translateY: translationContent } ] }}
+                    maxHeight: ( headerShown === true ) ? Dimensions.get('window').height - 174 : null,
+                    transform: [ { translateY: translationContent } ] 
+                }}
             >
-                <View style={{ flex: 1}}>
+                <View style={{ flex: 1, paddingBottom: 30 }}>
                     {
-                        hotels.map((value, idx) => (
+                        /*hotels && hotels.map((value, idx) => (
                             <LessDetail key={idx.toString()} hotel={value} navigation={navigation} />
-                        ))
+                        ))*/
                     }
                 </View>
             </Animated.ScrollView>
@@ -267,8 +279,6 @@ function HomeMain({ navigation, hotels }) {
 
 export default function Home(){
 
-    const [allHotels, setAllHotels] = useState(hotels)
-
     return (
         <GeneralFilterProvider>
             <FilterProvider>
@@ -280,7 +290,7 @@ export default function Home(){
                                 screenOptions={{ headerShown: false }}
                             >
                                 <Stack.Screen name="homeMain">
-                                    { props => <HomeMain {...props} hotels={allHotels} /> }    
+                                    { props => <HomeMain {...props} /> }    
                                 </Stack.Screen>
                                 <Stack.Screen name="filter" component={Filter} />
                                 <Stack.Screen name="date" component={DateD} />

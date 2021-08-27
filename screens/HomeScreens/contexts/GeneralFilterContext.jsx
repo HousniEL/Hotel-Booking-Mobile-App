@@ -8,19 +8,19 @@ export function useGeneral(){
 
 export function GeneralFilterProvider({ children }){
 
-    const defaultValue = new Map([
-        [ "search", {} ],
-        [ "rooms", {} ],
-        [ "filter", {} ],
-        [ "sortby", {} ],
-    ])
+    const defaultValue = {
+        search: {},
+        rooms: {},
+        filter: {},
+        sortby: {},
+    }
 
     const [generalFilter, setGeneralFilter] = useState(defaultValue);
 
     function setNewValue(type, value){
         var generalFilterCopy = generalFilter;
-        generalFilterCopy.delete(type);
-        generalFilterCopy.set(type, value);
+        //generalFilterCopy.delete(type);
+        generalFilterCopy[type] = value;
         setGeneralFilter(generalFilterCopy);
     }
 

@@ -20,10 +20,6 @@ export default function SortByMain({ handleApply }) {
 
     const { sort, visibleList, toggleOverlay } = useSort();
 
-    /*function handleItemPressed(value){
-        updateSort(value);
-        toggleOverlay();
-    }*/
 
     return (
         <>

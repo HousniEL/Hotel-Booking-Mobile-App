@@ -1,2 +1,2 @@
 
-export const API_URL = 'http://192.168.1.104:8086';
+export const API_URL = 'https://damp-brook-48016.herokuapp.com/api';

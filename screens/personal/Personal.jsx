@@ -6,7 +6,7 @@ import {
     StyleSheet
 } from 'react-native';
 
-import { Button } from 'react-native-elements';
+import { Button, Divider } from 'react-native-elements';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -52,7 +52,10 @@ export default function Personal({ navigation }) {
                     }}
                 />      
                 
-                <Text style={styles.text} >OR</Text>
+                <View style={{ position: 'relative', width: '90%', maxWidth: 400, marginVertical: 30, alignSelf: 'center' }}>
+                    <Divider orientation={'horizontal'} width={2} />
+                    <Text style={ styles.orText }>Or</Text>
+                </View>
                 
                 <Button 
                     title='Create an account'
@@ -82,7 +85,8 @@ export default function Personal({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: '#eee'
     },
     text: {
         alignSelf: 'center',
@@ -90,5 +94,16 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#777',
         marginVertical: 20
+    },
+    orText: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: 'gray', 
+        position: 'absolute', 
+        bottom: -10,
+        left: '45%',
+        width: 40,
+        textAlign: 'center',
+        backgroundColor: '#eee'
     }
 })

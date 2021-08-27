@@ -25,10 +25,10 @@ export default function Location() {
 
     useEffect(() => {
         const ff = function(){
-            if( appliedFilter.get('location') ){
-                updateLocation(appliedFilter.get('location').value);
+            if( appliedFilter['location'] ){
+                updateLocation(appliedFilter['location'].value);
             }
-            appliedFilter.delete('location');
+            delete appliedFilter['location'];
         };
 
         ff();

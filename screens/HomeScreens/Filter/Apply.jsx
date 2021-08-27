@@ -13,8 +13,8 @@ import { useGeneral } from '../contexts/GeneralFilterContext';
 
 export default function Apply({ navigation }){
 
-    const { setNewValue } = useGeneral();
-    const { filter, ApplyIt, getAppliedFilter } = useFilter();
+    const { generalFilter, setNewValue } = useGeneral();
+    const { filter, ApplyIt } = useFilter();
 
     function handleApply(){
         ApplyIt();

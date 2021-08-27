@@ -8,13 +8,13 @@ export function useFilter(){
 
 export function FilterProvider({ children }){
 
-    const [filter, setFilter] = useState(new Map());
-    const [appliedFilter, setAppliedFilter] = useState(new Map());
+    const [filter, setFilter] = useState({});
+    const [appliedFilter, setAppliedFilter] = useState({});
 
     function AddFilter(type, object){
         var filterCopy = filter;
-        if(!filterCopy.get(type)){
-            filterCopy.set(type, object);
+        if(!filterCopy[type]){
+            filterCopy[type] = object;
             setFilter(filterCopy);
         } else {
             UpdateFilter(type, object);
@@ -24,7 +24,7 @@ export function FilterProvider({ children }){
     function DeleteFilter(type){
         if(filter.size !== 0){
             var filterCopy = filter;
-            filterCopy.delete(type);
+            delete filterCopy[type];
             setFilter(filterCopy);
         }
     }
@@ -32,8 +32,8 @@ export function FilterProvider({ children }){
     function UpdateFilter(type, newValue){
         if(filter.size !== 0){
             var filterCopy = filter;
-            filterCopy.delete(type);
-            filterCopy.set(type, newValue);
+            delete filterCopy[type];
+            filterCopy[type] = newValue;
             setFilter(filterCopy);
         }
     }
@@ -41,11 +41,11 @@ export function FilterProvider({ children }){
     function unsetPrice(){
         if(filter.size !== 0){
             var filterCopy = filter;
-            if( !filterCopy.get('price') ){
-                var priceCopy = filterCopy.get('price');
-                filterCopy.delete('price');
+            if( !filterCopy['price'] ){
+                var priceCopy = filterCopy['price'];
+                delete filterCopy['price'];
                 delete priceCopy.value['max'];
-                if( JSON.stringify(priceCopy.value) !== "{}") filterCopy.set('price', priceCopy);
+                if( JSON.stringify(priceCopy.value) !== "{}") filterCopy['price'] = priceCopy;
                 setFilter(filterCopy);
             }
         }
@@ -53,7 +53,7 @@ export function FilterProvider({ children }){
 
 
     function ApplyIt(){
-        setAppliedFilter(new Map());
+        setAppliedFilter({});
         setAppliedFilter(filter);
     }
 

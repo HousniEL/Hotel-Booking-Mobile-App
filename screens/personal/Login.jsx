@@ -5,8 +5,7 @@ import {
     Text,
     Image,
     TouchableHighlight,
-    StyleSheet,
-    Alert
+    StyleSheet
 } from 'react-native';
 
 import { Input, Button } from 'react-native-elements';
@@ -19,32 +18,47 @@ import { useAuth } from '../../contexts/AuthContext';
 export default function Login({ navigation }) {
 
     const [pinSecure, setPinSecure] = useState(true);
-    const [message, setMessage] = useState();
+
     const [email, setEmail] = useState();
     const [pwd, setPwd] = useState();
 
-    const { currentUser, login } = useAuth();
+    const [emailErr, setEmailErr] = useState('');
+    const [pwdErr, setPwdErr] = useState('');
+
+    const { login } = useAuth();
 
     function handleSubmit(){
-        if(email && pwd){
-            login(email, pwd);
-            setMessage(JSON.stringify(currentUser));
-        } else {
-            setMessage("Error")
+        var goodToGo = true
+        if(!email){
+            goodToGo = false;
+            setEmailErr('Required Field');
+        }
+        if(!pwd){
+            goodToGo = false;
+            setPwdErr('Required Field');
+        }
+        if(goodToGo){
+            login({ email, pwd }, () => {
+                
+            }, (error) => {
+                if(error.email) setEmailErr(error.email[0]);
+                if(error.pwd) setEmailErr(error.pwd[0]);
+            });
         }
     }
 
     function handleEmail(value){
-        console.log(value);
+        setEmail(value);
+        setEmailErr('');
     }
     
     function handlePwd(value){
-        console.log(value);
+        setPwd(value);
+        setPwdErr('');
     }
     
     return (
         <View style={styles.container}>
-            {message && Alert.alert('Login', message)}
             <Image 
                 style={styles.image}
                 source={require('../../assets/Images/logo-white.png')}
@@ -54,6 +68,7 @@ export default function Login({ navigation }) {
             </Text>
             <View style={{ alignItems: 'center' }}>
                 <Input
+                    value={email}
                     placeholder={"Email"}
                     keyboardType={"email-address"}
                     autoCompleteType={'email'}
@@ -67,14 +82,19 @@ export default function Login({ navigation }) {
                     }}
                     containerStyle={{
                         paddingHorizontal: 0,
-                        width: 320,
+                        width: '90%',
+                        maxWidth: 400,
+                        minWidth: 320
                     }}
                     inputStyle={styles.input}
                     placeholderTextColor={"#CCC"}
                     inputContainerStyle={styles.inputcontainer}
                     onChangeText={handleEmail}
+                    errorMessage={emailErr}
+                    errorStyle={styles.erroStyle}
                 />
                 <Input
+                    value={pwd}
                     placeholder={"Password"}
                     keyboardType={"default"}
                     autoCompleteType={'password'}
@@ -91,13 +111,17 @@ export default function Login({ navigation }) {
                     }}
                     containerStyle={{
                         paddingHorizontal: 0,
-                        width: 320,
+                        width: '90%',
+                        maxWidth: 400,
+                        minWidth: 320
                     }}
                     inputStyle={styles.input}
                     placeholderTextColor={"#CCC"}
                     inputContainerStyle={styles.inputcontainer}
                     secureTextEntry={pinSecure}
                     onChangeText={handlePwd}
+                    errorMessage={pwdErr}
+                    errorStyle={styles.erroStyle}
                 />
                 <TouchableHighlight>
                     <Text
@@ -148,7 +172,7 @@ function BottomLogin({ navigation }){
                     underlayColor={'transparent'}
                 >
                     <Text style={{
-                        color: Global.primary
+                        color: Global.tabactive
                     }}>Sign Up</Text>                  
                 </TouchableHighlight>
             </View>
@@ -222,5 +246,13 @@ const styles = StyleSheet.create({
         height: 45,
         borderRadius: 20,
         backgroundColor: Global.buttonbg1
+    },
+    erroStyle: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#F88',
+        marginTop: 0,
+        marginBottom: 8,
+        marginHorizontal: 30
     }
 })

@@ -33,7 +33,7 @@ export default function MoreDetail({ route, navigation }) {
 
                 <View style={styles.container} >
                     <View style={{ height: 250, alignItems: "center" }} >
-                        <ImageSlider images={hotel.images} />
+                        <ImageSlider images={hotel.getImages()} />
                         <TouchableHighlight
                             style={{ position: 'absolute', top: 5, right: 10 }}
                             underlayColor={'transparent'}

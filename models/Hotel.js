@@ -3,20 +3,24 @@ import { services } from "../screens/constants";
 
 export default class Hotel{
     constructor(object){
-        this.Hotel_Name = object.Hotel_Name;
-        this.Description = object.Description;
-        this.Country = object.Country;
-        this.City = object.City;
-        this.Address = object.Address;
-        this.ZipCode = object.ZipCode;
-        this.Main_Phone_Number = object.Main_Phone_Number;
-        this.Fax_Number = object.Fax_Number;
-        this.Company_Mail_Address = object.Company_Mail_Address;
-        this.Services = object.Services;
-        this.Stars = object.Stars;
-        this.Rate = object.Rate;
-        this.images = object.images;
-        this.rooms = object.rooms;
+        this.Hotel_Name = object.hotel.Hotel_Name;
+        this.Description = object.hotel.Description;
+        this.Country = object.hotel.Country;
+        this.City = object.hotel.City;
+        this.Address = object.hotel.Address;
+        this.ZipCode = object.hotel.ZipCode;
+        this.Main_Phone_Number = object.hotel.Main_Phone_Number;
+        this.Fax_Number = object.hotel.Fax_Number;
+        this.Company_Mail_Address = object.hotel.Company_Mail_Address;
+        this.Services = object.hotel.Services;
+        this.Stars = object.hotel.Stars;
+        this.Rate = object.hotel.Rate;
+        this.images = object.hotel.images.imgs;
+        this.rooms = [];
+    }
+
+    setRooms(object){
+        this.rooms = object;
     }
 
     getServices(){
@@ -58,6 +62,14 @@ export default class Hotel{
             return room.Num_Persons >= numOfPerson
         } )
         return rightRooms;
+    }
+
+    getImages(){
+        var imgs = [];
+        for(let i = 1; i < this.images.length + 1; i++){
+            imgs.push({ url : this.images[i-1]['img'+i] });
+        }
+        return imgs;
     }
 
 }
