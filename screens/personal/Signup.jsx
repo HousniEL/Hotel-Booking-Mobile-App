@@ -26,7 +26,7 @@ import {
 
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function Signup({ navigation }) {
+export default function Signup({ navigation, signed }) {
 
     const [pwdSecure, setPwdSecure] = useState(true);
     const [pwdCSecure, setPwdCSecure] = useState(true);
@@ -117,7 +117,7 @@ export default function Signup({ navigation }) {
                 source={require('../../assets/Images/logo-white.png')}
             />
             <Text style={styles.title} >
-                Create An Account
+                Sign Up
             </Text>
             <View style={{ flex: 1, alignItems: 'center', width: '95%', maxWidth: 425 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
@@ -308,9 +308,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     image: {
-        width: 40,
-        height: 40,
-        alignSelf: 'center'
+        width: 35,
+        height: 35,
+        alignSelf: 'center',
+        marginBottom: 5
     },
     title: {
         alignSelf: 'center',

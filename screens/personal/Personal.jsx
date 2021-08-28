@@ -2,80 +2,74 @@ import React from 'react';
 
 import {
     View,
-    Text,
-    StyleSheet
+    StyleSheet,
+    Dimensions
 } from 'react-native';
 
-import { Button, Divider } from 'react-native-elements';
-
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Button } from 'react-native-elements';
 
 import Global from '../Global';
 
 import LogoSide from '../../LogoSide';
 
+import { LinearGradient } from 'expo-linear-gradient';
+
 export default function Personal({ navigation }) {
     return (
         <>
             <View style={styles.container}>
-                <MaterialCommunityIcons 
-                    name='arrow-left' 
-                    color={'gray'} 
-                    size={30} 
-                    style={{
-                        position: 'absolute',
-                        top: 20,
-                        left: 10
-                    }}
-                    onPress={() => {
-                        navigation.pop();
-                    }}
-                /> 
-                <LogoSide />
-                <Button 
-                    title='Guest'
-                    buttonStyle={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: 200,
-                        height: 45,
-                        backgroundColor: 'transparent',
-                        alignSelf: 'center',
-                        borderColor: Global.secondary,
-                        borderWidth: 2,
-                    }}
-                    titleStyle={{
-                        color: Global.secondary
-                    }}
-                    onPress={() => {
-                        navigation.push('navigatescreens')
-                    }}
-                />      
-                
-                <View style={{ position: 'relative', width: '90%', maxWidth: 400, marginVertical: 30, alignSelf: 'center' }}>
-                    <Divider orientation={'horizontal'} width={2} />
-                    <Text style={ styles.orText }>Or</Text>
-                </View>
-                
-                <Button 
-                    title='Create an account'
-                    buttonStyle={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: 200,
-                        height: 45,
-                        backgroundColor: 'transparent',
-                        alignSelf: 'center',
-                        borderColor: Global.secondary,
-                        borderWidth: 2,
-                    }}
-                    titleStyle={{
-                        color: Global.secondary
-                    }}
-                    onPress={() => {
-                        navigation.push('login')
-                    }}
+                <LinearGradient 
+                    style={[ styles.background, { height: Dimensions.get('screen').height }]}
+                    colors={[Global.primary, Global.tabactive]}
                 />
+                <View style={{ marginTop: '30%' }}>
+                    <LogoSide />
+                </View>
+                <View style={styles.buttonsView}>
+                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                        <Button 
+                            title='Log In'
+                            containerStyle={{ width: '48%', height: 50, marginBottom: 20, borderRadius: 5 }}
+                            buttonStyle={[styles.buttonStyle, {                       
+                                borderColor: "white",
+                                borderWidth: 1,
+                                backgroundColor: 'transparent'
+                            }]}
+                            titleStyle={{
+                                color: "white"
+                            }}
+                            onPress={() => {
+                                navigation.push('login')
+                            }}
+                        />
+                        <Button 
+                            title='Sign Up'
+                            containerStyle={{ width: '48%', height: 50, marginBottom: 20 }}
+                            buttonStyle={[styles.buttonStyle, {                       
+                                backgroundColor: 'transparent',
+                            }]}
+                            titleStyle={{
+                                color: "white"
+                            }}
+                            onPress={() => {
+                                navigation.push('signup')
+                            }}
+                        />
+                    </View>
+                    <Button 
+                        title='Continue as a guest'
+                        containerStyle={{ width: '100%', height: 50, borderRadius: 5 }}
+                        buttonStyle={[styles.buttonStyle, {                     
+                            backgroundColor: "#555",
+                        }]}
+                        titleStyle={{
+                            color: 'white'
+                        }}
+                        onPress={() => {
+                            navigation.push('navigatescreens')
+                        }}
+                    />
+                </View>
             </View>
         </>
     )
@@ -83,10 +77,15 @@ export default function Personal({ navigation }) {
 
 
 const styles = StyleSheet.create({
+    background: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0
+    },
     container: {
         flex: 1,
-        justifyContent: "center",
-        backgroundColor: '#eee'
+        justifyContent: "center"
     },
     text: {
         alignSelf: 'center',
@@ -95,15 +94,20 @@ const styles = StyleSheet.create({
         color: '#777',
         marginVertical: 20
     },
-    orText: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: 'gray', 
-        position: 'absolute', 
-        bottom: -10,
-        left: '45%',
-        width: 40,
-        textAlign: 'center',
-        backgroundColor: '#eee'
+    buttonStyle: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        height: 50,
+        borderRadius: 5
+    },
+    buttonsView: {
+        width: '80%',
+        maxWidth: 400,
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        alignSelf: 'center',
+        paddingBottom: 50
     }
 })

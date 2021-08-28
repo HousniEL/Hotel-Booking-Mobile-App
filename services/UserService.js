@@ -19,8 +19,7 @@ export default class UserService{
             if(content.errors){
                 return error(content.errors);
             }
-            console.log(content);
-            //await SecureStore.setItemAsync('token', content.token);
+            await SecureStore.setItemAsync('token', content.token);
             return success(content.user);
         } catch(e) {
             error(e);

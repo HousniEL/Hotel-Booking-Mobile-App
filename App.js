@@ -18,10 +18,11 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 //import StripePayment from './screens/Book/StripePayment';
 
-import Signup from './screens/personal/Signup';
+//import Signup from './screens/personal/Signup';
 
 import 'react-native-gesture-handler';
 import First from './screens/FirstConnection';
+import EmailVerification from './screens/EmailVerification';
 
 
 export default function App() {
@@ -42,7 +43,7 @@ export default function App() {
                 marginTop: Platform.OS === "android"? StatusBar.currentHeight : 0
               }}
             >
-                <First />
+                <EmailVerification />
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

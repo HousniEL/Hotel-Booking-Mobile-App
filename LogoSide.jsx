@@ -13,7 +13,7 @@ export default function LogoSide() {
         <View style={styles.container}>
             <Image 
                 style={styles.image}
-                source={require('./assets/Images/logo-red.png')}
+                source={require('./assets/Images/logo-white.png')}
             />
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
         top: 80
     },
     image: {
-        width: 50,
-        height: 50
+        width: 60,
+        height: 60
     },
     titleContainer: {
         flexDirection: 'column',
@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
         height: 50
     },
     title: {
-        fontSize: 21,
+        fontSize: 25,
         fontWeight: "700",
-        color: "gray",
+        color: "white",
         borderColor: 'black',
-        marginLeft: 5
+        marginLeft: 10
     }
 })

@@ -15,7 +15,7 @@ import Global from '../Global';
 
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function Login({ navigation }) {
+export default function Login({ navigation, signed }) {
 
     const [pinSecure, setPinSecure] = useState(true);
 
@@ -39,7 +39,7 @@ export default function Login({ navigation }) {
         }
         if(goodToGo){
             login({ email, pwd }, () => {
-                
+                signed();
             }, (error) => {
                 if(error.email) setEmailErr(error.email[0]);
                 if(error.pwd) setEmailErr(error.pwd[0]);
@@ -64,7 +64,7 @@ export default function Login({ navigation }) {
                 source={require('../../assets/Images/logo-white.png')}
             />
             <Text style={styles.title} >
-                Login
+                Log In
             </Text>
             <View style={{ alignItems: 'center' }}>
                 <Input
@@ -214,18 +214,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-        backgroundColor: Global.bg1,
+        backgroundColor: Global.primary,
         alignItems: 'center',
         justifyContent: 'center'
     },
     image: {
-        width: 40,
-        height: 40,
-        alignSelf: 'center'
+        width: 35,
+        height: 35,
+        alignSelf: 'center',
+        marginBottom: 5
     },
     title: {
         alignSelf: 'center',
-        fontSize: 30,
+        fontSize: 25,
         color: 'white',
         marginBottom: 40
     },
