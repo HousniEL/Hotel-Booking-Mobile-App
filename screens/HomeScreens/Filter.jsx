@@ -5,7 +5,6 @@ import {
     Text,
     StyleSheet,
     TouchableHighlight,
-    StatusBar,
     ScrollView
 } from 'react-native';
 
@@ -27,7 +26,6 @@ export default function Filter({ navigation }) {
 
     return (
         <>
-            <StatusBar backgroundColor={Global.primary} /> 
             <View style={styles.bigContainer}>
                 <Text
                     style={{

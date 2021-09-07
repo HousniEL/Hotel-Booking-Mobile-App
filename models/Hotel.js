@@ -52,7 +52,7 @@ export default class Hotel{
     getRoomsType(table){
         var roomsType = [];
         for(let room of table){
-            roomsType.push(room.Room_Type)
+            roomsType.push({ type: room.Room_Type, price: room.Price })
         }
         return roomsType;
     }

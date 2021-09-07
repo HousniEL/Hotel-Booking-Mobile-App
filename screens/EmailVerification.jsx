@@ -12,15 +12,19 @@ import { Input } from 'react-native-elements';
 
 import { CircleFade } from 'react-native-animated-spinkit';
 
-export default function EmailVerification() {
+import { useAuth } from '../contexts/AuthContext';
 
-    var refrenceCode = '123456'; 
+export default function EmailVerification({ signed, route }) {
+
+    const { email } = route.params;
 
     const [ code, setCode ] = useState('');
     const [ codeUnder, setCodeUnder ] = useState('______');
     const [ message, setMessage ] = useState();
 
     const [ wait, setWait ] = useState(false);
+
+    const { codeverification } = useAuth();
 
     function handleChange(value){
         setMessage();
@@ -29,21 +33,28 @@ export default function EmailVerification() {
             if(value.length === 6){
                 Keyboard.dismiss();
                 setWait(true);
-                setTimeout(() => { check(value) }, 3000);
+                check(value);
             }
             if(value.length === 0) setCode('');
         }
     }
 
     function check(value){
-        if(value === refrenceCode){
-            
-        } else {
+        codeverification({ email, verification_key : Number(value) }, (res) => {
+            if(res.error){
+                setCode('');
+                setCodeUnder('______');
+                setMessage(res.error);
+            } else {
+                signed();
+            }
+            setWait(false);
+        }, (err) => {
             setCode('');
             setCodeUnder('______');
-            setMessage('Incorrect code');
-        }
-        setWait(false);
+            setMessage(err);
+            setWait(false);
+        });
     }
 
     function handleFocus(){

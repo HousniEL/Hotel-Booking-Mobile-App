@@ -5,7 +5,6 @@ import {
     Text,
     StyleSheet,
     TouchableHighlight,
-    StatusBar,
     ScrollView
 } from 'react-native';
 
@@ -69,7 +68,6 @@ export default function Rooms({ navigation }) {
 
     return (
         <>
-            <StatusBar backgroundColor={Global.primary} /> 
             <View style={styles.bigContainer}>
                 <Text
                     style={{

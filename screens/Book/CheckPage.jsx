@@ -13,6 +13,8 @@ import { Button } from 'react-native-elements';
 
 import { useRooms } from '../HomeScreens/contexts/RoomsContext';
 
+import { useDate } from '../HomeScreens/contexts/DateContext';
+
 import Global from '../Global';
 
 import CustomCalendar from '../HomeScreens/CustomCalendar';
@@ -25,16 +27,30 @@ export default function CheckPage({ route, navigation }) {
 
     const { hotel } = route.params;
 
+    var { startDay, endDay } = useDate();
     var { rooms, addRoom, deleteRoom, appliedRooms, resetRooms } = useRooms();
 
     const [ table, setTable ] = useState([]);
+
+    const [ reload, setReload ] = useState();
+
+    function reloadPage(){
+        setReload(Math.random());
+    }
+
 
     useEffect(() => {
         const ff = function(){
             resetRooms();
             var tableCopy = [];
             for(let i = 1; i < appliedRooms.length + 1; i++){
-                tableCopy.push(i);
+                let object = {
+                    number: i,
+                    room: appliedRooms[i - 1],
+                    type: null,
+                    price: null
+                }
+                tableCopy.push(object);
             }
             setTable(tableCopy);
         }
@@ -44,16 +60,37 @@ export default function CheckPage({ route, navigation }) {
 
     function handleRooms(type){
         if(type === "minus"){
-            deleteRoom();
-            var tableCopy = table;
-            tableCopy.pop();
-            setTable(tableCopy);
+            if(rooms.length != 1){
+                deleteRoom();
+                var tableCopy = table;
+                tableCopy.pop();
+                setTable(tableCopy);
+                reloadPage();
+            }
         } else {
             addRoom();
             var tableCopy = table;
-            tableCopy.push(rooms.length);
-            setTable(tableCopy)
+            let object = {
+                number: rooms.length,
+                room: appliedRooms[rooms.length - 1],
+                type: null,
+                price: null
+            }
+            tableCopy.push(object);
+            setTable(tableCopy);
+            reloadPage();
         }
+    }
+
+    function handleNext(){
+        console.log('start : ' + new Date(startDay.day.timestamp) );
+        console.log('end : ' + new Date(endDay.day.timestamp) );
+        console.log(table);
+        navigation.push('paymentPage', {
+            startDay,
+            endDay,
+            table
+        })
     }
 
     return (
@@ -93,7 +130,7 @@ export default function CheckPage({ route, navigation }) {
                                 </View>
                                     {   
                                         table.map( (value, idx) => (
-                                            <RoomDetail key={idx} number={value} hotel={hotel} />
+                                            <RoomDetail key={idx} number={value.number} table={table} setTable={setTable} hotel={hotel} />
                                         ) )
                                     }
                             </View>
@@ -109,12 +146,12 @@ export default function CheckPage({ route, navigation }) {
                                         width: '100%',
                                         height: 45,
                                         paddingVertical: 10,
-                                        borderRadius: 50,
-                                        fontSize: 15
+                                        borderRadius: 50
                                     }}
                                     titleStyle={{
-                                        fontSize: 17
+                                        fontSize: 15
                                     }}
+                                    onPress={handleNext}
                                 />
                             </View>
                         </View>
@@ -126,7 +163,7 @@ export default function CheckPage({ route, navigation }) {
     )
 }
 
-function RoomDetail({ number, hotel }){
+function RoomDetail({ number, hotel, table, setTable }){
 
     const { appliedRooms, modifieRoom, getTotalPsPerRoom } = useRooms();
 
@@ -137,12 +174,43 @@ function RoomDetail({ number, hotel }){
         const numberA = value ;
         setAdultsNum( numberA );
         modifieRoom(number, numberA);
+        var tableCpy = table.map( roomInfo => {
+            if(roomInfo.number === number){
+                var roomInfoCpy = roomInfo;
+                roomInfoCpy['room']['adults'] = value;
+                return roomInfoCpy;
+            }
+            return roomInfo;
+        } );
+        setTable(tableCpy);
     }
 
     function handleChildrens(value){
         const numberC = Number(value);
         setChildrensNum(numberC);
         modifieRoom(number, null, numberC);
+        var tableCpy = table.map( roomInfo => {
+            if(roomInfo.number === number){
+                var roomInfoCpy = roomInfo;
+                roomInfoCpy['room']['childrens'] = value;
+                return roomInfoCpy;
+            }
+            return roomInfo;
+        } );
+        setTable(tableCpy);
+    }
+
+    function handleType(type){
+        var tableCpy = table.map( roomInfo => {
+            if(roomInfo.number === number){
+                var roomInfoCpy = roomInfo;
+                roomInfoCpy['type'] = type.type;
+                roomInfoCpy['price'] = type.price;
+                return roomInfoCpy;
+            }
+            return roomInfo;
+        } );
+        setTable(tableCpy);
     }
 
     return (
@@ -161,8 +229,9 @@ function RoomDetail({ number, hotel }){
                 </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 15 }}>
-                <CustomSelect data={hotel.getRoomsType(hotel.getRoomsThatFit(getTotalPsPerRoom(number - 1)))} 
+                <CustomSelect type={'type'} data={hotel.getRoomsType(hotel.getRoomsThatFit(getTotalPsPerRoom(number - 1)))} 
                     additionStyle={{ btn: { width: '100%', height: 45 }, btnTxt: { fontSize: 17 } }} 
+                    handle={handleType}
                 />
             </View>
         </>
@@ -200,14 +269,3 @@ const styles = StyleSheet.create({
         paddingRight: 5
     }
 })
-
-
-/*
-<View style={{ alignItems: 'center', paddingBottom: 15 }}>
-                            <Button 
-                                title='Next'
-                                buttonStyle={styles.buttonStyle}
-                                titleStyle={styles.titleStyle}
-                            />
-                        </View>
-*/

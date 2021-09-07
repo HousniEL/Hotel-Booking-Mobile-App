@@ -17,24 +17,44 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
 
     function signup(formData, success, error){
-        userService.SignUp(formData, (response) => {
-            setCurrentUser(response);
-            //console.log(response);
-            success();
+        userService.SignUp(formData, (res) => {
+            success("success");
+        }, (err) => {
+            if(err.errors){
+                error(err.errors);
+            } else {
+                var { message } = err;
+                error({ message });
+            }
+        })
+    }
+    function login(formData, success, error){
+        userService.LogIn(formData, (res) => {
+            if(res.verifie){
+                success(res);
+            } else {
+                setCurrentUser(res);
+                success(res);
+            }
         }, (err) => {
             error(err);
         })
     }
-    function login(formData, success, error){
-        userService.LogIn(formData, (response) => {
-            setCurrentUser(response);
-            success();
+    function codeverification(object, success, error){
+        userService.codeVerification(object, (res) => {
+            if(res.error){
+                success(res);
+            } else {
+                setCurrentUser(res);
+                success(res);
+            }
         }, (err) => {
             error(err);
         })
     }
     function logout(success, error){
         userService.LogOut( () => {
+            setCurrentUser();
             success();
         }, (err) => {
             error(err);
@@ -43,9 +63,11 @@ export function AuthProvider({ children }) {
 
     const value = {
         currentUser,
+        setCurrentUser,
         signup,
         login,
-        logout
+        logout,
+        codeverification
     }
 
     return (

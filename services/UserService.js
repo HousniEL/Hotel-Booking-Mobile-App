@@ -1,6 +1,6 @@
 import { API_URL } from '../Config';
 
-import { publicRoute, privateRoute } from './DefaultOptions';
+import { publicRoute } from './DefaultOptions';
 
 import * as SecureStore from 'expo-secure-store';
 
@@ -16,11 +16,10 @@ export default class UserService{
 
         try{
             var content = await response.json();
-            if(content.errors){
-                return error(content.errors);
+            if(content.message){
+                return error(content);
             }
-            await SecureStore.setItemAsync('token', content.token);
-            return success(content.user);
+            return success(content);
         } catch(e) {
             error(e);
         }
@@ -36,10 +35,14 @@ export default class UserService{
 
         try{
             var content = await response.json();
-            if(content.errors){
-                return error(content.errors);
+            if(content.pwd || content.email){
+                return error(content);
+            }
+            if(content.verifie){
+                return success(content);
             }
             await SecureStore.setItemAsync('token', content.token);
+            await SecureStore.setItemAsync('user', JSON.stringify(content.user));
             return success(content.user);
         } catch(e) {
             return error(e);
@@ -49,19 +52,46 @@ export default class UserService{
 
     async LogOut(success, error){
 
+        publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
+
         var response = await fetch( API_URL + '/v1/users/logout', {
-            ...privateRoute,
+            ...publicRoute,
             method: 'DELETE'
         } );
 
         try{
             var content = await response.json();
-            if( content.message === "Log Out" ) return success();
+            if( content.message === "Log Out" ){
+                await SecureStore.deleteItemAsync('token');
+                await SecureStore.deleteItemAsync('user');
+                return success();
+            }
             return error("Unauthorized");
         } catch(e) {
             return error(e);
         }
         
+    }
+
+    async codeVerification(object, success, error){
+        var response = await fetch( API_URL + '/v1/users/verification', {
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(object)
+        } );
+
+        try{
+            var content = await response.json();
+            if(content.error){
+                return success(content);
+            }
+            await SecureStore.setItemAsync('token', content.token);
+            await SecureStore.setItemAsync('user', JSON.stringify(content.user));
+            return success(content.user);
+        } catch(e) {
+            return error(e);
+        }
+
     }
 
 }

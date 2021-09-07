@@ -39,7 +39,7 @@ export default function RoomCard({ room }) {
 
 const styles = StyleSheet.create({
     container: {
-        width: 320,
+        width: '100%',
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 10,

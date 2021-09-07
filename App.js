@@ -10,40 +10,33 @@ import {
   Keyboard
 } from 'react-native';
 
+import Global from './screens/Global';
+
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-//import NavigateScreens from './screens/personal/NavigateScreens';
-
-//import PaymentPage from './screens/Book/PaymentPage';
-
-//import StripePayment from './screens/Book/StripePayment';
-
-//import Signup from './screens/personal/Signup';
+import First from './screens/FirstConnection';
 
 import 'react-native-gesture-handler';
-import First from './screens/FirstConnection';
-import EmailVerification from './screens/EmailVerification';
-
 
 export default function App() {
 
   return (
     <>
-      <StatusBar translucent barStyle={'default'} />
+      <StatusBar translucent backgroundColor={Global.primary} />
       <SafeAreaView style={[styles.container]}>
         <KeyboardAvoidingView 
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{flex: 1, width: "100%"}}
+          style={{flexGrow: 1, width: "100%" }}
         >
-          <TouchableWithoutFeedback style={{ height: '100%'}} onPress={Keyboard.dismiss}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View 
               onStartShouldSetResponder={() => true}
               style={{
-                flex: 1,
+                flexGrow: 1,
                 marginTop: Platform.OS === "android"? StatusBar.currentHeight : 0
               }}
             >
-                <EmailVerification />
+                <First />
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -54,7 +47,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },

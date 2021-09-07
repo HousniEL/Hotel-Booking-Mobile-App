@@ -20,11 +20,21 @@ import Map from './Map';
 import RoomCard from './RoomCard';
 
 
-export default function MoreDetail({ route, navigation }) {
+export default function MoreDetail({ route, navigation, isSignedIn, globalNavigation }) {
 
     const { hotel } = route.params;
 
     const [heartFilling, setHeartFilling] = useState(false);
+
+    function handleBook(){
+        isSignedIn ? (
+            navigation.push('checkPage', {
+                hotel: hotel
+            })
+        ) : (
+            globalNavigation.push('login')
+        )
+    }
 
     return (
         <>
@@ -34,29 +44,33 @@ export default function MoreDetail({ route, navigation }) {
                 <View style={styles.container} >
                     <View style={{ height: 250, alignItems: "center" }} >
                         <ImageSlider images={hotel.getImages()} />
-                        <TouchableHighlight
-                            style={{ position: 'absolute', top: 5, right: 10 }}
-                            underlayColor={'transparent'}
-                            onPress={() => setHeartFilling(!heartFilling)}
-                        >
-                            <View>
-                                <MaterialCommunityIcons 
-                                    name={ (heartFilling === true) ? "heart" : "heart-outline"} 
-                                    color={ (heartFilling === true ) ? "tomato" : "#FFF"}
-                                    size={30}
-                                />
-                            </View>
-                        </TouchableHighlight>
+                        {
+                            isSignedIn && (
+                                <TouchableHighlight
+                                    style={{ position: 'absolute', top: 5, right: 10 }}
+                                    underlayColor={'transparent'}
+                                    onPress={() => setHeartFilling(!heartFilling)}
+                                >
+                                    <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 4, borderRadius: 30 }}>
+                                        <MaterialCommunityIcons 
+                                            name={ (heartFilling === true) ? "heart" : "heart-outline"} 
+                                            color={ (heartFilling === true ) ? "tomato" : "#FFF"}
+                                            size={25}
+                                        />
+                                    </View>
+                                </TouchableHighlight>
+                            )
+                        }
                         <TouchableHighlight
                             style={{ position: 'absolute', top: 5, left: 5 }}
                             underlayColor={'transparent'}
                             onPress={() => { navigation.pop() }}
                         >
-                            <View>
+                            <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 4, borderRadius: 30 }}>
                                 <MaterialCommunityIcons 
                                     name={"arrow-left"} 
                                     color={"#FFF"}
-                                    size={30}
+                                    size={25}
                                 />
                             </View>
                         </TouchableHighlight>
@@ -181,11 +195,7 @@ export default function MoreDetail({ route, navigation }) {
                                 titleStyle={{
                                     fontSize: 15
                                 }}
-                                onPress={() => {
-                                    navigation.push('checkPage', {
-                                        hotel: hotel
-                                    })
-                                }}
+                                onPress={handleBook}
                             />
                         </View>
                     </View>
@@ -200,7 +210,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         height: '100%',
-        maxWidth: 380,
+        maxWidth: 400,
         alignSelf: 'center',
         backgroundColor: 'white'
     },

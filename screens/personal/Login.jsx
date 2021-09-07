@@ -15,6 +15,8 @@ import Global from '../Global';
 
 import { useAuth } from '../../contexts/AuthContext';
 
+import { Flow } from 'react-native-animated-spinkit';
+
 export default function Login({ navigation, signed }) {
 
     const [pinSecure, setPinSecure] = useState(true);
@@ -25,9 +27,13 @@ export default function Login({ navigation, signed }) {
     const [emailErr, setEmailErr] = useState('');
     const [pwdErr, setPwdErr] = useState('');
 
+    const [ loading, setLoading ] = useState(false);
+
     const { login } = useAuth();
 
     function handleSubmit(){
+        setEmailErr('');
+        setPwdErr('');
         var goodToGo = true
         if(!email){
             goodToGo = false;
@@ -38,11 +44,20 @@ export default function Login({ navigation, signed }) {
             setPwdErr('Required Field');
         }
         if(goodToGo){
-            login({ email, pwd }, () => {
-                signed();
+            setLoading(true);
+            login({ email, pwd }, (res) => {
+                if(res.verifie){
+                    navigation.push('verification', {
+                        email
+                    })
+                } else {
+                    signed();
+                }
+                setLoading(false);
             }, (error) => {
-                if(error.email) setEmailErr(error.email[0]);
-                if(error.pwd) setEmailErr(error.pwd[0]);
+                if(error.email) setEmailErr(error.email);
+                if(error.pwd) setPwdErr(error.pwd);
+                setLoading(false);
             });
         }
     }
@@ -58,7 +73,17 @@ export default function Login({ navigation, signed }) {
     }
     
     return (
+        <>
         <View style={styles.container}>
+            <TouchableHighlight style={styles.arrowStyle} onPress={() => navigation.pop()} >
+                <MaterialCommunityIcons name='arrow-left' color={'white'} size={24}
+                    style={{
+                        padding: 0,
+                        width: 24,
+                        height: 24
+                    }}
+                />
+            </TouchableHighlight>
             <Image 
                 style={styles.image}
                 source={require('../../assets/Images/logo-white.png')}
@@ -136,47 +161,48 @@ export default function Login({ navigation, signed }) {
                 <View style={{marginTop: 30, alignItems: 'center'}}>
                     <Button 
                         title='LOGIN'
+                        containerStyle={styles.buttonstyle}
                         buttonStyle={styles.buttonstyle}
-                        titleStyle={{
-                            fontSize: 14
-                        }}
-
+                        titleStyle={loading ? { display: 'none' } : { fontSize: 14 }}
+                        icon={ loading && <Flow size={30} color='white' /> }
+                        disabled={loading}
+                        iconContainerStyle={!loading ? { display: 'none' } : null}
                         onPress={handleSubmit}
+                        disabledStyle={{ backgroundColor: "#899B9A" }}
                     />
                 </View>
                 <BottomLogin  navigation={navigation} />
             </View>
         </View>
+        </>
     )
 }
 
 function BottomLogin({ navigation }){
     return (
-        <>
-            <View style={{
-                marginTop: 10,
-                flexDirection: 'row'
-            }}>
-                <Text
-                style={{
-                    color: 'white',
-                    borderColor: "black"
+        <View style={{
+            marginTop: 10,
+            flexDirection: 'row'
+        }}>
+            <Text
+            style={{
+                color: 'white',
+                borderColor: "black"
+            }}
+            >
+                Need an account? {' '}
+            </Text>
+            <TouchableHighlight
+                onPress={() => {
+                    navigation.push("signup")
                 }}
-                >
-                    Need an account? {' '}
-                </Text>
-                <TouchableHighlight
-                    onPress={() => {
-                        navigation.push("signup")
-                    }}
-                    underlayColor={'transparent'}
-                >
-                    <Text style={{
-                        color: Global.tabactive
-                    }}>Sign Up</Text>                  
-                </TouchableHighlight>
-            </View>
-        </>
+                underlayColor={'transparent'}
+            >
+                <Text style={{
+                    color: Global.tabactive
+                }}>Sign Up</Text>                  
+            </TouchableHighlight>
+        </View>
     )
 }
 
@@ -211,12 +237,17 @@ function PasswordEyeIcon({ pinSecure, setPinSecure }){
 }
 
 const styles = StyleSheet.create({
+    arrowStyle: {
+        paddingLeft: 20,
+        paddingTop: 20,
+        paddingBottom: '5%'
+    },
     container: {
-        flex: 1,
+        flexGrow: 1,
+        height: '100%',
         padding: 10,
         backgroundColor: Global.primary,
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'center'
     },
     image: {
         width: 35,

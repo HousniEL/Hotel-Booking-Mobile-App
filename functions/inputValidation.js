@@ -33,7 +33,8 @@ export function pwdValidation(pwd){
 
 export function pwdConfirmationValidation(pwd, pwdConfirmation) {
     if(pwd !== "" && pwdConfirmation !== ""){
-        if(pwd != pwdConfirmation) return "Password Different";
+        console.log(pwd, pwdConfirmation);
+        if(pwd !== pwdConfirmation) return "Password Different";
         return '';
     }
 }

@@ -4,7 +4,6 @@ import {
     View,
     Text,
     TouchableHighlight,
-    StatusBar,
     StyleSheet
 } from 'react-native';
 
@@ -23,7 +22,6 @@ export default function DateD({ navigation }) {
 
     return (
         <>
-            <StatusBar backgroundColor={Global.primary}/> 
             <View style={styles.bigContainer}>
                 <Text
                     style={{

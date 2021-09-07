@@ -16,62 +16,60 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Personal({ navigation }) {
     return (
-        <>
-            <View style={styles.container}>
-                <LinearGradient 
-                    style={[ styles.background, { height: Dimensions.get('screen').height }]}
-                    colors={[Global.primary, Global.tabactive]}
-                />
-                <View style={{ marginTop: '30%' }}>
-                    <LogoSide />
-                </View>
-                <View style={styles.buttonsView}>
-                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                        <Button 
-                            title='Log In'
-                            containerStyle={{ width: '48%', height: 50, marginBottom: 20, borderRadius: 5 }}
-                            buttonStyle={[styles.buttonStyle, {                       
-                                borderColor: "white",
-                                borderWidth: 1,
-                                backgroundColor: 'transparent'
-                            }]}
-                            titleStyle={{
-                                color: "white"
-                            }}
-                            onPress={() => {
-                                navigation.push('login')
-                            }}
-                        />
-                        <Button 
-                            title='Sign Up'
-                            containerStyle={{ width: '48%', height: 50, marginBottom: 20 }}
-                            buttonStyle={[styles.buttonStyle, {                       
-                                backgroundColor: 'transparent',
-                            }]}
-                            titleStyle={{
-                                color: "white"
-                            }}
-                            onPress={() => {
-                                navigation.push('signup')
-                            }}
-                        />
-                    </View>
+        <View style={styles.container}>
+            <LinearGradient 
+                style={[ styles.background, { height: Dimensions.get('screen').height }]}
+                colors={[Global.primary, Global.tabactive]}
+            />
+            <View style={{ marginTop: '30%' }}>
+                <LogoSide />
+            </View>
+            <View style={styles.buttonsView}>
+                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
                     <Button 
-                        title='Continue as a guest'
-                        containerStyle={{ width: '100%', height: 50, borderRadius: 5 }}
-                        buttonStyle={[styles.buttonStyle, {                     
-                            backgroundColor: "#555",
+                        title='Log In'
+                        containerStyle={{ width: '48%', height: 50, marginBottom: 20, borderRadius: 5 }}
+                        buttonStyle={[styles.buttonStyle, {                       
+                            borderColor: "white",
+                            borderWidth: 1,
+                            backgroundColor: 'transparent'
                         }]}
                         titleStyle={{
-                            color: 'white'
+                            color: "white"
                         }}
                         onPress={() => {
-                            navigation.push('navigatescreens')
+                            navigation.push('login')
+                        }}
+                    />
+                    <Button 
+                        title='Sign Up'
+                        containerStyle={{ width: '48%', height: 50, marginBottom: 20 }}
+                        buttonStyle={[styles.buttonStyle, {                       
+                            backgroundColor: 'transparent',
+                        }]}
+                        titleStyle={{
+                            color: "white"
+                        }}
+                        onPress={() => {
+                            navigation.push('signup')
                         }}
                     />
                 </View>
+                <Button 
+                    title='Continue as a guest'
+                    containerStyle={{ width: '100%', height: 50, borderRadius: 5 }}
+                    buttonStyle={[styles.buttonStyle, {                     
+                        backgroundColor: "#555",
+                    }]}
+                    titleStyle={{
+                        color: 'white'
+                    }}
+                    onPress={() => {
+                        navigation.push('navigatescreens')
+                    }}
+                />
             </View>
-        </>
+        </View>
     )
 }
 
@@ -84,7 +82,8 @@ const styles = StyleSheet.create({
         top: 0
     },
     container: {
-        flex: 1,
+        flexGrow: 1,
+        height: '100%',
         justifyContent: "center"
     },
     text: {

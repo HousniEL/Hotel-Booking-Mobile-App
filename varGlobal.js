@@ -38,44 +38,48 @@ var doubleDouble = new Hotel_Room_Type({
 })
 
 export const hotel1 = new Hotel({
-    Hotel_Name : "Royal Atlas & Spa",
-    Description : "Lorem ipsum dolor sit amet consectetur Totam dolore ut sequi non reprehenderit, ducimus hic quaerat aliquam, beatae earum quasi exercitationem corrupti aperiam deleniti voluptatum vero, nam iste autem",
-    Country : "Morocco",
-    City : "Agadir",
-    Address : "Baie d'agadir",
-    ZipCode : 40000,
-    Main_Phone_Number : "+212 XXX-XXXXXX",
-    Fax_Number : "",
-    Company_Mail_Address : "ras.hotel@mail.com",
-    Services : '11110101011010',
-    Stars : 4,
-    Rate : 3.5,
-    images : [
-        { url : "https://source.unsplash.com/1024x768/?summer" },
-        { url : "https://source.unsplash.com/1024x768/?fall"},
-        { url : "https://source.unsplash.com/1024x768/?winter"},
-        { url : "https://source.unsplash.com/1024x768/?spring"}
-    ],
-    rooms: [single, double, triple, quad, doubleDouble]
+    hotel: {
+        Hotel_Name : "Royal Atlas & Spa",
+        Description : "Lorem ipsum dolor sit amet consectetur Totam dolore ut sequi non reprehenderit, ducimus hic quaerat aliquam, beatae earum quasi exercitationem corrupti aperiam deleniti voluptatum vero, nam iste autem",
+        Country : "Morocco",
+        City : "Agadir",
+        Address : "Baie d'agadir",
+        ZipCode : 40000,
+        Main_Phone_Number : "+212 XXX-XXXXXX",
+        Fax_Number : "",
+        Company_Mail_Address : "ras.hotel@mail.com",
+        Services : '11110101011010',
+        Stars : 4,
+        Rate : 3.5,
+        images : [
+            { url : "https://source.unsplash.com/1024x768/?summer" },
+            { url : "https://source.unsplash.com/1024x768/?fall"},
+            { url : "https://source.unsplash.com/1024x768/?winter"},
+            { url : "https://source.unsplash.com/1024x768/?spring"}
+        ],
+        rooms: [single, double, triple, quad, doubleDouble]
+    }
 })
 export const hotel2 = new Hotel({
-    Hotel_Name : "Le Meridien N'Fis",
-    Description : "Lorem ipsum dolor sit amet consectetur Totam dolore ut sequi non reprehenderit, ducimus hic quaerat aliquam, beatae earum quasi exercitationem corrupti aperiam deleniti voluptatum vero, nam iste autem",
-    Country : "Morocco",
-    City : "Marrakech",
-    Address : "Le Meridien N'Fis",
-    ZipCode : 40000,
-    Main_Phone_Number : "+212 XXX-XXXXXX",
-    Fax_Number : "",
-    Company_Mail_Address : "mnf.hotel@mail.com",
-    Services : '11110101011010',
-    Stars : 5,
-    Rate : 4,
-    images : [
-        { url : "https://source.unsplash.com/1024x768/?city" },
-        { url : "https://source.unsplash.com/1024x768/?hotel"},
-    ],
-    rooms: [single, double, triple, quad, doubleDouble]
+    hotel : {
+        Hotel_Name : "Le Meridien N'Fis",
+        Description : "Lorem ipsum dolor sit amet consectetur Totam dolore ut sequi non reprehenderit, ducimus hic quaerat aliquam, beatae earum quasi exercitationem corrupti aperiam deleniti voluptatum vero, nam iste autem",
+        Country : "Morocco",
+        City : "Marrakech",
+        Address : "Le Meridien N'Fis",
+        ZipCode : 40000,
+        Main_Phone_Number : "+212 XXX-XXXXXX",
+        Fax_Number : "",
+        Company_Mail_Address : "mnf.hotel@mail.com",
+        Services : '11110101011010',
+        Stars : 5,
+        Rate : 4,
+        images : [
+            { url : "https://source.unsplash.com/1024x768/?city" },
+            { url : "https://source.unsplash.com/1024x768/?hotel"},
+        ],
+        rooms: [single, double, triple, quad, doubleDouble]
+    }
 })
 
 export const hotels = [hotel1, hotel2];

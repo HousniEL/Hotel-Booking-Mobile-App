@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
     View,
     Text,
     Image,
     StyleSheet,
-    ActivityIndicator,
-    StatusBar,
     Dimensions
 } from 'react-native';
 
@@ -15,21 +13,37 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import Global from './Global';
 
+import { useAuth } from '../contexts/AuthContext';
+
+import { Flow } from 'react-native-animated-spinkit';
+
 export default function Welcome({ handleSignIn }) {
 
+    const { setCurrentUser } = useAuth();
+
+/*     SecureStore.setItemAsync('token', '3|4876d6q4sd6qsd46qs').then( val => console.log(val) );
+    SecureStore.setItemAsync('user', JSON.stringify({
+        First_Name: 'Housni',
+        Last_Name: 'EL AICH',
+        Email: 'mail@mail.com',
+        Phone_Number: '06458555541'
+    })).then(val => console.log(val)) */
+    
     async function check(){
         const token = await SecureStore.getItemAsync('token');
-        if(token){
+        const user = await SecureStore.getItemAsync('user');
+        if(token && user){
+            setCurrentUser(JSON.parse(user));
             handleSignIn(true);
         } else {
+            setCurrentUser();
             handleSignIn(false);
         }
     }
     setTimeout(check, 3000);
 
     return (
-        <>
-            <StatusBar backgroundColor={Global.primary} />
+        <View style={{ flexGrow: 1, height: '100%' }}>
             <LinearGradient 
                 style={[ styles.background, { height: Dimensions.get('screen').height }]}
                 colors={[Global.primary, Global.secondary]}
@@ -47,10 +61,10 @@ export default function Welcome({ handleSignIn }) {
                     Hotels Reservation
                 </Text>
                 <View style={{ position: 'absolute', bottom: 100 }}>
-                    <ActivityIndicator size={'large'} color={'white'} />
+                    <Flow size={35} color='white' />
                 </View>
             </View>
-        </>
+        </View>
     )
 }
 
@@ -63,7 +77,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: Global.primary,
         alignItems: 'center'
     },
     title: {

@@ -6,11 +6,12 @@ import {
     Image,
     ScrollView,
     TouchableHighlight,
-    StyleSheet,
-    Alert
+    StyleSheet
 } from 'react-native';
 
 import { Input, Button } from 'react-native-elements';
+
+import { Flow } from 'react-native-animated-spinkit';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Global from '../Global';
@@ -26,7 +27,7 @@ import {
 
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function Signup({ navigation, signed }) {
+export default function Signup({ navigation }) {
 
     const [pwdSecure, setPwdSecure] = useState(true);
     const [pwdCSecure, setPwdCSecure] = useState(true);
@@ -44,6 +45,8 @@ export default function Signup({ navigation, signed }) {
     const [emailErr, setemailErr] = useState();
     const [pwdErr, setpwdErr] = useState();
     const [pwdConfirmationErr, setpwdConfirmationErr] = useState();
+
+    const [ loading, setLoading ] = useState(false);
 
     const { signup } = useAuth();
 
@@ -71,27 +74,31 @@ export default function Signup({ navigation, signed }) {
             } else {
                 eval("set" + key + "Err('')");
                 if( key === "pwd" ){
-                    setpwdErr(pwdValidation(value));
-                    if(pwdErr !== '') goodToGo = false;
-                    pwdSet = value.value;
+                    var err = pwdValidation(value);
+                    setpwdErr(err);
+                    if(err !== '') goodToGo = false;
+                    pwdSet = value;
                 }
                 if( key === "pwdConfirmation" ){
-                    setpwdConfirmationErr(pwdConfirmationValidation(pwdSet, value));
-                    if(pwdConfirmationErr !== '') goodToGo = false;
+                    var err = pwdConfirmationValidation(pwdSet, value);
+                    setpwdConfirmationErr(err);
+                    if(err !== '') goodToGo = false;
                 }
                 if( key === "email" ){
-                    setemailErr(emailValidation(value));
-                    if(emailErr !== '') goodToGo = false;
+                    var err = emailValidation(value);
+                    setemailErr(err);
+                    if(err !== '') goodToGo = false;
                 }
                 if( key === "phoneNumber" ){
-                    setphoneNumberErr(phoneNumberValidation(value));
-                    if(phoneNumberErr !== '') goodToGo = false;
+                    var err = phoneNumberValidation(value);
+                    setphoneNumberErr(err);
+                    if(err !== '') goodToGo = false;
                 }
             }
         }
 
         if(goodToGo){
-            Alert.alert('Sign up', 'Complete');            
+            setLoading(true);    
             var formData = {};
             for(const [ key, value ] of form){
                 if(key !== "pwdConfirmation" ){
@@ -100,17 +107,42 @@ export default function Signup({ navigation, signed }) {
                     formData["pwd_confirmation"] = value;
                 }
             }
-            signup(formData, () => {
-                
+            signup(formData, (res) => {
+               if(res === "success"){
+                navigation.push('verification', {
+                    email
+                })
+               }
+               setLoading(false);
             }, (error) => {
-                console.log(error);
+                if(!error.message){
+                    for(let err in error){
+                        eval("set" + err + "Err('" + errors[err][0] + "')");
+                    }
+                } else {
+                    console.log(error);
+                }
+                setLoading(false);
             });
         }
 
     }
 
     return (
-        <ScrollView containerStyle={{ flex: 1 }} style={{ backgroundColor: Global.bg1, flex: 1 }}>
+        <ScrollView 
+            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', height: '100%' }}
+            style={{ backgroundColor: Global.primary }}
+        >
+            <>
+            <TouchableHighlight style={styles.arrowStyle} underlayColor={'transparent'} onPress={() => navigation.pop()} >
+                <MaterialCommunityIcons name='arrow-left' color={'white'} size={24}
+                    style={{
+                        padding: 0,
+                        width: 24,
+                        height: 24
+                    }}
+                />
+            </TouchableHighlight>
             <View  style={[styles.container]}>
             <Image 
                 style={styles.image}
@@ -197,19 +229,20 @@ export default function Signup({ navigation, signed }) {
                 <View style={{marginTop: 10, alignItems: 'center', width: '100%'}}>
                     <Button 
                         title='SIGN UP'
-                        containerStyle={{
-                            width: '100%'
-                        }}
+                        containerStyle={styles.buttonstyle}
                         buttonStyle={styles.buttonstyle}
-                        titleStyle={{
-                            fontSize: 14
-                        }}
+                        titleStyle={loading ? { display: 'none' } : { fontSize: 14 }}
+                        icon={ loading && <Flow size={30} color='white' /> }
+                        disabled={loading}
+                        iconContainerStyle={!loading ? { display: 'none' } : null}
                         onPress={handleSubmit}
+                        disabledStyle={{ backgroundColor: "#899B9A" }}
                     />
                     <BottomSign navigation={navigation} />
                 </View>
             </View>
             </View>
+            </>
         </ScrollView>
     )
 }
@@ -256,7 +289,7 @@ function BottomSign({ navigation }){
             </Text>
             <TouchableHighlight
                 onPress={() => {
-                    navigation.pop();
+                    navigation.push('login');
                 }}
                 underlayColor={'transparent'}
             >
@@ -299,11 +332,14 @@ function PasswordEyeIcon({ pinSecure, setPinSecure }){
 }
 
 const styles = StyleSheet.create({
+    arrowStyle: {
+        paddingLeft: 20,
+        paddingTop: 20,
+        paddingBottom: '5%'
+    },
     container: {
-        flex: 1,
-        height: '100%',
+        flexGrow: 1,
         padding: 10,
-        backgroundColor: Global.bg1,
         alignItems: 'center',
         justifyContent: 'center'
     },

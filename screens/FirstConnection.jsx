@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { View } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -8,6 +10,9 @@ import Personal from './personal/Personal';
 import Login from './personal/Login';
 import Signup from './personal/Signup';
 import NavigateScreens from './personal/NavigateScreens';
+import EmailVerification from './EmailVerification';
+
+import * as SecureStore from 'expo-secure-store';
 
 import { AuthProvider } from '../contexts/AuthContext';
 
@@ -20,8 +25,18 @@ export default function First(){
     const [ isSignedIn, setIsSignedIn ] = useState();
 
     function handleSignIn(bool){
-        setFirstTime(false);
         setIsSignedIn(bool);
+        setFirstTime(false);
+    }
+
+    async function logout(){
+        try {
+            await SecureStore.deleteItemAsync('token');
+            await SecureStore.deleteItemAsync('user');
+            setFirstTime(true);
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 
     function signed(){
@@ -29,9 +44,10 @@ export default function First(){
     }
     
     return (
-        <AuthProvider>
-            <NavigationContainer independent={true}>
-                <Root.Navigator screenOptions={{ headerShown: false }} >
+        <View style={{ flexGrow: 1, height: '100%' }}>
+            <AuthProvider>
+                <NavigationContainer independent={true}  >
+                    <Root.Navigator screenOptions={{ headerShown: false }}>
                     {
                         firstTime && (
                             <Root.Screen  name="first">
@@ -43,7 +59,9 @@ export default function First(){
                         !firstTime && (
                             isSignedIn ? (
                                 <>
-                                    <Root.Screen  name="navigatescreens" component={NavigateScreens} />
+                                    <Root.Screen  name="navigatescreens">
+                                        { (props) => <NavigateScreens {...props} isSignedIn={isSignedIn} logout={logout} /> }
+                                    </Root.Screen>
                                 </>
                             ) : (
                                 <>
@@ -51,16 +69,20 @@ export default function First(){
                                     <Root.Screen  name="login">
                                         { (props) => <Login {...props} signed={signed} /> }
                                     </Root.Screen>
-                                    <Root.Screen  name="signup">
-                                        { (props) => <Signup {...props} signed={signed} /> }
+                                    <Root.Screen  name="signup"  component={Signup} />
+                                    <Root.Screen  name="verification">
+                                        { (props) => <EmailVerification {...props} signed={signed} /> }
                                     </Root.Screen>
-                                    <Root.Screen  name="navigatescreens" component={NavigateScreens} />
+                                    <Root.Screen  name="navigatescreens">
+                                        { (props) => <NavigateScreens { ...props } isSignedIn={isSignedIn} /> }
+                                    </Root.Screen>
                                 </>
                             )
                         )
                     }
-                </Root.Navigator>
-            </NavigationContainer>
-        </AuthProvider>
+                    </Root.Navigator>
+                </NavigationContainer>
+            </AuthProvider>
+        </View>
     )
 }

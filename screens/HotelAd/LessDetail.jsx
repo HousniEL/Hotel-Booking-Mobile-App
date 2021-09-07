@@ -22,7 +22,7 @@ import Hotel from '../../models/Hotel';
 
 import Rate from './Rate';
 
-export default function LessDetail({ hotel, navigation }) {
+export default function LessDetail({ hotel, navigation, isSignedIn }) {
 
     const [heartFilling, setHeartFilling] = useState(false);
 
@@ -75,19 +75,23 @@ export default function LessDetail({ hotel, navigation }) {
                         style={styles.imageStyle}
                         source={{ uri : hotel.image.img1 }}
                     />
-                    <TouchableHighlight
-                        style={{ position: 'absolute', top: 5, right: 5 }}
-                        underlayColor={'transparent'}
-                        onPress={() => setHeartFilling(!heartFilling)}
-                    >
-                        <View style={{ backgroundColor: 'rgba(0,0,0,.5)', padding: 5, borderRadius: 30 }}>
-                            <MaterialCommunityIcons 
-                                name={ (heartFilling === true) ? "heart" : "heart-outline"} 
-                                color={ (heartFilling === true ) ? "tomato" : '#ddd'}
-                                size={30}
-                            />
-                        </View>
-                    </TouchableHighlight>
+                    {
+                        isSignedIn && (
+                            <TouchableHighlight
+                                style={{ position: 'absolute', top: 5, right: 5 }}
+                                underlayColor={'transparent'}
+                                onPress={() => setHeartFilling(!heartFilling)}
+                            >
+                                <View style={{ backgroundColor: 'rgba(0,0,0,.5)', padding: 5, borderRadius: 30 }}>
+                                    <MaterialCommunityIcons 
+                                        name={ (heartFilling === true) ? "heart" : "heart-outline"} 
+                                        color={ (heartFilling === true ) ? "tomato" : '#ddd'}
+                                        size={23}
+                                    />
+                                </View>
+                            </TouchableHighlight>       
+                        )
+                    }
                     <View style={{ position: "absolute", bottom: 5, left: 5 }}>
                         <Rate value={hotel.Rate}/>
                     </View>
@@ -194,10 +198,10 @@ const styles = StyleSheet.create({
     },
     priceHeader: {
         color: '#999',
-        fontSize: 12,
+        fontSize: 11,
         alignSelf: 'flex-end',
         textAlign: 'right',
-        width: 100,
+        width: 80,
         marginBottom: 10
     },
     price: {

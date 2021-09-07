@@ -4,179 +4,151 @@ import {
     StyleSheet,
     View,
     Text,
-    TouchableOpacity,
-    StatusBar,
-    ScrollView
+    TouchableHighlight
 } from 'react-native';
 
+import { Divider } from 'react-native-elements';
 
 import Global from '../Global';
 
 import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-import { Input, CheckBox, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
+import CreditCardService from '../../services/CreditCardService';
 
-export default function PaymentPage() {
+import CreditCardCover from '../CreditCardCover';
+
+export default function PaymentPage({ route, navigation }) {
 
     //const { hotel } = route.params;
 
+    const { startDay, endDay, table } = route.params;
+
+    const [ cardInfo, setCardInfo ] = useState();
+    const [ total, setTotal ] = useState();
+
+    useEffect(() => {
+        const creditCardService = new CreditCardService();
+        creditCardService.getLessCreditCardInfo({ 'user_id' : 1 }, (response) => {
+            if(!response.message){
+                setCardInfo(response);
+            } else {
+                setCardInfo();
+            }
+        }, (error) => {
+            console.log(error);
+        });
+        var totalIni = 0;
+        table.map(val => {
+            totalIni += Number(val.price);
+        })
+        setTotal(totalIni.toFixed(2));
+    }, [])
+
     return (
         <>
-            <StatusBar backgroundColor={Global.primary} barStyle={'default'} />
+        {
 
-            <View style={{flex: 1}}>
-                    <View style={styles.greenArea}>
-                    </View>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
-                        <MaterialCommunityIcons name='arrow-left' style={{
-                            marginLeft: 10
-                        }} size={25} color='white' />
-                    </TouchableOpacity>
-                    <Text style={styles.mainHeader}>
-                        Payment
-                    </Text>
-                </View>
-                <View style={styles.mainContainer}>
-                    <View>
-                        <Text
+            cardInfo && 
+            (
+            <View style={{ flexGrow: 1, height: '100%' }}>
+                <View style={styles.bigContainer}>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            fontWeight: '700',
+                            color: '#FFF',
+                            position: 'absolute',
+                            width: '100%',
+                            textAlign: 'center'
+                        }}
+                    >Payment</Text>
+                    <TouchableHighlight
+                        underlayColor={'transparent'}
+                        style={{
+                            paddingVertical: 15,
+                            paddingLeft: 10,
+                            height: '100%',
+                            width: '10%',
+                        }}
+                        onPress={() => navigation.pop()}
+                    >
+                        <MaterialCommunityIcons name='arrow-left' color={'white'} size={24}
                             style={{
+                                padding: 0,
+                                width: 24,
+                                height: 24
+                            }}
+                        />
+                    </TouchableHighlight>
+                </View>
+                <View style={{ width: '90%', maxWidth: 400, alignSelf: 'center', alignItems: 'center' }}>
+                    <CreditCardCover cardInfo={cardInfo} />
+
+                    <Divider orientation={'vertical'} color='black' style={ styles.divider } />
+
+                    {
+                        table && table.map( (val, idx) => (
+                            <View style={ styles.productHolder } key={idx.toString()}>
+                                <Text style={styles.product}>{ val.type }</Text>
+                                <Text style={styles.price}>{ '$ ' + val.price }</Text>
+                            </View>
+                        ) )
+                    }
+
+                    <Divider orientation={'vertical'} color='black' style={ [ styles.divider, { marginTop: 20 } ] } />
+
+                    <View style={[ styles.productHolder, { marginTop: 0 } ]}>
+                        <Text style={[styles.product, { fontSize: 20 }]}>Total</Text>
+                        <Text style={[styles.price, { fontWeight: '700' }]}>$ { total }</Text>
+                    </View>
+
+                </View>
+                <View style={{ flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 15 }}>
+                    <View style={{ width: '90%', maxWidth: 400, flexDirection: 'row', justifyContent: 'space-around' }} >   
+                        <Button 
+                            title='Pay at the institution'
+                            buttonStyle={{
+                                backgroundColor: "#555",
+                                borderRadius: 25,
+                                padding: 10
+                            }}
+                            titleStyle={{
+                                fontSize: 14,
                                 fontWeight: '700',
-                                marginBottom: 0,
-                                color: '#888',
-                                fontSize: 15
+                                paddingVertical: 3,
                             }}
-                        >Choose Payment Method</Text>
-                        <CheckBox 
-                            title='Credit/Debit Card'
-                            iconRight
-                            checkedIcon='dot-circle-o'
-                            checkedColor={Global.primary}
-                            uncheckedIcon='circle-o'
-                            checked={true}
-                            containerStyle={styles.radioContainer}
-                            textStyle= {styles.radioText}
-                        />
-                        <CheckBox 
-                            title='Paypal'
-                            iconRight
-                            checkedIcon='dot-circle-o'
-                            uncheckedIcon='circle-o'
-                            containerStyle={styles.radioContainer}
-                            textStyle= {styles.radioText}
-                        />
-                    </View>
-                    <View style={{ marginTop: 10 }}>
-                        <Text
-                            style={styles.formElement}
-                        >Card Number</Text>
-                        <Input 
-                            placeholder='XXXX XXXX XXXX XXXX'
-                            keyboardType={'numeric'}
-                            textContentType={'creditCardNumber'}
-                            inputContainerStyle={styles.inputcontainerstyle}
-                            inputStyle= {styles.inputstyle}
                             containerStyle={{
-                                paddingHorizontal: 0
+                                marginTop: 10,
+                                width: '48%',
+                                alignSelf: 'center'
                             }}
-                        />
-                        <Text
-                            style={styles.formElement}
-                        >Name on Card</Text>
-                        <Input 
-                            placeholder='Name'
-                            keyboardType={'default'}
-                            textContentType={'name'}
-                            inputContainerStyle={styles.inputcontainerstyle}
-                            inputStyle= {styles.inputstyle}
+                        /> 
+                        <Button 
+                            title='Pay Now'
+                            buttonStyle={{
+                                backgroundColor: Global.buttonbg1,
+                                borderRadius: 25,
+                                padding: 10
+                            }}
+                            titleStyle={{
+                                fontSize: 14,
+                                fontWeight: '700',
+                                paddingVertical: 3,
+                            }}
                             containerStyle={{
-                                paddingHorizontal: 0
+                                marginTop: 10,
+                                width: '48%',
+                                alignSelf: 'center'
                             }}
-                        />
-                        <View
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between'
-                            }}
-                        >
-                            <View style={{ flexBasis: '35%' }}>
-                                <Text
-                                    style={styles.formElement}
-                                >CVV Code</Text>
-                                <Input 
-                                    placeholder='***'
-                                    keyboardType={'numeric'}
-                                    textContentType={'password'}
-                                    inputContainerStyle={styles.inputcontainerstyle}
-                                    inputStyle= {styles.inputstyle}
-                                    containerStyle={{
-                                        paddingHorizontal: 0
-                                    }}
-                                />
-                            </View>
-                            <View style={{ flexBasis: '60%' }}>
-                                <Text
-                                    style={styles.formElement}
-                                >Expiration Date</Text>
-                                <Input 
-                                    placeholder='MM/YY'
-                                    keyboardType={'numeric'}
-                                    inputContainerStyle={styles.inputcontainerstyle}
-                                    inputStyle= {styles.inputstyle}
-                                    containerStyle={{
-                                        paddingHorizontal: 0
-                                    }}
-                                />
-                            </View>
-                        </View>
+                        /> 
                     </View>
-                </View>
-            <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 15 }}>
-                <Text style={{ alignSelf: 'center', color: '#999', fontWeight: '700', fontSize: 18 }}>
-                    $2500.00
-                </Text>
-                <View style={{ width: '100%', maxWidth: 400, flexDirection: 'row', justifyContent: 'space-around' }} >
-                    
-                    <Button 
-                        title='Pay at the institution'
-                        buttonStyle={{
-                            backgroundColor: "#555",
-                            borderRadius: 25,
-                            padding: 10
-                        }}
-                        titleStyle={{
-                            fontSize: 14,
-                            fontWeight: '700',
-                            paddingVertical: 3,
-                        }}
-                        containerStyle={{
-                            marginTop: 10,
-                            width: 160,
-                            alignSelf: 'center'
-                        }}
-                    /> 
-                    <Button 
-                        title='Confirm'
-                        buttonStyle={{
-                            backgroundColor: Global.buttonbg1,
-                            borderRadius: 25,
-                            padding: 10
-                        }}
-                        titleStyle={{
-                            fontSize: 14,
-                            fontWeight: '700',
-                            paddingVertical: 3,
-                        }}
-                        containerStyle={{
-                            marginTop: 10,
-                            width: 160,
-                            alignSelf: 'center'
-                        }}
-                    /> 
                 </View>
             </View>
+            )
+        }
         </>
     )
 
@@ -184,18 +156,18 @@ export default function PaymentPage() {
 
 
 const styles = StyleSheet.create({
-    greenArea : {
+    bigContainer: {
         width: '100%',
-        height: 150,
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: Global.primary,
-        position: 'absolute'
+        marginBottom: 20
     },
     mainHeader : {
         alignSelf: 'center',
         fontSize: 18,
         marginBottom: 0,
         fontWeight: '700',
-        marginVertical: 5,
         color: 'white'
     },
     mainContainer: {
@@ -205,40 +177,28 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         elevation: 20,
         borderRadius: 5,
-        marginTop: -45,
         padding: 15
     },
-    radioContainer: {
-        padding: 0,
-        paddingVertical: 8,
-        backgroundColor: '#EEE',
-        marginLeft: 0,
-        width: '100%'
+    divider: {
+        marginTop: 30, 
+        marginBottom: 15, 
+        marginHorizontal: 10, 
+        alignSelf: 'center' 
     },
-    radioText : {
-        marginRight: 'auto',
-        marginLeft: 8,
-        color: '#777'
+    productHolder: {
+        width: '85%', 
+        marginTop: 5, 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center'
     },
-    inputcontainerstyle: {
-        backgroundColor: "white",
-        borderColor: '#DDD',
-        borderWidth: 2,
-        borderBottomWidth: 2,
-        borderRadius: 5,
-        height: 0,
-        paddingVertical: 18
+    product: {
+        fontSize: 17,
+        fontWeight: '700',
+        color: '#333'
     },
-    inputstyle : {
+    price: {
         fontSize: 15,
-        paddingHorizontal: 5,
-        paddingTop: 0,
-        color: 'black'
-    },
-    formElement : {
-        marginBottom: 2,
-        color: '#999',
-        fontWeight: "700",
-        fontSize: 12
+        color: '#444'
     }
 })
