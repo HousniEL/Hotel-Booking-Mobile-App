@@ -2,8 +2,6 @@ import React, { useContext, useState } from 'react';
 
 import UserService from '../services/UserService';
 
-import * as SecureStore from 'expo-secure-store';
-
 const AuthContext = React.createContext();
 
 export function useAuth(){

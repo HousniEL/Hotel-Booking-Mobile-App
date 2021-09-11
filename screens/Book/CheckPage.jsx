@@ -12,8 +12,9 @@ import {
 import { Button } from 'react-native-elements';
 
 import { useRooms } from '../HomeScreens/contexts/RoomsContext';
-
 import { useDate } from '../HomeScreens/contexts/DateContext';
+import { useBookingInfo } from '../../contexts/BookingInfoContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 import Global from '../Global';
 
@@ -29,6 +30,8 @@ export default function CheckPage({ route, navigation }) {
 
     var { startDay, endDay } = useDate();
     var { rooms, addRoom, deleteRoom, appliedRooms, resetRooms } = useRooms();
+    var { Book } = useBookingInfo();
+    var { currentUser } = useAuth();
 
     const [ table, setTable ] = useState([]);
 
@@ -83,14 +86,21 @@ export default function CheckPage({ route, navigation }) {
     }
 
     function handleNext(){
-        console.log('start : ' + new Date(startDay.day.timestamp) );
-        console.log('end : ' + new Date(endDay.day.timestamp) );
-        console.log(table);
-        navigation.push('paymentPage', {
-            startDay,
-            endDay,
-            table
-        })
+        var setToGo = true;
+        if( !startDay ) setToGo = false;
+        if( !endDay ) setToGo = false;
+        table.map( value => {
+            if( !value.type || !value.price ) setToGo = false;
+        } );
+        if( setToGo ){
+            Book({
+                Hotel_ID : hotel.id,
+                User_ID : currentUser.id,
+                Date_From : new Date(startDay.day.timestamp),
+                Date_To : new Date(endDay.day.timestamp),
+                table : table
+            })
+        }
     }
 
     return (

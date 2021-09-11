@@ -32,7 +32,7 @@ function ProfileInfo({ navigation, showHeader }) {
 
     useEffect(() => {
         setCardInfo();
-        /*setLooking(true);
+        setLooking(true);
         var creditCardService = new CreditCardService();
         creditCardService.getLessCreditCardInfo({ 'user_id' : currentUser.id }, (response) => {
             if(!response.message){
@@ -42,7 +42,7 @@ function ProfileInfo({ navigation, showHeader }) {
             }
             setLooking(false);
         }, (error) => {
-        });*/
+        });
     }, [refresh]);
 
     return (

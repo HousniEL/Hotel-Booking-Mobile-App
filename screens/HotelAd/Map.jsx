@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import { GOOGLE_API_KEY } from '@env';
+//import { GOOGLE_API_KEY } from '@env';
 
-import { Dimensions } from 'react-native';
+//import { Dimensions } from 'react-native';
 
-import Geocoder from 'react-native-geocoding';
+//import Geocoder from 'react-native-geocoding';
 
-Geocoder.init(GOOGLE_API_KEY);
+//Geocoder.init(GOOGLE_API_KEY);
 
 import MapView, { Marker, ProviderPropType  } from 'react-native-maps';
 
@@ -16,16 +16,29 @@ function randomColor() {
       .padStart(6, 0)}`;
 }
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+//const width = Dimensions.get('window').width;
+//const height = Dimensions.get('window').height;
 
 export default function Map({ provider, address }) {
 
-    const [region, setRegion] = useState();
+    const [region, setRegion] = useState({
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
 
-    const [marker, setMarker] = useState();
+    const [marker, setMarker] = useState({
+        coordinate: { latitude: 37.78825, longitude: -122.4324 },
+        color: randomColor()
+    });
 
-    useEffect(() => {
+
+    function onRegionChange(region) {
+        setRegion(region);
+    }
+
+    /*useEffect(() => {
         Geocoder.from(address)
             .then(json => {
                 var location = json.results[0].geometry.location;
@@ -41,7 +54,7 @@ export default function Map({ provider, address }) {
                 })
             })
             .catch(error => console.warn(error));
-    }, []);
+    }, []);*/
 
     return (
         <>
@@ -51,7 +64,8 @@ export default function Map({ provider, address }) {
                 <MapView
                     provider={provider}
                     style={{height: 200}}
-                    initialRegion={region}
+                    region={region}
+                    onRegionChange={onRegionChange}
                 >
                     <Marker
                         coordinate={marker.coordinate}
@@ -68,3 +82,16 @@ export default function Map({ provider, address }) {
 Map.prototype = {
     provide: ProviderPropType
 }
+
+/*
+    <MapView
+        provider={provider}
+        style={{height: 200}}
+        initialRegion={region}
+    >
+        <Marker
+            coordinate={marker.coordinate}
+            pinColor={marker.color}
+        />
+    </MapView>
+*/

@@ -2,7 +2,7 @@ import { API_URL } from '../Config';
 
 import Hotel_Room_Type from '../models/Hotel_Room_Type';
 
-import { publicRoute, privateRoute } from './DefaultOptions';
+import { publicRoute } from './DefaultOptions';
 
 export default class HotelService {
 

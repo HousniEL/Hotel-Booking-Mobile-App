@@ -75,7 +75,7 @@ export default function Login({ navigation, signed }) {
     return (
         <>
         <View style={styles.container}>
-            <TouchableHighlight style={styles.arrowStyle} onPress={() => navigation.pop()} >
+            <TouchableHighlight style={styles.arrowStyle} underlayColor={'transparent'} onPress={() => navigation.pop()} >
                 <MaterialCommunityIcons name='arrow-left' color={'white'} size={24}
                     style={{
                         padding: 0,
@@ -238,16 +238,15 @@ function PasswordEyeIcon({ pinSecure, setPinSecure }){
 
 const styles = StyleSheet.create({
     arrowStyle: {
-        paddingLeft: 20,
-        paddingTop: 20,
+        paddingLeft: 10,
+        paddingTop: 10,
         paddingBottom: '5%'
     },
     container: {
         flexGrow: 1,
         height: '100%',
         padding: 10,
-        backgroundColor: Global.primary,
-        alignItems: 'center'
+        backgroundColor: Global.primary
     },
     image: {
         width: 35,

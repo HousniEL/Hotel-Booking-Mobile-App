@@ -35,6 +35,7 @@ import { FilterProvider, useFilter } from '../HomeScreens/contexts/FilterContext
 import { RoomsProvider, useRooms } from '../HomeScreens/contexts/RoomsContext';
 import { DateProvider, useDate } from '../HomeScreens/contexts/DateContext';
 import { SortProvider, useSort } from '../HomeScreens/contexts/SortByContext';
+import { BookingProvider } from '../../contexts/BookingInfoContext';
 
 import HotelService from '../../services/HotelService';
 
@@ -93,13 +94,12 @@ function HomeMain({ navigation, isSignedIn }) {
             valueApp.push({ persons : getTotalPsPerRoom(i) });
         }
         setNewValue('rooms', valueApp);
-        /*const hotelService = new HotelService();
+        const hotelService = new HotelService();
         hotelService.getLessDetailHotels(JSON.stringify(generalFilter), (response) => {
-            console.log(response);
-            //if(response) setHotels(response);
+            if(response) setHotels(response);
         }, (error) => {
             console.log("Error ------------" + error);
-        });*/
+        });
         if(!isEmpty(generalFilter['search'])){
             setSearchValue(generalFilter['search'].value);
         }
@@ -290,43 +290,45 @@ function HomeMain({ navigation, isSignedIn }) {
     )
 }
 
-export default function Home({ isSignedIn, navigation }){
+export default function Home({ isSignedIn, globalNavigation }){
 
     return (
         <>
-            <GeneralFilterProvider>
-                <FilterProvider>
-                    <RoomsProvider>
-                        <DateProvider>
-                            <SortProvider>
-                                <Stack.Navigator
-                                    initialRouteName="homeMain"
-                                    screenOptions={{ headerShown: false }}
-                                >
-                                    <Stack.Screen name="homeMain">
-                                        { props => <HomeMain {...props} isSignedIn={isSignedIn} /> }    
-                                    </Stack.Screen>
-                                    <Stack.Screen name="filter" component={Filter} />
-                                    <Stack.Screen name="date" component={DateD} />
-                                    <Stack.Screen name="rooms" component={Rooms} />
-                                    <Stack.Screen name="hotelInfo">
-                                        { props => <MoreDetail {...props} isSignedIn={isSignedIn} globalNavigation={navigation} /> }
-                                    </Stack.Screen>
-                                    <Stack.Screen name="roomInfo" component={RoomType} />
-                                    {
-                                        isSignedIn && (
-                                            <>
-                                                <Stack.Screen name="checkPage" component={CheckPage} />
-                                                <Stack.Screen name="paymentPage" component={PaymentPage} />
-                                            </>
-                                        )
-                                    }
-                                </Stack.Navigator>
-                            </SortProvider>
-                        </DateProvider>
-                    </RoomsProvider>
-                </FilterProvider>
-            </GeneralFilterProvider>
+            <BookingProvider>
+                <GeneralFilterProvider>
+                    <FilterProvider>
+                        <RoomsProvider>
+                            <DateProvider>
+                                <SortProvider>
+                                    <Stack.Navigator
+                                        initialRouteName="homeMain"
+                                        screenOptions={{ headerShown: false }}
+                                    >
+                                        <Stack.Screen name="homeMain">
+                                            { props => <HomeMain {...props} isSignedIn={isSignedIn} /> }    
+                                        </Stack.Screen>
+                                        <Stack.Screen name="filter" component={Filter} />
+                                        <Stack.Screen name="date" component={DateD} />
+                                        <Stack.Screen name="rooms" component={Rooms} />
+                                        <Stack.Screen name="hotelInfo">
+                                            { props => <MoreDetail {...props} isSignedIn={isSignedIn} globalNavigation={globalNavigation} /> }
+                                        </Stack.Screen>
+                                        <Stack.Screen name="roomInfo" component={RoomType} />
+                                        {
+                                            isSignedIn && (
+                                                <>
+                                                    <Stack.Screen name="checkPage" component={CheckPage} />
+                                                    <Stack.Screen name="paymentPage" component={PaymentPage} />
+                                                </>
+                                            )
+                                        }
+                                    </Stack.Navigator>
+                                </SortProvider>
+                            </DateProvider>
+                        </RoomsProvider>
+                    </FilterProvider>
+                </GeneralFilterProvider>
+            </BookingProvider>
         </>
     )
 }

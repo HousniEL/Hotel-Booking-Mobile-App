@@ -7,24 +7,21 @@ import {
     TouchableHighlight
 } from 'react-native';
 
-import { Divider } from 'react-native-elements';
+import { Button, Divider } from 'react-native-elements';
 
 import Global from '../Global';
 
 import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
-import { Button } from 'react-native-elements';
-
 import CreditCardService from '../../services/CreditCardService';
 
 import CreditCardCover from '../CreditCardCover';
 
+import { useBookingInfo } from '../../contexts/BookingInfoContext';
+
 export default function PaymentPage({ route, navigation }) {
-
-    //const { hotel } = route.params;
-
-    const { startDay, endDay, table } = route.params;
+    
+    const { bookInfo } = useBookingInfo();
 
     const [ cardInfo, setCardInfo ] = useState();
     const [ total, setTotal ] = useState();
@@ -41,7 +38,7 @@ export default function PaymentPage({ route, navigation }) {
             console.log(error);
         });
         var totalIni = 0;
-        table.map(val => {
+        bookInfo.table.map(val => {
             totalIni += Number(val.price);
         })
         setTotal(totalIni.toFixed(2));
@@ -90,7 +87,7 @@ export default function PaymentPage({ route, navigation }) {
                     <Divider orientation={'vertical'} color='black' style={ styles.divider } />
 
                     {
-                        table && table.map( (val, idx) => (
+                        bookInfo.table && bookInfo.table.map( (val, idx) => (
                             <View style={ styles.productHolder } key={idx.toString()}>
                                 <Text style={styles.product}>{ val.type }</Text>
                                 <Text style={styles.price}>{ '$ ' + val.price }</Text>

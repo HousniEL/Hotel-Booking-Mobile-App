@@ -50,7 +50,7 @@ export default function NavigateScreens({ logout, isSignedIn, navigation }) {
                             ),
                         }}
                     >
-                        { props => <Home {...props} isSignedIn={isSignedIn} /> }
+                        { props => <Home {...props} isSignedIn={isSignedIn} globalNavigation={navigation} /> }
                     </Drawer.Screen>
                     {
                         isSignedIn && (
