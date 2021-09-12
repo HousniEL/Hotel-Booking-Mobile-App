@@ -20,14 +20,6 @@ import { Flow } from 'react-native-animated-spinkit';
 export default function Welcome({ handleSignIn }) {
 
     const { setCurrentUser } = useAuth();
-
-/*     SecureStore.setItemAsync('token', '3|4876d6q4sd6qsd46qs').then( val => console.log(val) );
-    SecureStore.setItemAsync('user', JSON.stringify({
-        First_Name: 'Housni',
-        Last_Name: 'EL AICH',
-        Email: 'mail@mail.com',
-        Phone_Number: '06458555541'
-    })).then(val => console.log(val)) */
     
     async function check(){
         const token = await SecureStore.getItemAsync('token');

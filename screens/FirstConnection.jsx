@@ -12,11 +12,11 @@ import Signup from './personal/Signup';
 import NavigateScreens from './personal/NavigateScreens';
 import EmailVerification from './EmailVerification';
 
-import * as SecureStore from 'expo-secure-store';
-
 import { AuthProvider } from '../contexts/AuthContext';
 
 const Root = createStackNavigator();
+
+import UserService from '../services/UserService';
 
 export default function First(){
     
@@ -29,14 +29,13 @@ export default function First(){
         setFirstTime(false);
     }
 
-    async function logout(){
-        try {
-            await SecureStore.deleteItemAsync('token');
-            await SecureStore.deleteItemAsync('user');
+    function logout(){
+        const userService = new UserService();
+        userService.LogOut(() => {
             setFirstTime(true);
-        } catch (error) {
-            console.log(error.message);
-        }
+        }, (err) => {
+            console.log(err);
+        })
     }
 
     function signed(){

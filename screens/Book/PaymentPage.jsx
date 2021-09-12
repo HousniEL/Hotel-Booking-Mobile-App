@@ -14,12 +14,14 @@ import Global from '../Global';
 import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import CreditCardService from '../../services/CreditCardService';
+import BookingService from '../../services/BookingService';
 
 import CreditCardCover from '../CreditCardCover';
 
 import { useBookingInfo } from '../../contexts/BookingInfoContext';
+import Loading from '../Loading';
 
-export default function PaymentPage({ route, navigation }) {
+export default function PaymentPage({ navigation, drawerNavigation }) {
     
     const { bookInfo } = useBookingInfo();
 
@@ -28,11 +30,11 @@ export default function PaymentPage({ route, navigation }) {
 
     useEffect(() => {
         const creditCardService = new CreditCardService();
-        creditCardService.getLessCreditCardInfo({ 'user_id' : 1 }, (response) => {
+        creditCardService.getLessCreditCardInfo({ 'user_id' : bookInfo.User_ID }, (response) => {
             if(!response.message){
                 setCardInfo(response);
             } else {
-                setCardInfo();
+                setCardInfo('nothing');
             }
         }, (error) => {
             console.log(error);
@@ -44,12 +46,36 @@ export default function PaymentPage({ route, navigation }) {
         setTotal(totalIni.toFixed(2));
     }, [])
 
+
+    function handlePayNow(){
+        const bookingService = new BookingService();
+        bookingService.addBooking(bookInfo, true, total, (ID) => {
+            var setOfRooms = [];
+            for(let room of bookInfo.table){
+                setOfRooms.push({
+                    Hotel_Room_Type_ID : room.id,
+                    Pers_count : room['room']['adults'] + room['room']['childrens']
+                })
+            }
+            bookingService.addRoomsBooked(ID, setOfRooms, () => {
+                console.log('success');
+            }, (err) => {
+                console.log('Rs : ', err);
+            })
+        }, (err) => {
+            console.log('G : ', err);
+        });
+    }
+    
+    function handlePayLater(){
+
+    }
+
     return (
         <>
         {
 
-            cardInfo && 
-            (
+            cardInfo ? (
             <View style={{ flexGrow: 1, height: '100%' }}>
                 <View style={styles.bigContainer}>
                     <Text
@@ -82,73 +108,79 @@ export default function PaymentPage({ route, navigation }) {
                     </TouchableHighlight>
                 </View>
                 <View style={{ width: '90%', maxWidth: 400, alignSelf: 'center', alignItems: 'center' }}>
-                    <CreditCardCover cardInfo={cardInfo} />
+                    {
+                        ( cardInfo !== 'nothing' ) ? (
+                            <CreditCardCover cardInfo={cardInfo} />
+                        ) : (
+                            <AddACreditCard drawerNavigation={drawerNavigation} />
+                        )
+                    }
 
                     <Divider orientation={'vertical'} color='black' style={ styles.divider } />
 
                     {
                         bookInfo.table && bookInfo.table.map( (val, idx) => (
                             <View style={ styles.productHolder } key={idx.toString()}>
-                                <Text style={styles.product}>{ val.type }</Text>
+                                <View>
+                                    <Text style={styles.product}>{ val.type }</Text>
+                                    <Text style={{ color: 'gray' }}>
+                                        { val.room.adults + ' adults, ' + val.room.childrens + ' childrens.'  }
+                                    </Text>
+                                </View>
                                 <Text style={styles.price}>{ '$ ' + val.price }</Text>
                             </View>
                         ) )
                     }
 
-                    <Divider orientation={'vertical'} color='black' style={ [ styles.divider, { marginTop: 20 } ] } />
-
-                    <View style={[ styles.productHolder, { marginTop: 0 } ]}>
-                        <Text style={[styles.product, { fontSize: 20 }]}>Total</Text>
-                        <Text style={[styles.price, { fontWeight: '700' }]}>$ { total }</Text>
-                    </View>
-
                 </View>
                 <View style={{ flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 15 }}>
-                    <View style={{ width: '90%', maxWidth: 400, flexDirection: 'row', justifyContent: 'space-around' }} >   
-                        <Button 
-                            title='Pay at the institution'
-                            buttonStyle={{
-                                backgroundColor: "#555",
-                                borderRadius: 25,
-                                padding: 10
-                            }}
-                            titleStyle={{
-                                fontSize: 14,
-                                fontWeight: '700',
-                                paddingVertical: 3,
-                            }}
-                            containerStyle={{
-                                marginTop: 10,
-                                width: '48%',
-                                alignSelf: 'center'
-                            }}
-                        /> 
-                        <Button 
-                            title='Pay Now'
-                            buttonStyle={{
-                                backgroundColor: Global.buttonbg1,
-                                borderRadius: 25,
-                                padding: 10
-                            }}
-                            titleStyle={{
-                                fontSize: 14,
-                                fontWeight: '700',
-                                paddingVertical: 3,
-                            }}
-                            containerStyle={{
-                                marginTop: 10,
-                                width: '48%',
-                                alignSelf: 'center'
-                            }}
-                        /> 
+                    <View style={{ width: '90%', maxWidth: 400, alignItems: 'center' }}>
+
+                        <Divider orientation={'vertical'} color='black' style={ [ styles.divider, { marginTop: 20 } ] } />
+
+                        <View style={[ styles.productHolder, { marginTop: 17, marginBottom: 10, alignItems: 'center' } ]}>
+                            <Text style={[styles.product, { fontWeight: '700', fontSize: 20 }]}>Total</Text>
+                            <Text style={[styles.price, { fontWeight: '700', fontSize: 17 }]}>$ { total }</Text>
+                        </View>
+                        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-around' }} >   
+                            <Button 
+                                title='Pay at the institution'
+                                buttonStyle={styles.payLaterButtonStyle}
+                                titleStyle={styles.payLaterTitleStyle}
+                                containerStyle={styles.payLaterContainerStyle}
+                                onPress={ handlePayLater }
+                            /> 
+                            <Button 
+                                title='Pay Now'
+                                buttonStyle={ styles.payNowButtonStyle }
+                                titleStyle={ styles.payNowTitleStyle }
+                                containerStyle={ styles.payNowContainerStyle }
+                                onPress={ handlePayNow }
+                            /> 
+                        </View>
                     </View>
                 </View>
             </View>
+            ) : (
+                <Loading />
             )
         }
         </>
     )
 
+}
+
+function AddACreditCard({ drawerNavigation }){
+    return (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', marginTop: 15, marginBottom: 5 }}>
+            <Text style={{ fontSize: 18 }}>There is no payment method</Text>
+            <TouchableHighlight underlayColor={'transparent'} onPress={() => drawerNavigation.jumpTo('Profile')} >
+                <MaterialCommunityIcons
+                    name={'plus'} color={Global.primary} size={28} style={{ width: 28, height: 28 }}
+                />
+            </TouchableHighlight>
+        </View>
+    )
 }
 
 
@@ -178,24 +210,53 @@ const styles = StyleSheet.create({
     },
     divider: {
         marginTop: 30, 
-        marginBottom: 15, 
+        marginBottom: 0, 
         marginHorizontal: 10, 
         alignSelf: 'center' 
     },
     productHolder: {
         width: '85%', 
-        marginTop: 5, 
+        marginTop: 20, 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
-        alignItems: 'center'
+        alignItems: 'flex-start'
     },
     product: {
-        fontSize: 17,
-        fontWeight: '700',
-        color: '#333'
+        fontSize: 18,
+        color: '#000'
     },
     price: {
-        fontSize: 15,
-        color: '#444'
+        fontSize: 16,
+        color: '#000'
+    },
+    payLaterButtonStyle: {
+        backgroundColor: "#555",
+        borderRadius: 25,
+        padding: 10
+    },
+    payLaterTitleStyle: {
+        fontSize: 14,
+        fontWeight: '700',
+        paddingVertical: 3,
+    },
+    payLaterContainerStyle: {
+        marginTop: 10,
+        width: '47%',
+        alignSelf: 'center'
+    },
+    payNowButtonStyle : {
+        backgroundColor: Global.buttonbg1,
+        borderRadius: 25,
+        padding: 10
+    },
+    payNowTitleStyle : {
+        fontSize: 14,
+        fontWeight: '700',
+        paddingVertical: 3,
+    },
+    payNowContainerStyle: {
+        marginTop: 10,
+        width: '47%',
+        alignSelf: 'center'
     }
 })

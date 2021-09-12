@@ -38,6 +38,7 @@ import { SortProvider, useSort } from '../HomeScreens/contexts/SortByContext';
 import { BookingProvider } from '../../contexts/BookingInfoContext';
 
 import HotelService from '../../services/HotelService';
+import AddCreditCard from './AddCreditCard';
 
 const Stack = createStackNavigator();
 
@@ -290,16 +291,16 @@ function HomeMain({ navigation, isSignedIn }) {
     )
 }
 
-export default function Home({ isSignedIn, globalNavigation }){
+export default function Home({ isSignedIn, globalNavigation, navigation }){
 
     return (
         <>
-            <BookingProvider>
-                <GeneralFilterProvider>
-                    <FilterProvider>
-                        <RoomsProvider>
-                            <DateProvider>
-                                <SortProvider>
+            <GeneralFilterProvider>
+                <FilterProvider>
+                    <RoomsProvider>
+                        <DateProvider>
+                            <SortProvider>
+                                <BookingProvider>
                                     <Stack.Navigator
                                         initialRouteName="homeMain"
                                         screenOptions={{ headerShown: false }}
@@ -318,17 +319,19 @@ export default function Home({ isSignedIn, globalNavigation }){
                                             isSignedIn && (
                                                 <>
                                                     <Stack.Screen name="checkPage" component={CheckPage} />
-                                                    <Stack.Screen name="paymentPage" component={PaymentPage} />
+                                                    <Stack.Screen name="paymentPage">
+                                                        { props => <PaymentPage {...props} drawerNavigation={navigation} /> }
+                                                    </Stack.Screen>
                                                 </>
                                             )
                                         }
                                     </Stack.Navigator>
-                                </SortProvider>
-                            </DateProvider>
-                        </RoomsProvider>
-                    </FilterProvider>
-                </GeneralFilterProvider>
-            </BookingProvider>
+                                </BookingProvider>
+                            </SortProvider>
+                        </DateProvider>
+                    </RoomsProvider>
+                </FilterProvider>
+            </GeneralFilterProvider>
         </>
     )
 }

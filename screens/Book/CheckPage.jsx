@@ -26,16 +26,18 @@ import CustomSelect from './CustomSelect';
 
 export default function CheckPage({ route, navigation }) {
 
-    const { hotel } = route.params;
+    const { hotel, hotelID } = route.params;
 
     var { startDay, endDay } = useDate();
     var { rooms, addRoom, deleteRoom, appliedRooms, resetRooms } = useRooms();
-    var { Book } = useBookingInfo();
+    var { Book, bookInfo } = useBookingInfo();
     var { currentUser } = useAuth();
 
     const [ table, setTable ] = useState([]);
 
     const [ reload, setReload ] = useState();
+
+    const [ message, setMessage ] = useState();
 
     function reloadPage(){
         setReload(Math.random());
@@ -45,17 +47,22 @@ export default function CheckPage({ route, navigation }) {
     useEffect(() => {
         const ff = function(){
             resetRooms();
-            var tableCopy = [];
-            for(let i = 1; i < appliedRooms.length + 1; i++){
-                let object = {
-                    number: i,
-                    room: appliedRooms[i - 1],
-                    type: null,
-                    price: null
+            if( !bookInfo ){
+                var tableCopy = [];
+                for(let i = 1; i < appliedRooms.length + 1; i++){
+                    let object = {
+                        number: i,
+                        room: appliedRooms[i - 1],
+                        id: null,
+                        type: null,
+                        price: null
+                    }
+                    tableCopy.push(object);
                 }
-                tableCopy.push(object);
+                setTable(tableCopy);
+            } else {
+               setTable(bookInfo.table);
             }
-            setTable(tableCopy);
         }
 
         ff();
@@ -76,6 +83,7 @@ export default function CheckPage({ route, navigation }) {
             let object = {
                 number: rooms.length,
                 room: appliedRooms[rooms.length - 1],
+                id: null,
                 type: null,
                 price: null
             }
@@ -86,20 +94,35 @@ export default function CheckPage({ route, navigation }) {
     }
 
     function handleNext(){
+        setMessage();
         var setToGo = true;
-        if( !startDay ) setToGo = false;
-        if( !endDay ) setToGo = false;
-        table.map( value => {
-            if( !value.type || !value.price ) setToGo = false;
-        } );
+        if( JSON.stringify(startDay) === "{}" ) {
+            setToGo = false;
+            setMessage('Set your check in date!');
+        }
+        if( setToGo && JSON.stringify(endDay) === "{}" ) {
+            setToGo = false;
+            setMessage('Set your check out date!');
+        }
+        if( setToGo ){
+            table.map( value => {
+                if( !value.type || !value.price ) {
+                    setToGo = false;
+                    setMessage('Select a room!');
+                }
+            } );
+        }
         if( setToGo ){
             Book({
-                Hotel_ID : hotel.id,
+                Hotel_ID : hotelID,
                 User_ID : currentUser.id,
                 Date_From : new Date(startDay.day.timestamp),
                 Date_To : new Date(endDay.day.timestamp),
                 table : table
             })
+            
+            navigation.push("paymentPage");
+            
         }
     }
 
@@ -139,11 +162,20 @@ export default function CheckPage({ route, navigation }) {
                                     </View>
                                 </View>
                                     {   
-                                        table.map( (value, idx) => (
+                                        table && table.map( (value, idx) => (
                                             <RoomDetail key={idx} number={value.number} table={table} setTable={setTable} hotel={hotel} />
                                         ) )
                                     }
                             </View>
+                            {
+                                message && (
+                                    <View style={styles.warning}>
+                                        <Text style={{ color: 'tomato', marginLeft: 10, fontSize: 14 }}>
+                                            { message }
+                                        </Text>
+                                    </View>
+                                )
+                            }
                             <View style={{flex: 1, alignSelf: 'center', justifyContent: 'flex-end', width: 175}}>
                                 <Button 
                                     title='Next'
@@ -214,6 +246,7 @@ function RoomDetail({ number, hotel, table, setTable }){
         var tableCpy = table.map( roomInfo => {
             if(roomInfo.number === number){
                 var roomInfoCpy = roomInfo;
+                roomInfoCpy['id'] = type.id;
                 roomInfoCpy['type'] = type.type;
                 roomInfoCpy['price'] = type.price;
                 return roomInfoCpy;
@@ -277,5 +310,14 @@ const styles = StyleSheet.create({
         fontSize: 17,
         paddingBottom: 5,
         paddingRight: 5
+    },
+    warning: {
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        borderRadius: 5,
+        backgroundColor: '#FCE2E3',
+        marginBottom: 20,
+        alignItems: 'center'
     }
 })

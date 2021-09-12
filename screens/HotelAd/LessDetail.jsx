@@ -51,7 +51,8 @@ export default function LessDetail({ hotel, navigation, isSignedIn }) {
             var hotelInfo = new Hotel(HInfo);
             hotelInfo.setRooms(roomsType);
             navigation.push('hotelInfo', {
-                hotel: hotelInfo
+                hotel: hotelInfo,
+                hotelID: id
             })
         }, (error) => {
             Alert.alert("Alert", error.message);

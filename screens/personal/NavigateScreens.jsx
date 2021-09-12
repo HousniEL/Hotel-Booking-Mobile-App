@@ -30,7 +30,7 @@ export default function NavigateScreens({ logout, isSignedIn, navigation }) {
         <View style={{ flexGrow: 1, height: '100%' }}>
         <NavigationContainer independent={true} >
             <Drawer.Navigator
-                drawerContent={ props => <SideBar {...props} isSignedIn={isSignedIn} logout={logout} navigation={navigation} /> }
+                drawerContent={ props => <SideBar {...props} isSignedIn={isSignedIn} logout={logout} supNavigation={navigation} /> }
                 screenOptions={{
                     drawerType: isLargeScreen ? 'permanent' : 'back',
                     overlayColor: 'transparent',
@@ -52,42 +52,43 @@ export default function NavigateScreens({ logout, isSignedIn, navigation }) {
                     >
                         { props => <Home {...props} isSignedIn={isSignedIn} globalNavigation={navigation} /> }
                     </Drawer.Screen>
-                    {
-                        isSignedIn && (
-                            <>        
-                                <Drawer.Screen 
-                                    name='Reservation'
-                                    component={Reservation}
-                                    options={{
-                                        drawerIcon : ({ color, size }) => (
-                                            <MaterialCommunityIcons name='calendar' color={color} size={size} />
-                                        )
-                                    }}
-                                    
-                                />
-                                <Drawer.Screen 
-                                    name='Favorite'
-                                    component={Favorite}
-                                    options={{
-                                        drawerIcon : ({ color, size }) => (
-                                            <MaterialCommunityIcons name='heart' color={color} size={size} />
-                                        )
-                                    }}
-                                />
-                                <Drawer.Screen 
-                                    name='Profile'
-                                    options={{
-                                        headerShown: showProfileHeader,
-                                        drawerIcon : ({ color, size }) => (
-                                            <MaterialCommunityIcons name='account' color={color} size={size} />
-                                        )
-                                    }}
-                                >
-                                    { (props) => <Profile {...props} showHeader={setShowProfileHeader} /> }
-                                </Drawer.Screen>
-                            </>
-                        )
-                    }
+                        {
+                            isSignedIn && (
+                                <>
+
+                                    <Drawer.Screen 
+                                        name='Reservation'
+                                        component={Reservation}
+                                        options={{
+                                            drawerIcon : ({ color, size }) => (
+                                                <MaterialCommunityIcons name='calendar' color={color} size={size} />
+                                            )
+                                        }}
+                                        
+                                    />
+                                    <Drawer.Screen 
+                                        name='Favorite'
+                                        component={Favorite}
+                                        options={{
+                                            drawerIcon : ({ color, size }) => (
+                                                <MaterialCommunityIcons name='heart' color={color} size={size} />
+                                            )
+                                        }}
+                                    />
+                                    <Drawer.Screen 
+                                        name='Profile'
+                                        options={{
+                                            headerShown: showProfileHeader,
+                                            drawerIcon : ({ color, size }) => (
+                                                <MaterialCommunityIcons name='account' color={color} size={size} />
+                                            )
+                                        }}
+                                    >
+                                        { (props) => <Profile {...props} showHeader={setShowProfileHeader} /> }
+                                    </Drawer.Screen>
+                                </>
+                            )
+                        }
                 </Drawer.Group>
             </Drawer.Navigator>
         </NavigationContainer>

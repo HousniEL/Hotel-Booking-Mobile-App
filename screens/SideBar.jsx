@@ -13,7 +13,7 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-export default function SideBar({ isSignedIn, logout, navigation,  ...props }) {
+export default function SideBar({ isSignedIn, logout, supNavigation,  ...props }) {
 
     return (
         <>
@@ -49,7 +49,7 @@ export default function SideBar({ isSignedIn, logout, navigation,  ...props }) {
                     ) : (
                         <TouchableWithoutFeedback
                             onPress={ () => {  
-                                navigation.push('signup');
+                                supNavigation.push('signup');
                             } }
                             style={{ borderRadius: 5 }}
                         >

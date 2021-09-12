@@ -8,7 +8,7 @@ export function useBookingInfo(){
 
 export function BookingProvider({ children }){
 
-    const [bookInfo, setBookInfo] = useState({});
+    const [bookInfo, setBookInfo] = useState();
 
     function Book(object){
         setBookInfo(object);

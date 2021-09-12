@@ -22,14 +22,15 @@ import RoomCard from './RoomCard';
 
 export default function MoreDetail({ route, navigation, isSignedIn, globalNavigation }) {
 
-    const { hotel } = route.params;
+    const { hotel, hotelID } = route.params;
 
     const [heartFilling, setHeartFilling] = useState(false);
 
     function handleBook(){
         isSignedIn ? (
             navigation.push('checkPage', {
-                hotel: hotel
+                hotel: hotel,
+                hotelID: hotelID
             })
         ) : (
             globalNavigation.push('login')

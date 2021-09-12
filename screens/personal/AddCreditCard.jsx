@@ -101,7 +101,7 @@ export default function AddCreditCard({ navigation, showHeader }) {
                         width: '100%',
                         textAlign: 'center'
                     }}
-                >Enter Your Paymant Information</Text>
+                >Enter Your Payment Information</Text>
                 <TouchableHighlight
                     underlayColor={'transparent'}
                     style={{
