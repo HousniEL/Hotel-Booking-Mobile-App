@@ -67,7 +67,7 @@ export default class Hotel{
     getImages(){
         var imgs = [];
         for(let i = 1; i < this.images.length + 1; i++){
-            imgs.push({ url : this.images[i-1]['img'+i] });
+            imgs.push({ uri : this.images[i-1]['img'+i] });
         }
         return imgs;
     }

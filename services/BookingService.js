@@ -16,7 +16,7 @@ export default class BookingService {
             Date_From : bookingInfo.Date_From,
             Date_To : bookingInfo.Date_To,
             Status : 'In Progress',
-            Room_Count : bookingInfo.table.length + 1,
+            Rooms_Count : bookingInfo.table.length,
             Online_Payment : onlinePayment,
             Total_Amount : totalAmount
         }
@@ -52,8 +52,8 @@ export default class BookingService {
         });
 
         try{
-            await response.json();
-            success(' ');
+            const detail = await response.json();
+            success(detail);
         } catch(err) {
             error(err);
         }

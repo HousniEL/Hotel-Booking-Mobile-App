@@ -116,8 +116,8 @@ export default function CheckPage({ route, navigation }) {
             Book({
                 Hotel_ID : hotelID,
                 User_ID : currentUser.id,
-                Date_From : new Date(startDay.day.timestamp),
-                Date_To : new Date(endDay.day.timestamp),
+                Date_From : startDay.day.year + '/' + startDay.day.month + '/' + startDay.day.day,
+                Date_To : endDay.day.year + '/' + endDay.day.month + '/' + endDay.day.day,
                 table : table
             })
             

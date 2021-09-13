@@ -36,7 +36,10 @@ export default function NavigateScreens({ logout, isSignedIn, navigation }) {
                     overlayColor: 'transparent',
                     drawerActiveBackgroundColor: '#5CA19A',
                     drawerActiveTintColor: 'white',
-                    drawerType: 'front'
+                    drawerType: 'front',
+                    drawerStyle: {
+                        elevation: 10
+                    }
                 }}
                 
             >

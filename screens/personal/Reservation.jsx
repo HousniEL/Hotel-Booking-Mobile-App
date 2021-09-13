@@ -1,15 +1,25 @@
 import React from 'react';
 import {
-    View,
-    Text
+    ScrollView,
+    View
 } from 'react-native';
+import LessDetailResInfo from '../Reservation/LessDetailResInfo';
+
+import * as SecureStore from 'expo-secure-store';
 
 export default function Reservation() {
+
+    SecureStore.getItemAsync('token').then( val => console.log(val) )
+
     return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{fontSize: 30, fontWeight: '700'}}>
-                Reservation
-            </Text>
-        </View>
+        <ScrollView style={{ flexGrow: 1 }}>
+            <View style={{ flex: 1 }}>
+                {
+                    [1, 2, 3, 4, 5].map( val => (
+                        <LessDetailResInfo key={val} />
+                    ) )
+                }
+            </View>
+        </ScrollView>
     )
 }

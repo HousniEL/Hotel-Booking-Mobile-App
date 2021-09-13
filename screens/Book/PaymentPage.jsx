@@ -21,12 +21,17 @@ import CreditCardCover from '../CreditCardCover';
 import { useBookingInfo } from '../../contexts/BookingInfoContext';
 import Loading from '../Loading';
 
+import { Flow } from 'react-native-animated-spinkit';
+import Success from './Success';
+
 export default function PaymentPage({ navigation, drawerNavigation }) {
     
     const { bookInfo } = useBookingInfo();
 
     const [ cardInfo, setCardInfo ] = useState();
     const [ total, setTotal ] = useState();
+    const [ wait, setWait ] = useState(false);
+    const [ done, setDone ] = useState(false);
 
     useEffect(() => {
         const creditCardService = new CreditCardService();
@@ -48,6 +53,7 @@ export default function PaymentPage({ navigation, drawerNavigation }) {
 
 
     function handlePayNow(){
+        setWait(true);
         const bookingService = new BookingService();
         bookingService.addBooking(bookInfo, true, total, (ID) => {
             var setOfRooms = [];
@@ -58,12 +64,15 @@ export default function PaymentPage({ navigation, drawerNavigation }) {
                 })
             }
             bookingService.addRoomsBooked(ID, setOfRooms, () => {
-                console.log('success');
+                setDone(true);
+                setWait(false);
             }, (err) => {
                 console.log('Rs : ', err);
+                setWait(false);
             })
         }, (err) => {
             console.log('G : ', err);
+            setWait(false);
         });
     }
     
@@ -74,7 +83,9 @@ export default function PaymentPage({ navigation, drawerNavigation }) {
     return (
         <>
         {
-
+            done === true && <Success success={done} setSuccess={setDone} navigation={navigation} />
+        }
+        {
             cardInfo ? (
             <View style={{ flexGrow: 1, height: '100%' }}>
                 <View style={styles.bigContainer}>
@@ -149,13 +160,19 @@ export default function PaymentPage({ navigation, drawerNavigation }) {
                                 titleStyle={styles.payLaterTitleStyle}
                                 containerStyle={styles.payLaterContainerStyle}
                                 onPress={ handlePayLater }
+                                disabled={wait}
+                                disabledStyle={ wait && { backgroundColor: "#555" }}
+                                disabledTitleStyle={ wait && { color: 'white' }}
                             /> 
                             <Button 
                                 title='Pay Now'
                                 buttonStyle={ styles.payNowButtonStyle }
-                                titleStyle={ styles.payNowTitleStyle }
+                                titleStyle={ !wait ? styles.payNowTitleStyle : { display: 'none' } }
                                 containerStyle={ styles.payNowContainerStyle }
+                                icon={ wait && <Flow size={30} color='white' /> }
                                 onPress={ handlePayNow }
+                                disabled={wait}
+                                disabledStyle={{ backgroundColor: "#899B9A" }}
                             /> 
                         </View>
                     </View>
@@ -232,7 +249,7 @@ const styles = StyleSheet.create({
     payLaterButtonStyle: {
         backgroundColor: "#555",
         borderRadius: 25,
-        padding: 10
+        height: 45
     },
     payLaterTitleStyle: {
         fontSize: 14,
@@ -247,7 +264,7 @@ const styles = StyleSheet.create({
     payNowButtonStyle : {
         backgroundColor: Global.buttonbg1,
         borderRadius: 25,
-        padding: 10
+        height: 45
     },
     payNowTitleStyle : {
         fontSize: 14,
