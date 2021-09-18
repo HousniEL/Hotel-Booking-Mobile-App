@@ -21,6 +21,7 @@ const Drawer = createDrawerNavigator();
 export default function NavigateScreens({ logout, isSignedIn, navigation }) {
 
     const [ showProfileHeader, setShowProfileHeader ] = useState(true);
+    const [ showReservationsHeader, setShowReservationsHeader ] = useState(true);
 
     const dimensions = useWindowDimensions();
 
@@ -60,17 +61,19 @@ export default function NavigateScreens({ logout, isSignedIn, navigation }) {
                                 <>
 
                                     <Drawer.Screen 
-                                        name='Reservation'
-                                        component={Reservation}
+                                        name='Reservations'
                                         options={{
+                                            headerShown: showReservationsHeader,
                                             drawerIcon : ({ color, size }) => (
                                                 <MaterialCommunityIcons name='calendar' color={color} size={size} />
                                             )
                                         }}
                                         
-                                    />
+                                    >
+                                        { props => <Reservation {...props} showHeader={setShowReservationsHeader} /> }
+                                    </Drawer.Screen>
                                     <Drawer.Screen 
-                                        name='Favorite'
+                                        name='Favorites'
                                         component={Favorite}
                                         options={{
                                             drawerIcon : ({ color, size }) => (

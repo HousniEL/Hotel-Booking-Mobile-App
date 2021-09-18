@@ -59,4 +59,47 @@ export default class BookingService {
         }
 
     }
+
+    async getBookings(userID, success, error){
+        publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;
+
+        const response = await fetch(API_URL + '/v1/book/allReservations', {
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(userID)
+        })
+
+        try {
+            const detail = await response.json();
+            if( detail.message ){
+                return error(detail.message);
+            }
+            return success(detail);
+        } catch (e) {
+            return error(e);
+        }
+
+    }
+    
+    async getBookingInfo(object, success, error){
+        publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;
+
+        const response = await fetch(API_URL + '/v1/book/allInfo', {
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(object)
+        })
+
+        try {
+            const detail = await response.json();
+            if( detail.message ){
+                return error(detail.message);
+            }
+            return success(detail);
+        } catch (e) {
+            return error(e);
+        }
+
+    }
+
 }

@@ -52,7 +52,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                                     underlayColor={'transparent'}
                                     onPress={() => setHeartFilling(!heartFilling)}
                                 >
-                                    <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 4, borderRadius: 30 }}>
+                                    <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 8, borderRadius: 30 }}>
                                         <MaterialCommunityIcons 
                                             name={ (heartFilling === true) ? "heart" : "heart-outline"} 
                                             color={ (heartFilling === true ) ? "tomato" : "#FFF"}
@@ -67,7 +67,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                             underlayColor={'transparent'}
                             onPress={() => { navigation.pop() }}
                         >
-                            <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 4, borderRadius: 30 }}>
+                            <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 8, borderRadius: 30 }}>
                                 <MaterialCommunityIcons 
                                     name={"arrow-left"} 
                                     color={"#FFF"}

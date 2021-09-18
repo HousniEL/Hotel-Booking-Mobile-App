@@ -5,29 +5,18 @@ import { StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Global from '../Global';
 
-const resInfo = {
-    hotelName : 'Hotel Namedsfd sfsddsf dsfsd',
-    Date_From : '2021-09-15',
-    Date_To : '2021-09-20',
-    numRooms : 2,
-    numPers : 3,
-    status: 'In Progress'
-}
-
 const status = new Map([
     ['In Progress', { color: 'orange', icon: 'clock-outline' }],
     ['Accepted', { color: 'green', icon: 'check-bold' }],
     ['Rejected', { color: 'red', icon: 'close-thick' }]
 ])
 
-export default function LessDetailResInfo() {
-
-
+export default function LessDetailResInfo({ resInfo }) {
 
     return (
         <View style={ styles.container }>
             <View style={[ styles.sectionContainer, { justifyContent: 'space-between' } ]}>
-                <Text style={ styles.hotelName }>{ resInfo.hotelName }</Text>
+                <Text style={ styles.hotelName }>{ resInfo.Hotel_Name }</Text>
             </View>
             <View style={ styles.sectionContainer }>
                 <Text style={ styles.sectionTitle }>Check-in : </Text>
@@ -43,11 +32,11 @@ export default function LessDetailResInfo() {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={ styles.sectionTitle } >
-                    { resInfo.numPers } guests, { resInfo.numRooms } rooms.
+                    { resInfo.Pers_Count } guests, { resInfo.Rooms_Count } rooms.
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <MaterialCommunityIcons name={status.get(resInfo.status).icon} size={15} color={status.get(resInfo.status).color} style={{ marginRight: 5 }} />
-                    <Text style={{ color: status.get(resInfo.status).color, fontSize: 15, fontWeight: 'bold' }}>{ resInfo.status }</Text>    
+                    <MaterialCommunityIcons name={status.get(resInfo.Status).icon} size={15} color={status.get(resInfo.Status).color} style={{ marginRight: 5 }} />
+                    <Text style={{ color: status.get(resInfo.Status).color, fontSize: 15, fontWeight: 'bold' }}>{ resInfo.Status }</Text>    
                 </View>
             </View>
         </View>
@@ -69,7 +58,7 @@ const styles = StyleSheet.create({
         fontSize: 19,
         fontWeight: '700',
         color: Global.black,
-        marginBottom: 10,
+        marginBottom: 5,
         maxWidth: '100%'
     },
     sectionContainer: {

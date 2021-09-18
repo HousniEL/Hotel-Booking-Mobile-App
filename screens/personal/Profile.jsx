@@ -52,20 +52,26 @@ function ProfileInfo({ navigation, showHeader }) {
                 <Loading />
             ) : (
                 <View style={{flex: 1, width: '90%', maxWidth: 400, alignSelf: 'center', paddingTop: '10%'}}>
-                    <Text style={styles.mainTitle}>Personal Info</Text>
-                    <View style={styles.singleContainer}>
-                        <Text style={styles.miniTitle}>Full Name</Text>
-                        <Text style={styles.value}>{ currentUser['First_Name'] + ' ' + currentUser['Last_Name'] }</Text>
+                    <View style={{ backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 15, paddingVertical: 10 }}>
+                        <Text style={styles.mainTitle}>My Account</Text>
+                        <View style={styles.singleContainer}>
+                            <Text style={styles.miniTitle}>First Name</Text>
+                            <Text style={styles.value}>{ currentUser['First_Name'] }</Text>
+                        </View>
+                        <View style={styles.singleContainer}>
+                            <Text style={styles.miniTitle}>Last Name</Text>
+                            <Text style={styles.value}>{ currentUser['Last_Name'] }</Text>
+                        </View>
+                        <View style={styles.singleContainer}>
+                            <Text style={styles.miniTitle}>Email</Text>
+                            <Text style={styles.value}>{ currentUser['Email'] }</Text>
+                        </View>
+                        <View style={styles.lastSingleContainer}>
+                            <Text style={styles.miniTitle}>Phone Number</Text>
+                            <Text style={styles.value}>{ currentUser['Phone_Number'] }</Text>
+                        </View>
                     </View>
-                    <View style={styles.singleContainer}>
-                        <Text style={styles.miniTitle}>Email</Text>
-                        <Text style={styles.value}>{ currentUser['Email'] }</Text>
-                    </View>
-                    <View style={styles.singleContainer}>
-                        <Text style={styles.miniTitle}>Phone Number</Text>
-                        <Text style={styles.value}>{ currentUser['Phone_Number'] }</Text>
-                    </View>
-                    <View style={{ marginTop: 30 }}>
+                    <View style={{ backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 15, paddingVertical: 10, marginTop: 30 }}>
                         <Text style={styles.mainTitle}>Billing</Text>
                         {
                             !cardInfo && (
@@ -114,20 +120,30 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-between',
-        marginBottom: 15
+        borderBottomColor: '#eee',
+        borderBottomWidth: 1,
+        paddingBottom: 12,
+        marginBottom: 12
+    },
+    lastSingleContainer:{
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        paddingBottom: 7
     },
     mainTitle :{
-        fontSize: 20,
+        fontSize: 18,
         color: '#222',
         fontWeight: '700',
+        marginTop: 5,
         marginBottom: 20
     },
     miniTitle: {
         color: '#333',
-        fontSize: 18
+        fontSize: 15
     },
     value: {
-        color: '#555',
+        color: '#666',
         fontSize: 16
     },
     reminder: {
