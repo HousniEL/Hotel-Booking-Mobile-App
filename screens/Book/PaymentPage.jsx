@@ -60,7 +60,7 @@ export default function PaymentPage({ navigation, drawerNavigation }) {
             for(let room of bookInfo.table){
                 setOfRooms.push({
                     Hotel_Room_Type_ID : room.id,
-                    Pers_count : room['room']['adults'] + room['room']['childrens']
+                    Pers_count : Number(room['room']['adults']) + Number(room['room']['childrens'])
                 })
             }
             bookingService.addRoomsBooked(ID, setOfRooms, () => {

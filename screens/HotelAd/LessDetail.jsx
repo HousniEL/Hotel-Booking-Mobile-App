@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     StyleSheet, 
     Text, 
@@ -22,16 +22,56 @@ import Hotel from '../../models/Hotel';
 
 import Rate from './Rate';
 
+import FavoriteService from '../../services/FavoriteService';
+
+import { useAuth } from '../../contexts/AuthContext';
+
 export default function LessDetail({ hotel, navigation, isSignedIn }) {
 
-    const [heartFilling, setHeartFilling] = useState(false);
+    const [heartFilling, setHeartFilling] = useState();
+
+    const { currentUser } = useAuth();
+
+    const favoriteService = new FavoriteService();
+
+    useEffect(() => {
+        var object = {
+            user_id: currentUser.id,
+            hotel_id: hotel.id
+        }
+        favoriteService.checkFavorite(object, (suc) => {
+            setHeartFilling(suc.success);
+        }, (err) => {
+            console.log(err);
+        })
+    }, []);
+
+    function handleFavorite(){
+        var object = {
+            user_id: currentUser.id,
+            hotel_id: hotel.id
+        }
+        if( !heartFilling ){
+            favoriteService.addFavorite(object, (res) => {
+                setHeartFilling(!heartFilling);
+            }, (err) => {
+                console.log(err);
+            });
+        } else {
+            favoriteService.deleteFavorite(object, (res) => {
+                setHeartFilling(!heartFilling);
+            }, (err) => {
+                console.log(err);
+            });
+        }
+    }
 
     function getStars(Stars){
         var starArray = [false, false, false, false, false];
         for(let i = 0; i < Stars; i++){
             starArray[i] = true;
         }
-        return starArray;
+        return starArray;  
     }
 
     function getServices(Services){
@@ -77,13 +117,13 @@ export default function LessDetail({ hotel, navigation, isSignedIn }) {
                         source={{ uri : hotel.image.img1 }}
                     />
                     {
-                        isSignedIn && (
+                        isSignedIn && ( heartFilling === true || heartFilling === false ) && (
                             <TouchableHighlight
                                 style={{ position: 'absolute', top: 5, right: 5 }}
                                 underlayColor={'transparent'}
-                                onPress={() => setHeartFilling(!heartFilling)}
+                                onPress={handleFavorite}
                             >
-                                <View style={{ backgroundColor: 'rgba(0,0,0,.5)', padding: 5, borderRadius: 30 }}>
+                                <View style={{ backgroundColor: 'rgba(0,0,0,.5)', width:33, height:33, padding: 5, borderRadius: 30 }}>
                                     <MaterialCommunityIcons 
                                         name={ (heartFilling === true) ? "heart" : "heart-outline"} 
                                         color={ (heartFilling === true ) ? "tomato" : '#ddd'}

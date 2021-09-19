@@ -13,6 +13,7 @@ import Global from '../Global';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useAuth } from '../../contexts/AuthContext';
+import Loading from '../Loading';
 
 /*const bookingInfo = {
     "bookedRooms": [
@@ -53,7 +54,6 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
         }
         bookingService.getBookingInfo(object, (suc) => {
             if( suc.created_at ){
-                console.log(suc);
                 setBookingInfo(suc);
                 const reservationDateTable = suc.created_at.split('T');
                 setReservationDate(reservationDateTable[0] + ' ' + reservationDateTable[1].split('.')[0]) ;
@@ -69,10 +69,52 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
             contentContainerStyle={{ flexGrow: 1 }}
         >
             {
-                bookingInfo && (
+                bookingInfo ? (
                     <>
-                        <Text style={ styles.hotelName }>{bookingInfo.Hotel_Name}</Text>
+                        <TouchableHighlight
+                            underlayColor={'transparent'}
+                            style={{
+                                paddingVertical: 15,
+                                paddingLeft: 10,
+                                width: '10%',
+                            }}
+                            onPress={() => { showHeader(true); navigation.pop(); } }
+                        >
+                            <MaterialCommunityIcons name='arrow-left' color={'#222'} size={24}
+                                style={{
+                                    padding: 0,
+                                    width: 24,
+                                    height: 24
+                                }}
+                            />
+                        </TouchableHighlight>
+                        <View style={{ width: '90%', maxWidth: 400, alignSelf: 'center' }}>
+                            <Text style={ styles.hotelName }>{bookingInfo.Hotel_Name}</Text>
+                            <View style={ styles.content }>
+                                <Text style={ styles.contentTitle }>Check in</Text>
+                                <Text style={ styles.contentContent }>{ bookingInfo.Date_From }</Text>
+                            </View>
+                            <View style={ styles.content }>
+                                <Text style={ styles.contentTitle }>Check out</Text>
+                                <Text style={ styles.contentContent }>{ bookingInfo.Date_To }</Text>
+                            </View>
+                            <View style={ styles.content }>
+                                <Text style={ styles.contentTitle }>Duration stay</Text>
+                                <Text style={ styles.contentContent }>{ Math.floor(( new Date(bookingInfo.Date_To) - new Date(bookingInfo.Date_From) ) / ( 1000*24*60*60 ) ) + ' days' }</Text>
+                            </View>
+                            <Table bookedRooms={ bookingInfo.bookedRooms } total={ bookingInfo.totalAmount } />
+                            <View style={ styles.content }>
+                                <Text style={ styles.contentTitle }>Reservation date</Text>
+                                <Text style={ styles.contentContent }>{ reservationDate }</Text>
+                            </View>
+                            <View style={ styles.content }>
+                                <Text style={ styles.contentTitle }>Your reservation status</Text>
+                                <Text style={ styles.contentContent }>{ bookingInfo.Status }</Text>
+                            </View>
+                        </View>
                     </>
+                ) : (
+                    <Loading />
                 )
             }
         </ScrollView>
@@ -98,7 +140,7 @@ function Table({ bookedRooms, total }){
                 <Text style={[ styles.columnHeader, { borderTopLeftRadius: 3, borderRightColor: 'white', borderRightWidth: 1 } ]}>Room</Text>
                 {
                     rooms.map( (val, idx) => (
-                        <Text key={idx} style={[ styles.columnContent, { borderRightColor: '#eee', borderRightWidth: 1 } ]}>{ val }</Text>
+                        <Text key={idx} style={[ styles.columnContent, { borderRightColor: '#e0e0e0', borderRightWidth: 1 } ]}>{ val }</Text>
                     ) )
                 }
                 <Text style={[ styles.columnContent, { fontWeight: '700' } ]}>Total</Text>
@@ -107,7 +149,7 @@ function Table({ bookedRooms, total }){
                 <Text style={[ styles.columnHeader, { borderRightColor: 'white', borderRightWidth: 1 } ]}>Guests Number</Text>
                 {
                     guests.map( (val, idx) => (
-                        <Text key={idx} style={[ styles.columnContent, { borderRightColor: '#eee', borderRightWidth: 1 } ]}>{ val }</Text>
+                        <Text key={idx} style={[ styles.columnContent, { borderRightColor: '#e0e0e0', borderRightWidth: 1 } ]}>{ val }</Text>
                     ) )
                 }
                 <Text style={ styles.columnContent }></Text>
@@ -127,7 +169,8 @@ function Table({ bookedRooms, total }){
 
 const styles = StyleSheet.create({
     hotelName: {
-        marginVertical: 20,
+        marginTop: 0,
+        marginBottom: 20,
         fontSize: 23
     },
     content: {
@@ -146,7 +189,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         width: '100%',
-        borderColor: '#e5e5e5',
+        borderColor: '#e0e0e0',
         borderWidth: 1,
         borderBottomWidth: 0,
         borderRadius: 4,
@@ -167,7 +210,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingHorizontal: 5,
         paddingVertical: 10,
-        borderBottomColor: '#eee',
+        borderBottomColor: '#e0e0e0',
         borderBottomWidth: 1
     }
 });

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 
 import { Button, Overlay } from 'react-native-elements';
 
@@ -8,7 +8,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import CreditCardService from '../../../services/CreditCardService';
 import CreditCardCover from '../../CreditCardCover';
-import Global from '../../Global';
 
 export default function CardInfo({ userID, cardInfo, setRefresh, refresh }){
 
@@ -28,12 +27,10 @@ export default function CardInfo({ userID, cardInfo, setRefresh, refresh }){
         setWait(true);
         const creditCardService = new CreditCardService();
         creditCardService.deleteCreditCard({ 'user_id' : userID }, (res) => {
-            console.log('Res : ', res);
             toggleOverlay();
             setWait(false);
             setRefresh(!refresh);
         }, (err) => {
-            console.log('Err : ', err);
             toggleOverlay();
             setWait(false);
         })
@@ -42,12 +39,13 @@ export default function CardInfo({ userID, cardInfo, setRefresh, refresh }){
     return (
         <View style={{ alignItems: 'center' }}>
             <CreditCardCover cardInfo={cardInfo} />
-            <Button 
-                title={'Delete'}
-                containerStyle={{ marginTop: 15 }}
-                buttonStyle={{ backgroundColor: '#DA4C55', paddingHorizontal: 20 }}
-                onPress={toggleOverlay}
-            />
+            <TouchableHighlight 
+                underlayColor={'transparent'}
+                style={{ position: 'absolute', top: -45, right: 0  }}
+                onPress={handleDelete}
+            >
+                <MaterialCommunityIcons name={'trash-can-outline'} color={'gray'} size={25} />
+            </TouchableHighlight>
             <Overlay 
                 isVisible={messageVisibility} 
                 onBackdropPress={toggleOverlay} 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     StyleSheet, 
     Text, 
@@ -19,12 +19,51 @@ import ImageSlider from './ImageSlider';
 import Map from './Map';
 import RoomCard from './RoomCard';
 
+import FavoriteService from '../../services/FavoriteService';
+
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function MoreDetail({ route, navigation, isSignedIn, globalNavigation }) {
 
     const { hotel, hotelID } = route.params;
 
-    const [heartFilling, setHeartFilling] = useState(false);
+    const { currentUser } = useAuth();
+
+    const favoriteService = new FavoriteService();
+
+    useEffect(() => {
+        var object = {
+            user_id: currentUser.id,
+            hotel_id: hotelID
+        }
+        favoriteService.checkFavorite(object, (suc) => {
+            setHeartFilling(suc.success);
+        }, (err) => {
+            console.log(err);
+        })
+    }, []);
+
+    function handleFavorite(){
+        var object = {
+            user_id: currentUser.id,
+            hotel_id: hotel.id
+        }
+        if( !heartFilling ){
+            favoriteService.addFavorite(object, () => {
+                setHeartFilling(!heartFilling);
+            }, (err) => {
+                console.log(err);
+            });
+        } else {
+            favoriteService.deleteFavorite(object, () => {
+                setHeartFilling(!heartFilling);
+            }, (err) => {
+                console.log(err);
+            });
+        }
+    }
+
+    const [heartFilling, setHeartFilling] = useState();
 
     function handleBook(){
         isSignedIn ? (
@@ -46,13 +85,13 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                     <View style={{ height: 250, alignItems: "center" }} >
                         <ImageSlider images={hotel.getImages()} />
                         {
-                            isSignedIn && (
+                            isSignedIn && ( heartFilling === true || heartFilling === false ) && (
                                 <TouchableHighlight
                                     style={{ position: 'absolute', top: 5, right: 10 }}
                                     underlayColor={'transparent'}
-                                    onPress={() => setHeartFilling(!heartFilling)}
+                                    onPress={handleFavorite}
                                 >
-                                    <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 8, borderRadius: 30 }}>
+                                    <View style={{ backgroundColor: 'rgba(0,0,0,.35)', width:35, height:35, padding: 5, borderRadius: 30 }}>
                                         <MaterialCommunityIcons 
                                             name={ (heartFilling === true) ? "heart" : "heart-outline"} 
                                             color={ (heartFilling === true ) ? "tomato" : "#FFF"}
@@ -67,7 +106,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                             underlayColor={'transparent'}
                             onPress={() => { navigation.pop() }}
                         >
-                            <View style={{ backgroundColor: 'rgba(0,0,0,.35)', padding: 8, borderRadius: 30 }}>
+                            <View style={{ backgroundColor: 'rgba(0,0,0,.35)',  width:35, height:35, padding: 5, borderRadius: 30 }}>
                                 <MaterialCommunityIcons 
                                     name={"arrow-left"} 
                                     color={"#FFF"}
