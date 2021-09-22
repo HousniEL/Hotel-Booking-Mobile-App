@@ -15,6 +15,7 @@ export default class Hotel{
         this.Services = object.hotel.Services;
         this.Stars = object.hotel.Stars;
         this.Rate = object.hotel.Rate;
+        this.Num_opinions = object.hotel.Num_opinions;
         this.images = object.hotel.images.imgs;
         this.rooms = [];
     }

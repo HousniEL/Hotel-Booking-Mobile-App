@@ -43,6 +43,7 @@ export default class UserService{
             }
             await SecureStore.setItemAsync('token', content.token);
             await SecureStore.setItemAsync('user', JSON.stringify(content.user));
+            await SecureStore.setItemAsync('rated', JSON.stringify([]));
             return success(content.user);
         } catch(e) {
             return error(e);
@@ -64,6 +65,7 @@ export default class UserService{
             if( content.message === "Log Out" ){
                 await SecureStore.deleteItemAsync('token');
                 await SecureStore.deleteItemAsync('user');
+                await SecureStore.deleteItemAsync('rated');
                 return success();
             }
             return error("Unauthorized");
@@ -87,6 +89,7 @@ export default class UserService{
             }
             await SecureStore.setItemAsync('token', content.token);
             await SecureStore.setItemAsync('user', JSON.stringify(content.user));
+            await SecureStore.setItemAsync('rated', JSON.stringify([]));
             return success(content.user);
         } catch(e) {
             return error(e);

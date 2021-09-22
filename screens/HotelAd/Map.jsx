@@ -66,12 +66,7 @@ export default function Map({ provider, address }) {
                     style={{height: 200}}
                     region={region}
                     onRegionChange={onRegionChange}
-                >
-                    <Marker
-                        coordinate={marker.coordinate}
-                        pinColor={marker.color}
-                    />
-                </MapView>
+                />
             )
         }
         </>
@@ -84,6 +79,10 @@ Map.prototype = {
 }
 
 /*
+<Marker
+                        coordinate={marker.coordinate}
+                        pinColor={marker.color}
+                    />
     <MapView
         provider={provider}
         style={{height: 200}}

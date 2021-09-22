@@ -4,8 +4,6 @@ import { StyleSheet, View, Image } from 'react-native';
 
 import { Flow } from 'react-native-animated-spinkit';
 
-import Global from './Global';
-
 export default function Loading() {
     return (
         <View style={styles.container}>

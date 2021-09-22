@@ -15,11 +15,6 @@ import { servicesIcon } from '../constants';
 
 import { services } from "../constants";
 
-import HotelService from '../../services/HotelService';
-import { Alert } from 'react-native';
-
-import Hotel from '../../models/Hotel';
-
 import Rate from './Rate';
 
 import FavoriteService from '../../services/FavoriteService';
@@ -35,15 +30,17 @@ export default function LessDetail({ hotel, navigation, isSignedIn }) {
     const favoriteService = new FavoriteService();
 
     useEffect(() => {
-        var object = {
-            user_id: currentUser.id,
-            hotel_id: hotel.id
+        if( currentUser ){
+            var object = {
+                user_id: currentUser.id,
+                hotel_id: hotel.id
+            }
+            favoriteService.checkFavorite(object, (suc) => {
+                setHeartFilling(suc.success);
+            }, (err) => {
+                console.log(err);
+            })
         }
-        favoriteService.checkFavorite(object, (suc) => {
-            setHeartFilling(suc.success);
-        }, (err) => {
-            console.log(err);
-        })
     }, []);
 
     function handleFavorite(){
@@ -85,19 +82,9 @@ export default function LessDetail({ hotel, navigation, isSignedIn }) {
     }
 
     function handlePress(){
-        var id = hotel.id;
-        const hotelService = new HotelService();
-        hotelService.getHotelById(id, (HInfo, roomsType) => {
-            var hotelInfo = new Hotel(HInfo);
-            hotelInfo.setRooms(roomsType);
-            navigation.push('hotelInfo', {
-                hotel: hotelInfo,
-                hotelID: id
-            })
-        }, (error) => {
-            Alert.alert("Alert", error.message);
-        } )
-
+        navigation.push('hotelInfo', {
+            hotelID: hotel.id
+        })
     }
 
     return (

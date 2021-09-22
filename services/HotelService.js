@@ -4,6 +4,8 @@ import Hotel_Room_Type from '../models/Hotel_Room_Type';
 
 import { publicRoute } from './DefaultOptions';
 
+import * as SecureStore from 'expo-secure-store';
+
 export default class HotelService {
 
     async getLessDetailHotels(generalFilter, success, error) {
@@ -41,6 +43,24 @@ export default class HotelService {
             error(e);
         }
 
+    }
+
+    async rate(object, success, error){
+
+        publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
+
+        var response = await fetch(API_URL + '/v1/hotels/rate', {
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(object)
+        });
+
+        try{
+            var detail = await response.json();
+            success(detail);
+        } catch(e) {
+            error(e);
+        }
     }
 
 }
