@@ -24,8 +24,10 @@ import Loading from '../Loading';
 import { Flow } from 'react-native-animated-spinkit';
 import Success from './Success';
 
-export default function PaymentPage({ navigation, drawerNavigation }) {
+export default function PaymentPage({ navigation, route, drawerNavigation }) {
     
+    const { hotelName } = route.params;
+
     const { bookInfo } = useBookingInfo();
 
     const [ cardInfo, setCardInfo ] = useState();
@@ -64,8 +66,17 @@ export default function PaymentPage({ navigation, drawerNavigation }) {
                 })
             }
             bookingService.addRoomsBooked(ID, setOfRooms, () => {
-                setDone(true);
-                setWait(false);
+                var object = {
+                    booking_id : ID,
+                    user_id : bookInfo.User_ID,
+                    hotelName : hotelName
+                }
+                bookingService.sendEmail(object, (res) => {
+                    setDone(true);
+                    setWait(false);
+                }, (err) => {
+                    console.log('Email Err', err);
+                })
             }, (err) => {
                 console.log('Rs : ', err);
                 setWait(false);

@@ -121,7 +121,9 @@ export default function CheckPage({ route, navigation }) {
                 table : table
             })
             
-            navigation.push("paymentPage");
+            navigation.push("paymentPage", {
+                hotelName : hotel.Hotel_Name
+            });
             
         }
     }

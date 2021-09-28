@@ -60,6 +60,27 @@ export default class BookingService {
 
     }
 
+    async sendEmail(object, success, error){
+        publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
+
+        var response = await fetch( API_URL + '/v1/book/status', {
+            ...publicRoute,
+            method : 'POST',
+            body : JSON.stringify(object)
+        } );
+
+        try {
+            var detail = await response.json();
+    
+            if( detail.success ) return success('Email send');
+            return error(detail);
+        } catch(e) {
+            error(e.messsage);
+        }
+
+
+    }
+
     async getBookings(userID, success, error){
         publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;
 
