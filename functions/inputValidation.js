@@ -16,8 +16,8 @@ export function emailValidation(value){
 
 export function phoneNumberValidation(value){
     if(value !== ""){
-        const re = /^(((\+[0-9]{3}( ))|0)[6-7][0-9]{2}\-[0-9]{6})$/g;
-        if(!re.test(value)) return "Phone Number Incorrect";
+        //const re = /^(((\+[0-9]{3}( ))|0)[6-7][0-9]{2}\-[0-9]{6})$/g;
+        //if(!re.test(value)) return "Phone Number Incorrect";
         return '';
     } else { return "Required Field" }
 }
@@ -33,7 +33,6 @@ export function pwdValidation(pwd){
 
 export function pwdConfirmationValidation(pwd, pwdConfirmation) {
     if(pwd !== "" && pwdConfirmation !== ""){
-        console.log(pwd, pwdConfirmation);
         if(pwd !== pwdConfirmation) return "Password Different";
         return '';
     }

@@ -117,10 +117,9 @@ export default function Signup({ navigation }) {
             }, (error) => {
                 if(!error.message){
                     for(let err in error){
-                        eval("set" + err + "Err('" + errors[err][0] + "')");
+                        eval("set" + err + "Err('" + error[err][0] + "')");
                     }
                 } else {
-                    console.log(error);
                 }
                 setLoading(false);
             });
