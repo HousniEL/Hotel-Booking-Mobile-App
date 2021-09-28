@@ -2,6 +2,7 @@ import React from 'react';
 import {
     View,
     Text,
+    Animated,
     Image,
     StyleSheet,
     Dimensions
@@ -18,6 +19,30 @@ import { useAuth } from '../contexts/AuthContext';
 import { Flow } from 'react-native-animated-spinkit';
 
 export default function Welcome({ handleSignIn }) {
+    const translationLeft = React.useRef(new Animated.Value(Number(70))).current;
+    const titleOpacity = React.useRef(new Animated.Value(Number(0))).current;
+
+    const [ show, setShow ] = React.useState(true);
+
+    React.useEffect(() => {
+
+        Animated.parallel([
+            Animated.timing(translationLeft, {
+                toValue: 0,
+                duration: 800,
+                useNativeDriver: true,
+                timing: 'easing',
+                delay: 2500
+            }),
+            Animated.timing(titleOpacity, {
+                toValue: 1,
+                duration: 800,
+                useNativeDriver: true,
+                delay: 3300
+            })
+        ]).start();
+    }, []);
+
 
     const { setCurrentUser } = useAuth();
     
@@ -32,7 +57,13 @@ export default function Welcome({ handleSignIn }) {
             handleSignIn(false);
         }
     }
-    setTimeout(check, 3000);
+    setTimeout(check, 4000);
+
+    function removeLoadin(){
+        setShow(false);
+    }
+
+    setTimeout(removeLoadin, 2000);
 
     return (
         <View style={{ flexGrow: 1, height: '100%' }}>
@@ -41,19 +72,30 @@ export default function Welcome({ handleSignIn }) {
                 colors={[Global.primary, Global.secondary]}
             />
             <View style={styles.container}>
-                <Image 
-                    style={{
-                        width: 60,
-                        height: 60,
-                        marginTop: '50%'
-                    }}
-                    source={require('../assets/Images/logo-white.png')}
-                />
-                <Text style={[styles.title, { marginTop: 5 }]}>
-                    Hotels Reservation
-                </Text>
+                <Animated.View style={{ flexDirection: 'row', alignItems: 'center', marginTop: Dimensions.get('window').height/3 }}>
+                    <Animated.Image 
+                        style={{
+                            width: 65,
+                            height: 65,
+                            transform: [
+                                { 
+                                    translateX: translationLeft 
+                                }
+                            ]
+                        }}
+                        source={require('../assets/Images/logo-white.png')}
+                    />
+                    <Animated.View
+                        style={{
+                            opacity: titleOpacity
+                        }}
+                    >
+                        <Text style={ styles.title }>Hotels</Text>
+                        <Text style={ styles.title }>Reservation</Text>
+                    </Animated.View>
+                </Animated.View>
                 <View style={{ position: 'absolute', bottom: 100 }}>
-                    <Flow size={35} color='white' />
+                    <Flow style={ show ? null : { display: 'none' } } size={35} color='white' />
                 </View>
             </View>
         </View>
@@ -72,9 +114,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        alignSelf: 'center',
-        fontSize: 27,
+        fontSize: 22,
         fontWeight: '700',
-        color: 'white'
+        color: 'white',
+        marginLeft: 10
     }
 })

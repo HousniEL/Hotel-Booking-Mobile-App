@@ -19,15 +19,10 @@ const Stack = createStackNavigator();
 
 function ReservationList({ navigation, showHeader }) {
 
-    const wait = (timeout) => {
-        return new Promise(resolve => setTimeout(resolve, timeout));
-    }
-
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
     }, []);
 
     const { currentUser } = useAuth();
@@ -38,6 +33,7 @@ function ReservationList({ navigation, showHeader }) {
         var bookingService = new BookingService();
         bookingService.getBookings({ user_id : currentUser.id }, (suc) => {
             setReservations(suc);
+            setRefreshing(false);
         }, (err) => {
             console.log('Err : ', err);
         });

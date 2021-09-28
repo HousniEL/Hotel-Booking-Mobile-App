@@ -125,7 +125,7 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
 function Table({ bookedRooms, total }){
 
     var rooms = bookedRooms.map( val => {
-        return val['Room_Type'];  
+        return val['type'];  
       } );
     var prices = bookedRooms.map( val => {
         return val['Price'];  

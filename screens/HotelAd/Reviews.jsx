@@ -33,7 +33,7 @@ export default function Reviews({ rating, setRating, hotelId }) {
     getRates();
 
     function handlePress(){
-        setShow(!rates.includes(hotelId));
+        if(rates) setShow(!rates.includes(hotelId));
     }
 
     return (

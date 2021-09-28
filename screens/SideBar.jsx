@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
         paddingVertical: 25
     },
     image: {
-        width: 40,
-        height: 40
+        width: 45,
+        height: 45
     },
     titleContainer: {
         flexDirection: 'column',

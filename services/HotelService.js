@@ -13,14 +13,15 @@ export default class HotelService {
         var response = await fetch(API_URL + '/v1/hotels',{
             ...publicRoute,
             method: 'POST',
-            body: generalFilter
+            body: JSON.stringify(generalFilter)
         });
 
         try{
             var detail = await response.json();
-            success(detail);
+            if( detail.message ) return error(detail); 
+            return success(detail);
         } catch(err) {
-            error(err);
+            return error(err);
         }
 
     }
@@ -38,9 +39,9 @@ export default class HotelService {
             for(let room of object.hotel_rooms_type){
                 rooms.push(new Hotel_Room_Type(room));
             }
-            success(object, rooms);
+            return success(object, rooms);
         } catch(e) {
-            error(e);
+            return error(e);
         }
 
     }
@@ -57,9 +58,9 @@ export default class HotelService {
 
         try{
             var detail = await response.json();
-            success(detail);
+            return success(detail);
         } catch(e) {
-            error(e);
+            return error(e);
         }
     }
 

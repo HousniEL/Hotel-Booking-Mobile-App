@@ -7,7 +7,6 @@ import {
     Text,
     TouchableHighlight,
     StyleSheet,
-    StatusBar,
     Animated,
     Dimensions
 } from 'react-native';
@@ -38,7 +37,6 @@ import { SortProvider, useSort } from '../HomeScreens/contexts/SortByContext';
 import { BookingProvider } from '../../contexts/BookingInfoContext';
 
 import HotelService from '../../services/HotelService';
-import AddCreditCard from './AddCreditCard';
 
 const Stack = createStackNavigator();
 
@@ -96,10 +94,11 @@ function HomeMain({ navigation, isSignedIn }) {
         }
         setNewValue('rooms', valueApp);
         const hotelService = new HotelService();
-        hotelService.getLessDetailHotels(JSON.stringify(generalFilter), (response) => {
+        hotelService.getLessDetailHotels(generalFilter, (response) => {
             if(response) setHotels(response);
         }, (error) => {
-            console.log("Error ------------" + error);
+            console.log(generalFilter);
+            //console.log("Error ------------",error);
         });
         if(!isEmpty(generalFilter['search'])){
             setSearchValue(generalFilter['search'].value);
