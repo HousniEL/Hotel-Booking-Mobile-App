@@ -51,7 +51,7 @@ function ProfileInfo({ navigation, showHeader }) {
             looking ? (
                 <Loading />
             ) : (
-                <View style={{flex: 1, width: '90%', maxWidth: 400, alignSelf: 'center', paddingTop: '10%'}}>
+                <View style={{flex: 1, width: '90%', maxWidth: 450, alignSelf: 'center', paddingTop: '10%'}}>
                     <View style={{ backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 15, paddingVertical: 10 }}>
                         <Text style={styles.mainTitle}>My Account</Text>
                         <View style={styles.singleContainer}>
@@ -71,7 +71,7 @@ function ProfileInfo({ navigation, showHeader }) {
                             <Text style={styles.value}>{ currentUser['Phone_Number'] }</Text>
                         </View>
                     </View>
-                    <View style={{ backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 15, paddingVertical: 10, marginTop: 30 }}>
+                    <View style={{ backgroundColor: 'white', borderRadius: 10, paddingHorizontal: 15, paddingVertical: 10, paddingBottom: 20, marginTop: 30 }}>
                         <Text style={styles.mainTitle}>Billing</Text>
                         {
                             !cardInfo && (

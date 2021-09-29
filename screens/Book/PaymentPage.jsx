@@ -129,7 +129,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                         />
                     </TouchableHighlight>
                 </View>
-                <View style={{ width: '90%', maxWidth: 400, alignSelf: 'center', alignItems: 'center' }}>
+                <View style={{ width: '90%', maxWidth: 470, alignSelf: 'center', alignItems: 'center' }}>
                     {
                         ( cardInfo !== 'nothing' ) ? (
                             <CreditCardCover cardInfo={cardInfo} />
@@ -156,7 +156,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
 
                 </View>
                 <View style={{ flexGrow: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 15 }}>
-                    <View style={{ width: '90%', maxWidth: 400, alignItems: 'center' }}>
+                    <View style={{ width: '90%', maxWidth: 470, alignItems: 'center' }}>
 
                         <Divider orientation={'vertical'} color='black' style={ [ styles.divider, { marginTop: 20 } ] } />
 
@@ -227,15 +227,6 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: 'white'
     },
-    mainContainer: {
-        width: '90%', 
-        maxWidth: 400,
-        alignSelf: 'center',
-        backgroundColor: 'white',
-        elevation: 20,
-        borderRadius: 5,
-        padding: 15
-    },
     divider: {
         marginTop: 30, 
         marginBottom: 0, 
@@ -269,7 +260,7 @@ const styles = StyleSheet.create({
     },
     payLaterContainerStyle: {
         marginTop: 10,
-        width: '47%',
+        width: '45%',
         alignSelf: 'center'
     },
     payNowButtonStyle : {
@@ -284,7 +275,7 @@ const styles = StyleSheet.create({
     },
     payNowContainerStyle: {
         marginTop: 10,
-        width: '47%',
+        width: '45%',
         alignSelf: 'center'
     }
 })

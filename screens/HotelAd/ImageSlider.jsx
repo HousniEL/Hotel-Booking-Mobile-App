@@ -56,7 +56,7 @@ export default function ImageSlider({ images }) {
 const styles = StyleSheet.create({
     container: { 
         width, 
-        height 
+        height
     },
     paginationContainer: { 
         width, 
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
         margin: 4 
     },
     paginationDot: { 
-        fontSize: width / 30,
+        fontSize: width / 40,
         color: '#777', 
         marginHorizontal: 2 
     },
     paginationActiveDot: { 
-        fontSize: width / 27,
+        fontSize: width / 37,
         color: 'white', 
         marginHorizontal: 2 
     }

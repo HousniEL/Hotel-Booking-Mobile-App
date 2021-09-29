@@ -103,7 +103,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                 hotel ? (
                     <ScrollView>
                         <View style={styles.container} >
-                            <View style={{ height: 250, alignItems: "center" }} >
+                            <View style={{ alignItems: "center" }} >
                                 <ImageSlider images={hotel.getImages()} />
                                 {
                                     isSignedIn && ( heartFilling === true || heartFilling === false ) && (
@@ -123,7 +123,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                                     )
                                 }
                                 <TouchableHighlight
-                                    style={{ position: 'absolute', top: 7, left: 12 }}
+                                    style={{ position: 'absolute', width: '100%', top: 7, left: 12 }}
                                     underlayColor={'transparent'}
                                     onPress={() => { navigation.pop() }}
                                 >
@@ -137,7 +137,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                                 </TouchableHighlight>
                             </View>
                             
-                            <View style={{ padding: 10, flex: 1 }} >
+                            <View style={{ padding: 10, width: '100%', maxWidth: 470, paddingHorizontal: 20, backgroundColor: 'white' }} >
                                 <Text style={{fontSize: 22, maxWidth: 265, fontWeight: '700', paddingHorizontal: 2, color: Global.black}}
                                     numberOfLines={2}   
                                 >
@@ -220,7 +220,7 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                                             ) )
                                         }
                                     </View>
-                                </View>
+                                </View> 
                                 <Divider 
                                     orientation="horizontal"
                                     style={{marginVertical: 15}}
@@ -287,12 +287,11 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         width: '100%',
         height: '100%',
-        maxWidth: 400,
         alignSelf: 'center',
-        backgroundColor: 'white'
+        backgroundColor: 'transparent',
+        alignItems: 'center'
     },
     starscontainer: {
         flexDirection: 'row',

@@ -168,7 +168,7 @@ function HomeMain({ navigation, isSignedIn }) {
                                     onChangeText={(text) => setSearchValue(text)}
                                     onSubmitEditing={(e) => handleSearchApply(e)}
                                 />
-                                <View style={{marginTop: 20, width: '100%', backgroundColor: 'transparent'}}>
+                                <View style={{marginTop: 20, width: '100%', maxWidth: 450, backgroundColor: 'transparent'}}>
                                     <View style={styles.dateANDroomcontainer} >
                                         <TouchableHighlight
                                             underlayColor={'transparent'}

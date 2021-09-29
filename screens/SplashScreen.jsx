@@ -32,13 +32,13 @@ export default function Welcome({ handleSignIn }) {
                 duration: 800,
                 useNativeDriver: true,
                 timing: 'easing',
-                delay: 2500
+                delay: 3000
             }),
             Animated.timing(titleOpacity, {
                 toValue: 1,
                 duration: 800,
                 useNativeDriver: true,
-                delay: 3300
+                delay: 3800
             })
         ]).start();
     }, []);
@@ -57,13 +57,13 @@ export default function Welcome({ handleSignIn }) {
             handleSignIn(false);
         }
     }
-    setTimeout(check, 4000);
+    setTimeout(check, 5500);
 
     function removeLoadin(){
         setShow(false);
     }
 
-    setTimeout(removeLoadin, 2000);
+    setTimeout(removeLoadin, 3000);
 
     return (
         <View style={{ flexGrow: 1, height: '100%' }}>

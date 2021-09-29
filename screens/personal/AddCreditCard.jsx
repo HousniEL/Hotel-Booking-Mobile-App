@@ -121,7 +121,7 @@ export default function AddCreditCard({ navigation, showHeader }) {
                     />
                 </TouchableHighlight>
             </View>
-            <View style={{ width: '90%', maxWidth: 400, alignSelf: 'center' }}>
+            <View style={{ width: '90%', maxWidth: 450, alignSelf: 'center' }}>
                 <View style={styles.warning}>
                     <MaterialCommunityIcons name="alert-circle" size={19} color='tomato' />
                     <Text style={{ color: 'tomato', marginLeft: 10, fontSize: 14 }}>

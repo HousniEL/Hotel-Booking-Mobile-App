@@ -158,7 +158,7 @@ export default function Login({ navigation, signed }) {
                         Forgot Password?
                     </Text>
                 </TouchableHighlight>
-                <View style={{marginTop: 30, alignItems: 'center'}}>
+                <View style={{marginTop: 30, alignItems: 'center', width: '90%', maxWidth: 400}}>
                     <Button 
                         title='LOGIN'
                         containerStyle={styles.buttonstyle}
@@ -273,9 +273,9 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     buttonstyle: {
-        width: 320,
+        width: '100%',
         height: 45,
-        borderRadius: 20,
+        borderRadius: 50,
         backgroundColor: Global.buttonbg1
     },
     erroStyle: {

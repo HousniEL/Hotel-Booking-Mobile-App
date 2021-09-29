@@ -36,14 +36,13 @@ export default function CreditCardCover({ cardInfo }) {
         <>
         {
             image && (
-                <View style={styles.cardCover}>
                     <LinearGradient 
-                        style={{ flex: 1, borderRadius: 10 }}
+                        style={[ styles.cardCover, { flexGrow: 1, borderRadius: 10 } ]}
                         colors={[Global.secondary, Global.primary, Global.secondary, Global.primary]}
                         start={{ x:0, y: 0 }}
                         end={{ x: 1, y: 1 }}
-                    />
-                    <View style={{ width: '100%', position: 'absolute', paddingVertical: 15, paddingHorizontal: 25 }}>
+                    >
+                    <View style={{ width: '100%', paddingVertical: 15, paddingHorizontal: 25 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Image source={smartchip} style={{ width: 35, height: 25 }} />
                             { image }
@@ -66,7 +65,7 @@ export default function CreditCardCover({ cardInfo }) {
                             </View>
                         </View>
                     </View>
-                </View>
+                    </LinearGradient>
             )
         }
         </>
@@ -75,9 +74,9 @@ export default function CreditCardCover({ cardInfo }) {
 
 const styles = StyleSheet.create({
     cardCover: {
-        width: '90%',
-        maxWidth: 400,
-        height: 190,
+        width: '95%',
+        maxWidth: 350,
+        flexGrow: 1,
         borderRadius: 10,
         position: 'relative'
     },
