@@ -40,16 +40,19 @@ import HotelService from '../../services/HotelService';
 
 const Stack = createStackNavigator();
 
+var width = ( ( Dimensions.get('window').width ) >= 355 ) ? 355 : Dimensions.get('window').width;
+
 function HomeMain({ navigation, isSignedIn }) {
     
     const [hotels, setHotels] = useState();
 
-    const translationHeader = useRef(new Animated.Value(Number(-180))).current;
+    const translationHeader = useRef(new Animated.Value(Number(0))).current;
     const translationContent = useRef(new Animated.Value(Number(190))).current;
 
     const [searchValue, setSearchValue] = useState("");
     const [headerShown, setHeaderShown] = useState(true);
     const [load, setload] = useState(false);
+    const [twoColumns, setTwoColumns] = useState(false);
 
     const [ dateString, setDateString ] = useState("From - To");
 
@@ -60,6 +63,14 @@ function HomeMain({ navigation, isSignedIn }) {
     const { toggleOverlay, updateSort } = useSort();
 
     useEffect(() => {
+
+        var dim = (Dimensions.get('window').width - width*2);
+        if( dim < 0 ){
+            setTwoColumns(false);
+        } else {
+            setTwoColumns(true);
+        }
+
         if(!isEmpty(appliedStartDay) && !isEmpty(appliedEndDay)){
             const startTab = appliedStartDay.dayFormat.split(' ');
             const endTab = appliedEndDay.dayFormat.split(' ');
@@ -97,8 +108,7 @@ function HomeMain({ navigation, isSignedIn }) {
         hotelService.getLessDetailHotels(generalFilter, (response) => {
             if(response) setHotels(response);
         }, (error) => {
-            console.log(generalFilter);
-            //console.log("Error ------------",error);
+            console.log("Err : ", error);
         });
         if(!isEmpty(generalFilter['search'])){
             setSearchValue(generalFilter['search'].value);
@@ -237,11 +247,29 @@ function HomeMain({ navigation, isSignedIn }) {
                                 transform: [ { translateY: translationContent } ] 
                             }}
                         >
-                            <View style={{ flex: 1, paddingBottom: 30 }}>
+                            <View style={
+                                { 
+                                    flex: 1,
+                                    paddingBottom: 30,
+                                    width: '100%', 
+                                    flexDirection: 'row', 
+                                    flexWrap: 'wrap',
+                                    justifyContent: twoColumns ? 'flex-start' : 'center' 
+                                }
+                            }>
                                 {
-                                    hotels.map((value, idx) => (
-                                        <LessDetail key={idx.toString()} hotel={value} navigation={navigation} isSignedIn={isSignedIn} />
-                                    ))
+                                    hotels.length !== 0 ? (
+                                        hotels.map((value, idx) => (
+                                            <LessDetail key={idx.toString()} hotel={value} navigation={navigation} isSignedIn={isSignedIn} />
+                                        ))
+                                    ) : (
+                                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '40%' }}>
+                                            <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>Sorry,</Text>
+                                            <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>
+                                                There is no hotel suites these critics.
+                                            </Text>
+                                        </View>
+                                    )
                                 }
                             </View>
                         </Animated.ScrollView>

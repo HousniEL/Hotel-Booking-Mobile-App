@@ -26,7 +26,7 @@ import Success from './Success';
 
 export default function PaymentPage({ navigation, route, drawerNavigation }) {
     
-    const { hotelName } = route.params;
+    const { payat, hotelName } = route.params;
 
     const { bookInfo } = useBookingInfo();
 
@@ -134,7 +134,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                         ( cardInfo !== 'nothing' ) ? (
                             <CreditCardCover cardInfo={cardInfo} />
                         ) : (
-                            <AddACreditCard drawerNavigation={drawerNavigation} />
+                            <AddACreditCard navigation={navigation} drawerNavigation={drawerNavigation} />
                         )
                     }
 
@@ -171,9 +171,9 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                                 titleStyle={styles.payLaterTitleStyle}
                                 containerStyle={styles.payLaterContainerStyle}
                                 onPress={ handlePayLater }
-                                disabled={wait}
-                                disabledStyle={ wait && { backgroundColor: "#555" }}
-                                disabledTitleStyle={ wait && { color: 'white' }}
+                                disabled={ wait || payat == 0 }
+                                disabledStyle={ ( wait || payat == 0 ) && { backgroundColor: "#ddd" }}
+                                disabledTitleStyle={ ( wait || payat == 0 ) && { color: '#aaa' }}
                             /> 
                             <Button 
                                 title='Pay Now'
@@ -198,11 +198,17 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
 
 }
 
-function AddACreditCard({ drawerNavigation }){
+function AddACreditCard({ navigation, drawerNavigation }){
+
+    function handleAddPayment(){
+        navigation.pop();
+        drawerNavigation.jumpTo('Profile');
+    }
+
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%', marginTop: 15, marginBottom: 5 }}>
             <Text style={{ fontSize: 18 }}>There is no payment method</Text>
-            <TouchableHighlight underlayColor={'transparent'} onPress={() => drawerNavigation.jumpTo('Profile')} >
+            <TouchableHighlight underlayColor={'transparent'} onPress={handleAddPayment} >
                 <MaterialCommunityIcons
                     name={'plus'} color={Global.primary} size={28} style={{ width: 28, height: 28 }}
                 />

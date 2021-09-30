@@ -3,7 +3,8 @@ import {
     RefreshControl,
     ScrollView,
     TouchableHighlight,
-    View
+    View,
+    Dimensions
 } from 'react-native';
 import LessDetailResInfo from '../Reservation/LessDetailResInfo';
 
@@ -15,11 +16,14 @@ import Loading from '../Loading';
 import { createStackNavigator } from '@react-navigation/stack';
 import MoreDetailResInfo from '../Reservation/MoreDetailResInfo';
 
+var width = ( ( Dimensions.get('window').width ) >= 355 ) ? 355 : Dimensions.get('window').width;
+
 const Stack = createStackNavigator();
 
 function ReservationList({ navigation, showHeader }) {
 
     const [refreshing, setRefreshing] = useState(false);
+    const [twoColumns, setTwoColumns] = useState(false);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -30,6 +34,14 @@ function ReservationList({ navigation, showHeader }) {
     const [ reservations, setReservations ] = useState();
 
     useEffect(() => {
+
+        var dim = (Dimensions.get('window').width - width*2);
+        if( dim < 0 ){
+            setTwoColumns(false);
+        } else {
+            setTwoColumns(true);
+        }
+
         var bookingService = new BookingService();
         bookingService.getBookings({ user_id : currentUser.id }, (suc) => {
             setReservations(suc);
@@ -59,17 +71,35 @@ function ReservationList({ navigation, showHeader }) {
                             />
                         }    
                     >
-                        <View style={{ flex: 1 }}>
+                        <View style={
+                            { 
+                                flex: 1, 
+                                width: '100%', 
+                                flexDirection: 'row', 
+                                flexWrap: 'wrap', 
+                                justifyContent: twoColumns ? 'flex-start' : 'center' 
+                            }
+                        }>
                             {
                                 reservations.map( (val, idx) => (
                                     <TouchableHighlight
                                         underlayColor={'transparent'}
                                         key={idx} 
                                         onPress={() => handleResPressed(val.id)}
+                                        style={{ width }}
                                     >
                                         <LessDetailResInfo resInfo={val} />
                                     </TouchableHighlight>
                                 ) )
+                            }
+                            {
+                                    <TouchableHighlight
+                                        underlayColor={'transparent'}
+                                        onPress={() => handleResPressed(reservations[0].id)}
+                                        style={{ width }}
+                                    >
+                                        <LessDetailResInfo resInfo={reservations[0]} />
+                                    </TouchableHighlight>
                             }
                         </View>
                     </ScrollView>

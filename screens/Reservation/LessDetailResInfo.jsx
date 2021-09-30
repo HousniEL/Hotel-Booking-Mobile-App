@@ -45,8 +45,7 @@ export default function LessDetailResInfo({ resInfo }) {
 
 const styles = StyleSheet.create({
     container: {
-        width: '90%',
-        maxWidth: 400,
+        width: '100%',
         backgroundColor: 'white',
         borderRadius: 5,
         padding: 15,

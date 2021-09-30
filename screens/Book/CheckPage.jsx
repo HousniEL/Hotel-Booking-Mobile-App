@@ -120,8 +120,9 @@ export default function CheckPage({ route, navigation }) {
                 Date_To : endDay.day.year + '/' + endDay.day.month + '/' + endDay.day.day,
                 table : table
             })
-            
+
             navigation.push("paymentPage", {
+                payat : hotel.Services[1],
                 hotelName : hotel.Hotel_Name
             });
             
@@ -136,9 +137,10 @@ export default function CheckPage({ route, navigation }) {
                 <View style={{flex: 1}}>
                     <View style={styles.greenArea}>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.pop()}>
+                    <TouchableOpacity underlayColor={'transparent'} onPress={() => navigation.pop()}>
                         <MaterialCommunityIcons name='arrow-left' style={{
-                            marginLeft: 10
+                            paddingTop: 15,
+                            paddingLeft: 10,
                         }} size={25} color='white' />
                     </TouchableOpacity>
                     <Text style={styles.mainHeader}>

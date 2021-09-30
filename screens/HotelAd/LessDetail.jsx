@@ -191,8 +191,8 @@ export default function LessDetail({ hotel, navigation, isSignedIn }) {
 
 const styles = StyleSheet.create({
     container: {
-        width: '90%',
-        maxWidth: 400,
+        width: '95%',
+        maxWidth: 355,
         paddingBottom: 5,
         alignSelf: 'center',
         marginBottom: 25,
