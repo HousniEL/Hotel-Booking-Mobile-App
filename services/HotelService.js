@@ -26,6 +26,24 @@ export default class HotelService {
 
     }
 
+    async getLessDetailHotelsPerPage(ids, success, error) {
+
+        var response = await fetch(API_URL + '/v1/hotels/getsome',{
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(ids)
+        });
+
+        try{
+            var detail = await response.json();
+            if( detail.message ) return error(detail); 
+            return success(detail);
+        } catch(err) {
+            return error(err);
+        }
+
+    }
+
     async getHotelById(id, success, error){
 
         var response = await fetch(API_URL + '/v1/hotels/' + id, {

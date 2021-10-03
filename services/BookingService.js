@@ -101,6 +101,24 @@ export default class BookingService {
         }
 
     }
+
+    async getBookingsPerPage(ids, success, error) {
+
+        var response = await fetch(API_URL + '/v1/book/chunk',{
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(ids)
+        });
+
+        try{
+            var detail = await response.json();
+            if( detail.message ) return error(detail); 
+            return success(detail);
+        } catch(err) {
+            return error(err);
+        }
+
+    }
     
     async getBookingInfo(object, success, error){
         publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;

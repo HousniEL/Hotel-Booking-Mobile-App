@@ -127,7 +127,7 @@ export default function LessDetail({ hotel, navigation, isSignedIn }) {
                 <View
                     style={{
                         padding: 5,
-                        flex: 1
+                        flexGrow: 1
                     }}
                 >
                     <Text style={{fontSize: 19, fontWeight: '700', maxWidth: '75%', paddingHorizontal: 2, color: Global.black}}>
@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
     container: {
         width: '95%',
         maxWidth: 355,
-        paddingBottom: 5,
         alignSelf: 'center',
         marginBottom: 25,
         borderRadius:5,
@@ -210,7 +209,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 5
     },
     servicesContainer: {
-        flex: 1,
+        flexGrow: 1,
         maxHeight: 80,
         marginTop: 12,
         marginRight: 90,
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 8,
         right: 10,
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
     },
     priceHeader: {
         color: '#999',

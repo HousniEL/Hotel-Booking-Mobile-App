@@ -22,7 +22,7 @@ import { useBookingInfo } from '../../contexts/BookingInfoContext';
 import Loading from '../Loading';
 
 import { Flow } from 'react-native-animated-spinkit';
-import Success from './Success';
+import { Success, Waiting } from './Popup';
 
 export default function PaymentPage({ navigation, route, drawerNavigation }) {
     
@@ -33,6 +33,9 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     const [ cardInfo, setCardInfo ] = useState();
     const [ total, setTotal ] = useState();
     const [ wait, setWait ] = useState(false);
+
+    const [ check, setCheck ] = useState();
+
     const [ done, setDone ] = useState(false);
 
     useEffect(() => {
@@ -56,6 +59,9 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
 
     function handlePayNow(){
         setWait(true);
+    }
+
+    function handlePayment(){
         const bookingService = new BookingService();
         bookingService.addBooking(bookInfo, true, total, (ID) => {
             var setOfRooms = [];
@@ -93,6 +99,9 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
 
     return (
         <>
+        {
+            wait === true && !check && <Waiting wait={wait} check={check} setCheck={setCheck} handlePayment={handlePayment} setWait={setWait} />
+        }
         {
             done === true && <Success success={done} setSuccess={setDone} navigation={navigation} />
         }

@@ -70,6 +70,24 @@ export default class FavoriteService{
         }
 
     }
+
+    async getFavoritePerPage(ids, success, error) {
+
+        var response = await fetch(API_URL + '/v1/favorite/chunk',{
+            ...publicRoute,
+            method: 'POST',
+            body: JSON.stringify(ids)
+        });
+
+        try{
+            var detail = await response.json();
+            if( detail.message ) return error(detail); 
+            return success(detail);
+        } catch(err) {
+            return error(err);
+        }
+
+    }
     
     async checkFavorite(object, success, error){
 

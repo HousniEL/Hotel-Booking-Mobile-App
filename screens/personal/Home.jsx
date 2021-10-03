@@ -37,13 +37,28 @@ import { SortProvider, useSort } from '../HomeScreens/contexts/SortByContext';
 import { BookingProvider } from '../../contexts/BookingInfoContext';
 
 import HotelService from '../../services/HotelService';
+import Paginate from '../Paginate';
 
 const Stack = createStackNavigator();
 
 var width = ( ( Dimensions.get('window').width ) >= 355 ) ? 355 : Dimensions.get('window').width;
 
-function HomeMain({ navigation, isSignedIn }) {
-    
+function HomeMain({ navigation, isSignedIn, drawerRoute }) {
+
+    function displayMoreDetail(){
+        var idC = drawerRoute.params['favoriteId'];
+        if(drawerRoute.params['favoriteId']){
+            delete drawerRoute.params['favoriteId'];
+            navigation.push('hotelInfo', {
+                hotelID: idC
+            });
+        }
+    }
+
+    drawerRoute.params && (
+        setTimeout(displayMoreDetail, 500)
+    )
+
     const [hotels, setHotels] = useState();
 
     const translationHeader = useRef(new Animated.Value(Number(0))).current;
@@ -53,6 +68,7 @@ function HomeMain({ navigation, isSignedIn }) {
     const [headerShown, setHeaderShown] = useState(true);
     const [load, setload] = useState(false);
     const [twoColumns, setTwoColumns] = useState(false);
+    const [paginate, setPaginate] = useState();
 
     const [ dateString, setDateString ] = useState("From - To");
 
@@ -106,7 +122,14 @@ function HomeMain({ navigation, isSignedIn }) {
         setNewValue('rooms', valueApp);
         const hotelService = new HotelService();
         hotelService.getLessDetailHotels(generalFilter, (response) => {
-            if(response) setHotels(response);
+            if(response) {
+                hotelService.getLessDetailHotelsPerPage({ ids : response.slice(0, 1) }, (suc) => {
+                    setHotels(suc);
+                }, (err) => {
+                    console.log(err);
+                })
+                setPaginate(<Paginate allIds={response} setItems={setHotels} fetchIds={hotelService.getLessDetailHotelsPerPage} perpage={1} />)
+            }
         }, (error) => {
             console.log("Err : ", error);
         });
@@ -135,190 +158,192 @@ function HomeMain({ navigation, isSignedIn }) {
         <>
 
             {
-                hotels ? (
-                    <>
-                        <Animated.View style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            transform: [
-                            { translateY: translationHeader },
-                            ]
+                hotels && (
+                    <Animated.View style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        transform: [
+                            { translateY: translationHeader }
+                        ]
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            backgroundColor: Global.primary,
+                            paddingTop: 15
                         }}>
-                            <View style={{
-                                width: '100%',
-                                alignSelf: 'center',
-                                alignItems: 'center',
-                                backgroundColor: Global.primary,
-                                paddingTop: 15
-                            }}>
-                                <Input 
-                                    placeholder="Search"
-                                    value={searchValue}
-                                    keyboardAppearance={'default'}
-                                    keyboardType={'default'}
-                                    autoCorrect={false}
-                                    rightIcon={
-                                        <MaterialComunnityIcons name="magnify" color={'#555'} size={20} />
-                                    }
-                                    rightIconContainerStyle={{
-                                        width: 30
-                                    }}
-                                    containerStyle={{
-                                        paddingHorizontal: 0,
-                                        width: 320,
-                                    }}
-                                    inputStyle={styles.input}
-                                    placeholderTextColor={"#888"}
-                                    inputContainerStyle={styles.inputcontainer}
-                                    errorStyle={{
-                                        display: 'none'
-                                    }}
-                                    onChangeText={(text) => setSearchValue(text)}
-                                    onSubmitEditing={(e) => handleSearchApply(e)}
-                                />
-                                <View style={{marginTop: 20, width: '100%', maxWidth: 450, backgroundColor: 'transparent'}}>
-                                    <View style={styles.dateANDroomcontainer} >
-                                        <TouchableHighlight
-                                            underlayColor={'transparent'}
-                                            style={{ width: '50%'}}
-                                            onPress={ () => navigateTo('date') }
-                                        >
-                                            <View style={{ borderRightColor: Global.buttonbg1, borderRightWidth: 1, paddingHorizontal: 20 }}>
-                                                <Text style={styles.tags} >Dates</Text>
-                                                <Text style={styles.choice} numberOfLines={1}>
-                                                    { dateString }       
-                                                </Text>
-                                            </View>
-                                        </TouchableHighlight> 
-                                        <TouchableHighlight
-                                            underlayColor={'transparent'}
-                                            style={{width: '50%'}}
-                                            onPress={ () => navigateTo('rooms')}
-                                        >
-                                            <View style={{ paddingHorizontal: 20 }}>
-                                                <Text style={styles.tags}>Rooms</Text>
-                                                <Text style={styles.choice} numberOfLines={1}>
-                                                    { totalPandR() }
-                                                </Text>
-                                            </View>
-                                        </TouchableHighlight> 
-                                    </View>
-                                    <View style={styles.buttonscontainer} >
-                                        <TouchableHighlight 
-                                            underlayColor={'transparent'}
-                                            style={{width: '50%'}}
-                                        >
-                                            <Button 
-                                                title='FILTER'
-                                                buttonStyle={styles.buttonstyle}
-                                                icon={
-                                                    <MaterialComunnityIcons 
-                                                        name={'tune'} 
-                                                        color={Global.buttonbg1} 
-                                                        size={20}
-                                                    />
-                                                }
-                                                titleStyle={styles.buttontitlestyle}
-                                                onPress={ () => navigateTo('filter') }
-                                            />  
-                                        </TouchableHighlight>
-                                        <SortByMain handleApply={handleSortApply} />
-                                    </View>
-                                </View>
-                            </View>
-                        </Animated.View>
-                        <Animated.ScrollView
-                            onScroll={(event) => {
-                                const scrolling = event.nativeEvent.contentOffset.y;
-                                if (scrolling > 300 ) {
-                                    setHeaderShown(false);
-                                } else {
-                                    setHeaderShown(true);
+                            <Input 
+                                placeholder="Search"
+                                value={searchValue}
+                                keyboardAppearance={'default'}
+                                keyboardType={'default'}
+                                autoCorrect={false}
+                                rightIcon={
+                                    <MaterialComunnityIcons name="magnify" color={'#555'} size={20} />
                                 }
-                            }}
-                            // onScroll will be fired every 16ms
-                            scrollEventThrottle={16}
-                            style={{ 
-                                flex: 1, 
-                                paddingVertical:10,
-                                maxHeight: ( headerShown === true ) ? Dimensions.get('window').height - 174 : null,
-                                transform: [ { translateY: translationContent } ] 
-                            }}
-                        >
-                            <View style={
-                                { 
-                                    flex: 1,
-                                    paddingBottom: 30,
-                                    width: '100%', 
-                                    flexDirection: 'row', 
-                                    flexWrap: 'wrap',
-                                    justifyContent: twoColumns ? 'flex-start' : 'center' 
-                                }
-                            }>
-                                {
-                                    hotels.length !== 0 ? (
-                                        hotels.map((value, idx) => (
-                                            <LessDetail key={idx.toString()} hotel={value} navigation={navigation} isSignedIn={isSignedIn} />
-                                        ))
-                                    ) : (
-                                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '40%' }}>
-                                            <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>Sorry,</Text>
-                                            <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>
-                                                There is no hotel suites these critics.
+                                rightIconContainerStyle={{
+                                    width: 30
+                                }}
+                                containerStyle={{
+                                    paddingHorizontal: 0,
+                                    width: 320,
+                                }}
+                                inputStyle={styles.input}
+                                placeholderTextColor={"#888"}
+                                inputContainerStyle={styles.inputcontainer}
+                                errorStyle={{
+                                    display: 'none'
+                                }}
+                                onChangeText={(text) => setSearchValue(text)}
+                                onSubmitEditing={(e) => handleSearchApply(e)}
+                            />
+                            <View style={{marginTop: 20, width: '100%', maxWidth: 450, backgroundColor: 'transparent'}}>
+                                <View style={styles.dateANDroomcontainer} >
+                                    <TouchableHighlight
+                                        underlayColor={'transparent'}
+                                        style={{ width: '50%'}}
+                                        onPress={ () => navigateTo('date') }
+                                    >
+                                        <View style={{ borderRightColor: Global.buttonbg1, borderRightWidth: 1, paddingHorizontal: 20 }}>
+                                            <Text style={styles.tags} >Dates</Text>
+                                            <Text style={styles.choice} numberOfLines={1}>
+                                                { dateString }       
                                             </Text>
                                         </View>
-                                    )
-                                }
-                            </View>
-                        </Animated.ScrollView>
-                        {
-                            headerShown === false ? (
-                                <View
-                                    style={{
-                                        position: 'absolute',
-                                        width: 60,
-                                        bottom: 10,
-                                        left: 10
-                                    }}
-                                >
-                                    <Button
-                                        title=''
-                                        titleStyle={{ display: 'none' }}
-                                        icon={
-                                            <MaterialComunnityIcons 
-                                                name="book-search"
-                                                color={'white'}
-                                                size={25}
-                                            />
-                                        }
-                                        containerStyle={{
-                                            borderRadius: 200,
-                                            elevation: 10
-                                        }}
-                                        buttonStyle={{
-                                            backgroundColor: Global.tabactive,
-                                            borderRadius: 200,
-                                            width: 60,
-                                            height: 60
-                                        }}
-                                        onPress={() => setHeaderShown(true) }
-                                    />
+                                    </TouchableHighlight> 
+                                    <TouchableHighlight
+                                        underlayColor={'transparent'}
+                                        style={{width: '50%'}}
+                                        onPress={ () => navigateTo('rooms')}
+                                    >
+                                        <View style={{ paddingHorizontal: 20 }}>
+                                            <Text style={styles.tags}>Rooms</Text>
+                                            <Text style={styles.choice} numberOfLines={1}>
+                                                { totalPandR() }
+                                            </Text>
+                                        </View>
+                                    </TouchableHighlight> 
                                 </View>
-                            ) : (null)
-                        }
-                    </>
-                ) : (
-                    <Loading />
+                                <View style={styles.buttonscontainer} >
+                                    <TouchableHighlight 
+                                        underlayColor={'transparent'}
+                                        style={{width: '50%'}}
+                                    >
+                                        <Button 
+                                            title='FILTER'
+                                            buttonStyle={styles.buttonstyle}
+                                            icon={
+                                                <MaterialComunnityIcons 
+                                                    name={'tune'} 
+                                                    color={Global.buttonbg1} 
+                                                    size={20}
+                                                />
+                                            }
+                                            titleStyle={styles.buttontitlestyle}
+                                            onPress={ () => navigateTo('filter') }
+                                        />  
+                                    </TouchableHighlight>
+                                    <SortByMain handleApply={handleSortApply} />
+                                </View>
+                            </View>
+                        </View>
+                    </Animated.View>
                 )
             }
-            
+            <Animated.ScrollView
+                onScroll={(event) => {
+                    const scrolling = event.nativeEvent.contentOffset.y;
+                    if (scrolling > 300 ) {
+                        setHeaderShown(false);
+                    } else {
+                        setHeaderShown(true);
+                    }
+                }}
+                // onScroll will be fired every 16ms
+                scrollEventThrottle={16}
+                style={{ flex: 1 }}
+                contentContainerStyle={{ flexGrow: 1 }}
+            >
+                {
+                    hotels ? (
+                        <Animated.View style={
+                            {
+                                flex: 1,
+                                width: '100%', 
+                                flexDirection: 'row', 
+                                flexWrap: 'wrap',            
+                                paddingVertical:10,
+                                maxHeight: ( headerShown === true ) ? Dimensions.get('window').height - 174 : null,
+                                transform: [ { translateY: translationContent } ],
+                                justifyContent: twoColumns ? 'flex-start' : 'center' 
+                            }
+                        }>
+                            {
+                                hotels.length !== 0 ? (
+                                    hotels.map((value, idx) => (
+                                        <LessDetail key={idx.toString()} hotel={value} navigation={navigation} isSignedIn={isSignedIn} />
+                                    ))
+                                ) : (
+                                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '40%' }}>
+                                        <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>Sorry,</Text>
+                                        <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>
+                                            There is no hotel suites these critics.
+                                        </Text>
+                                    </View>
+                                )
+                            }
+                        </Animated.View>
+                    ) : (
+                            <Loading />
+                        )
+                    }
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                    { paginate && paginate }
+                </View>
+            </Animated.ScrollView>
+            {
+                headerShown === false ? (
+                    <View
+                        style={{
+                            position: 'absolute',
+                            width: 60,
+                            bottom: 10,
+                            left: 10
+                        }}
+                    >
+                        <Button
+                            title=''
+                            titleStyle={{ display: 'none' }}
+                            icon={
+                                <MaterialComunnityIcons 
+                                    name="book-search"
+                                    color={'white'}
+                                    size={25}
+                                />
+                            }
+                            containerStyle={{
+                                borderRadius: 200,
+                                elevation: 10
+                            }}
+                            buttonStyle={{
+                                backgroundColor: Global.tabactive,
+                                borderRadius: 200,
+                                width: 60,
+                                height: 60
+                            }}
+                            onPress={() => setHeaderShown(true) }
+                        />
+                    </View>
+                ) : (null)
+            }
         </>
     )
 }
 
-export default function Home({ isSignedIn, globalNavigation, navigation }){
+export default function Home({ isSignedIn, globalNavigation, navigation, route }){
 
     return (
         <>
@@ -333,7 +358,7 @@ export default function Home({ isSignedIn, globalNavigation, navigation }){
                                         screenOptions={{ headerShown: false }}
                                     >
                                         <Stack.Screen name="homeMain">
-                                            { props => <HomeMain {...props} isSignedIn={isSignedIn} /> }    
+                                            { props => <HomeMain {...props} isSignedIn={isSignedIn} drawerRoute={route} /> }    
                                         </Stack.Screen>
                                         <Stack.Screen name="filter" component={Filter} />
                                         <Stack.Screen name="date" component={DateD} />
