@@ -41,7 +41,7 @@ export function Success({ success, setSuccess, navigation }) {
     )
 }
 
-export function Waiting({ wait, check, setCheck, handlePayment, setWait }){
+export function Waiting({ wait, check, setCheck, handlePayment, setWait, type }){
     return (
         <Overlay isVisible={wait && !check} overlayStyle={{ width: '90%', maxWidth: 400, padding: 0, borderRadius: 5 }}>
             <Text style={{ margin: 10, fontSize: 20, color: '#444', fontWeight: '700', textAlign: 'center' }}>
@@ -63,7 +63,7 @@ export function Waiting({ wait, check, setCheck, handlePayment, setWait }){
                     containerStyle={{ width: "50%", alignSelf: 'center', borderRadius: 0   }}
                     buttonStyle={{ width: "100%", borderTopColor: '#ddd', borderTopWidth: 1, backgroundColor: 'transparent', borderRadius: 0  }}
                     titleStyle={{ color: Global.tabactive, fontSize: 18 }}
-                    onPress={() => { setCheck(true); handlePayment(); }}
+                    onPress={() => { setCheck(true); handlePayment(type); }}
                 />
             </View>
         </Overlay>

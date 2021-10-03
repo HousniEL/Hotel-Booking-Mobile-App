@@ -33,9 +33,8 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     const [ cardInfo, setCardInfo ] = useState();
     const [ total, setTotal ] = useState();
     const [ wait, setWait ] = useState(false);
-
     const [ check, setCheck ] = useState();
-
+    const [ paymentType, setPaymentType ] = useState();
     const [ done, setDone ] = useState(false);
 
     useEffect(() => {
@@ -58,12 +57,13 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
 
 
     function handlePayNow(){
+        setPaymentType(true);
         setWait(true);
     }
 
-    function handlePayment(){
+    function handlePayment(type){
         const bookingService = new BookingService();
-        bookingService.addBooking(bookInfo, true, total, (ID) => {
+        bookingService.addBooking(bookInfo, type, total, (ID) => {
             var setOfRooms = [];
             for(let room of bookInfo.table){
                 setOfRooms.push({
@@ -94,13 +94,14 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     }
     
     function handlePayLater(){
-
+        setPaymentType(false);
+        setWait(true);
     }
 
     return (
         <>
         {
-            wait === true && !check && <Waiting wait={wait} check={check} setCheck={setCheck} handlePayment={handlePayment} setWait={setWait} />
+            wait === true && !check && <Waiting wait={wait} check={check} setCheck={setCheck} handlePayment={handlePayment} setWait={setWait} type={paymentType} />
         }
         {
             done === true && <Success success={done} setSuccess={setDone} navigation={navigation} />
