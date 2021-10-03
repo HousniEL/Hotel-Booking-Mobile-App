@@ -46,13 +46,13 @@ function ReservationList({ navigation, showHeader }) {
 
         var bookingService = new BookingService();
         bookingService.getBookings({ user_id : currentUser.id }, (suc) => {
-            bookingService.getBookingsPerPage({ ids : suc.slice(0, 3) }, (suc) => {
+            bookingService.getBookingsPerPage({ ids : suc.slice(0, 6) }, (suc) => {
                 setReservations(suc);
                 setRefreshing(false);
             }, (err) => {
                 console.log(err);
             })
-            setPaginate(<Paginate allIds={suc} setItems={setReservations} fetchIds={bookingService.getBookingsPerPage} perpage={3} />);
+            setPaginate(<Paginate allIds={suc} setItems={setReservations} fetchIds={bookingService.getBookingsPerPage} perpage={6} />);
         }, (err) => {
             console.log('Err : ', err);
         });

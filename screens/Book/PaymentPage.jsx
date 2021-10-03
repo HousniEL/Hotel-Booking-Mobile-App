@@ -34,7 +34,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     const [ total, setTotal ] = useState();
     const [ wait, setWait ] = useState(false);
     const [ check, setCheck ] = useState();
-    const [ paymentType, setPaymentType ] = useState();
+    const [ paymentType, setPaymentType ] = useState("");
     const [ done, setDone ] = useState(false);
 
     useEffect(() => {
@@ -101,7 +101,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     return (
         <>
         {
-            wait === true && !check && <Waiting wait={wait} check={check} setCheck={setCheck} handlePayment={handlePayment} setWait={setWait} type={paymentType} />
+            wait === true && !check && <Waiting wait={wait} check={check} setCheck={setCheck} handlePayment={handlePayment} setWait={setWait} type={paymentType} setType={setPaymentType}/>
         }
         {
             done === true && <Success success={done} setSuccess={setDone} navigation={navigation} />
@@ -178,8 +178,9 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                             <Button 
                                 title='Pay at the institution'
                                 buttonStyle={styles.payLaterButtonStyle}
-                                titleStyle={styles.payLaterTitleStyle}
+                                titleStyle={ (paymentType === "" || paymentType === true) ? styles.payLaterTitleStyle : { display: 'none' }}
                                 containerStyle={styles.payLaterContainerStyle}
+                                icon={ wait && !paymentType && <Flow size={30} color='white' /> }
                                 onPress={ handlePayLater }
                                 disabled={ wait || payat == 0 }
                                 disabledStyle={ ( wait || payat == 0 ) && { backgroundColor: "#ddd" }}
@@ -188,12 +189,14 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                             <Button 
                                 title='Pay Now'
                                 buttonStyle={ styles.payNowButtonStyle }
-                                titleStyle={ !wait ? styles.payNowTitleStyle : { display: 'none' } }
+                                titleStyle={ (paymentType === "" || paymentType === false) ? styles.payNowTitleStyle : { display: 'none' } }
                                 containerStyle={ styles.payNowContainerStyle }
-                                icon={ wait && <Flow size={30} color='white' /> }
+                                icon={ wait && paymentType && <Flow size={30} color='white' /> }
                                 onPress={ handlePayNow }
                                 disabled={wait}
                                 disabledStyle={{ backgroundColor: "#899B9A" }}
+                                disabledTitleStyle={{ color: '#bbb' }}
+
                             /> 
                         </View>
                     </View>
