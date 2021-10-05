@@ -9,96 +9,70 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import CreditCardService from '../../../services/CreditCardService';
 import CreditCardCover from '../../CreditCardCover';
 
+import Global from '../../Global.js';
+
+import { Flow } from "react-native-animated-spinkit";
+
 export default function CardInfo({ userID, cardInfo, setRefresh, refresh }){
 
     const [wait, setWait] = useState(false); 
-    const [ messageVisibility, setMessageVisibility ] = useState(false);
-
-    function toggleOverlay(){
-        setMessageVisibility(!messageVisibility);
-    }
-
-    function handleCancel(){
-        toggleOverlay();
-    }
-
+    const [deleting, setDeleting] = useState(false);
 
     function handleDelete(){
-        setWait(true);
+        setWait(false);
+        setDeleting(true);
         const creditCardService = new CreditCardService();
         creditCardService.deleteCreditCard({ 'user_id' : userID }, (res) => {
-            toggleOverlay();
-            setWait(false);
             setRefresh(!refresh);
         }, (err) => {
-            toggleOverlay();
-            setWait(false);
+            setDeleting(false);
         })
     }
 
     return (
         <View style={{ alignItems: 'center' }}>
-            <CreditCardCover cardInfo={cardInfo} />
-            <TouchableHighlight 
-                underlayColor={'transparent'}
-                style={{ position: 'absolute', top: -45, right: 0  }}
-                onPress={handleDelete}
-            >
-                <MaterialCommunityIcons name={'trash-can-outline'} color={'gray'} size={25} />
-            </TouchableHighlight>
-            <Overlay 
-                isVisible={messageVisibility} 
-                onBackdropPress={toggleOverlay} 
-                onPress={toggleOverlay} 
-                overlayStyle={styles.overlay}
-            >
-                <View style={ { backgroundColor: 'white', borderRadius: 10 } }>
-                    <Text style={styles.title}>Are you sure you want to delete this credit card?</Text>
-                    <Button 
-                        title="Delete"
-                        containerStyle={{
-                            justifyContent: 'center'
-                        }}
-                        buttonStyle={{
-                            backgroundColor: 'transparent',
-                            padding: 10
-                        }}
-                        titleStyle={{
-                            color: '#DA4C55',
-                            fontSize: 18,
-                            fontWeight: '700'
-                        }}
-                        onPress={handleDelete}
-                        disabled={wait}
-                        disabledStyle={{ backgroundColor: 'transparent' }}
-                        disabledTitleStyle={{ color: '#DA4C55' }}
-                    />           
-                </View>
-                <View>
-                    <Button 
-                        title="Cancel"
-                        containerStyle={{
-                            justifyContent: 'center',
-                            marginTop: 10,
-                            borderRadius: 10
-                        }}
-                        buttonStyle={{
-                            backgroundColor: 'white',
-                            borderRadius: 10,
-                            padding: 10
-                        }}
-                        titleStyle={{
-                            color: '#2B77D1',
-                            fontSize: 18,
-                            fontWeight: '700'
-                        }}
-                        onPress={handleCancel}
-                        disabled={wait}
-                        disabledStyle={{ backgroundColor: 'transparent' }}
-                        disabledTitleStyle={{ color: '#2B77D1' }}
-                    />
-                </View>
-            </Overlay>
+            {
+                !deleting ? (
+                    <>
+                        <CreditCardCover cardInfo={cardInfo} />
+                        <TouchableHighlight 
+                            underlayColor={'transparent'}
+                            style={{ position: 'absolute', top: -45, right: 0  }}
+                            onPress={() => setWait(true)}
+                        >
+                            <MaterialCommunityIcons name={'trash-can-outline'} color={'gray'} size={25} />
+                        </TouchableHighlight>
+                        <Overlay isVisible={wait} overlayStyle={ styles.overlay } >
+                            <Text style={ styles.title }>
+                            Verification Required
+                            </Text>
+                            <Text style={{ margin: 10, fontSize: 18, color: '#444', textAlign: 'center' }}>
+                                Are you sure you want to delete this credit card?
+                            </Text>
+                            <View style={{ flexDirection: 'row', width: '100%', alignSelf: 'center', marginTop: 20 }}>
+                                <Button 
+                                    title='Cancel'
+                                    containerStyle={{ width: "50%", alignSelf: 'center' , borderRadius: 0   }}
+                                    buttonStyle={{ width: "100%", borderTopColor: '#ddd', borderTopWidth: 1, borderEndColor: '#ddd', borderRightWidth: 1, backgroundColor: 'transparent', borderRadius: 0 }}
+                                    titleStyle={{ color: Global.tabactive, fontSize: 18 }}
+                                    onPress={() => { setWait(false) }}
+                                />
+                                <Button 
+                                    title='Delete'
+                                    containerStyle={{ width: "50%", alignSelf: 'center', borderRadius: 0   }}
+                                    buttonStyle={{ width: "100%", borderTopColor: '#ddd', borderTopWidth: 1, backgroundColor: 'transparent', borderRadius: 0  }}
+                                    titleStyle={{ color: 'tomato', fontSize: 18 }}
+                                    onPress={handleDelete}
+                                />
+                            </View>
+                        </Overlay>
+                    </>
+                ) : (
+                    <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20 }}>
+                        <Flow color='#666' size={30} />
+                    </View>
+                )
+            }
         </View>
     )
 }
@@ -106,20 +80,16 @@ export default function CardInfo({ userID, cardInfo, setRefresh, refresh }){
 
 const styles = StyleSheet.create({
     overlay: {
-        backgroundColor: 'transparent',
-        elevation: 0, 
         width: '90%', 
-        maxWidth: 400,
-        borderRadius: 5,
-        padding: 0,
-        bottom: 20,
-        position: 'absolute' 
+        maxWidth: 400, 
+        padding: 0, 
+        borderRadius: 5 
     },
     title: {
-        textAlign: 'center',
-        fontSize: 18,
-        color: '#797979',
-        paddingHorizontal: 10,
-        paddingVertical: 10
+        margin: 10, 
+        fontSize: 20, 
+        color: '#444', 
+        fontWeight: '700', 
+        textAlign: 'center'
     }
 })

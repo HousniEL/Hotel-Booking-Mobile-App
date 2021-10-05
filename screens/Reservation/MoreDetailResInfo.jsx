@@ -7,6 +7,9 @@ import {
     TouchableHighlight,
     StyleSheet
 } from 'react-native';
+
+import { Button } from 'react-native-elements';
+
 import BookingService from '../../services/BookingService';
 import Global from '../Global';
 
@@ -14,28 +17,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { useAuth } from '../../contexts/AuthContext';
 import Loading from '../Loading';
-
-/*const bookingInfo = {
-    "bookedRooms": [
-        {
-            "Room_Type": "Single",
-            "Price": "88.00",
-            "Pers_count": "1"
-        },
-        {
-            "Room_Type": "Triple",
-            "Price": "150.00",
-            "Pers_count": "21"
-        }
-    ],
-    "Hotel_Name": "Le Meridien N'Fis",
-    "Date_From": "2021-09-15",
-    "Date_To": "2021-09-19",
-    "Status": "In Progress",
-    "Rooms_Count": 2,
-    "totalAmount": "238.00",
-    "created_at": "2021-09-13T19:42:49.000000Z"
-}*/
+import Verifying from './Verifying';
+import { Flow } from 'react-native-animated-spinkit';
 
 export default function MoreDetailResInfo({ navigation, route, showHeader }){
 
@@ -45,6 +28,11 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
 
     const [ bookingInfo, setBookingInfo ] = useState();
     const [ reservationDate, setReservationDate ] = useState();
+    const [ cancel, setCancel ] = useState();
+
+    function hanldeCancel(){
+        console.log('cancel');
+    }
 
     useEffect(() => {
         const bookingService = new BookingService();
@@ -112,6 +100,26 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
                                 <Text style={ styles.contentContent }>{ bookingInfo.Status }</Text>
                             </View>
                         </View>
+                        {
+                            bookingInfo.Status !== "Refused" && (
+                                <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'flex-end', padding: 10 }}>
+                                    <Button
+                                        title="Cancel"
+                                        containerStyle={{ width: '45%', maxWidth: 355 }}
+                                        buttonStyle={{ backgroundColor: "rgb(201, 41, 41)", height: 40 }}
+                                        titleStyle={ !cancel ? null : { display: 'none' } }
+                                        icon={ cancel && <Flow size={30} color='white' /> }
+                                        disabled={cancel}
+                                        disabledStyle={{ backgroundColor: "rgb(201, 41, 41)" }}
+                                        disabledTitleStyle={{ color: '#bbb' }}
+                                        onPress={() => setCancel(true)}
+                                    />
+                                </View>
+                            )
+                        }
+                        {
+                            cancel === true && <Verifying cancel={cancel} setCancel={setCancel} sendCancel={hanldeCancel} />
+                        }
                     </>
                 ) : (
                     <Loading />

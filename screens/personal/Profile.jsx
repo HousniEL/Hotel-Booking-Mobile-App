@@ -174,37 +174,3 @@ const styles = StyleSheet.create({
         margin: 2
     }
 })
-
-/*
-    const [ wait, setWait ] = useState(false);
-    function handleLogout(){
-        setWait(true);
-        logout(() => {
-            handleSignIn();
-            setWait(false);
-        }, (err) => {
-            console.log(err);
-            setWait(false);
-        })
-    }
-<View style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: 30 }}>
-                        <Button 
-                            title='Log Out'
-                            containerStyle={{
-                                justifyContent: 'center'
-                            }}
-                            buttonStyle={{
-                                backgroundColor: 'transparent'
-                            }}
-                            titleStyle={{
-                                color: '#DA4C55',
-                                fontSize: 18,
-                                fontWeight: '700'
-                            }}
-                            disabled={wait}
-                            disabledStyle={{ backgroundColor: 'transparent' }}
-                            disabledTitleStyle={{ color: '#D83000' }}
-                            onPress={ handleLogout }
-                        />
-                    </View>
-*/
