@@ -10,13 +10,12 @@ export default class HotelService {
 
     async getLessDetailHotels(generalFilter, success, error) {
 
-        var response = await fetch(API_URL + '/v1/hotels',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(generalFilter)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/hotels',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(generalFilter)
+            });
             var detail = await response.json();
             if( detail.message ) return error(detail); 
             return success(detail);
@@ -28,13 +27,13 @@ export default class HotelService {
 
     async getLessDetailHotelsPerPage(ids, success, error) {
 
-        var response = await fetch(API_URL + '/v1/hotels/getsome',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(ids)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/hotels/getsome',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(ids)
+            });
+
             var detail = await response.json();
             if( detail.message ) return error(detail); 
             return success(detail);
@@ -46,20 +45,20 @@ export default class HotelService {
 
     async getHotelById(id, success, error){
 
-        var response = await fetch(API_URL + '/v1/hotels/' + id, {
-            ...publicRoute,
-            method: 'GET'
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/hotels/' + id, {
+                ...publicRoute,
+                method: 'GET'
+            });
+
             var object = await response.json();
             var rooms = [];
             for(let room of object.hotel_rooms_type){
                 rooms.push(new Hotel_Room_Type(room));
             }
             return success(object, rooms);
-        } catch(e) {
-            return error(e);
+        } catch(err) {
+            return error(err);
         }
 
     }
@@ -68,17 +67,17 @@ export default class HotelService {
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/hotels/rate', {
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(object)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/hotels/rate', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            });
+
             var detail = await response.json();
             return success(detail);
-        } catch(e) {
-            return error(e);
+        } catch(err) {
+            return error(err);
         }
     }
 

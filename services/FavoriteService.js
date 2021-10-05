@@ -10,20 +10,20 @@ export default class FavoriteService{
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/favorite/add',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(object)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/favorite/add',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            });
+
             var detail = await response.json();
 
             if( detail.message ) return error(detail);
 
             return success(detail);
         } catch (e) {
-            return error(detail);
+            return error(e);
         }
 
     }
@@ -31,20 +31,20 @@ export default class FavoriteService{
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/favorite/delete',{
-            ...publicRoute,
-            method: 'DELETE',
-            body: JSON.stringify(object)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/favorite/delete',{
+                ...publicRoute,
+                method: 'DELETE',
+                body: JSON.stringify(object)
+            });
+
             var detail = await response.json();
 
             if( detail.message ) return error(detail);
 
             return success(detail);
         } catch (e) {
-            return error(detail);
+            return error(e);
         }
 
     }
@@ -53,38 +53,38 @@ export default class FavoriteService{
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/favorite/all',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(object)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/favorite/all',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            });
+
             var detail = await response.json();
 
             if( detail.message ) return error(detail);
 
             return success(detail);
         } catch (e) {
-            return error(detail);
+            return error(e);
         }
 
     }
 
     async getFavoritePerPage(ids, success, error) {
 
-        var response = await fetch(API_URL + '/v1/favorite/chunk',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(ids)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/favorite/chunk',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(ids)
+            });
+
             var detail = await response.json();
             if( detail.message ) return error(detail); 
             return success(detail);
-        } catch(err) {
-            return error(err);
+        } catch(e) {
+            return error(e);
         }
 
     }
@@ -93,20 +93,19 @@ export default class FavoriteService{
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/favorite/check',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(object)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/favorite/check',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            });
             var detail = await response.json();
 
             if( detail.message ) return error(detail);
 
             return success(detail);
         } catch (e) {
-            return error(detail);
+            return error(e);
         }
 
     }

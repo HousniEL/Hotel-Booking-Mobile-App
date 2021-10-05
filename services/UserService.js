@@ -8,13 +8,13 @@ export default class UserService{
 
     async SignUp(formData, success, error){
 
-        var response = await fetch( API_URL + '/v1/users/register', {
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(formData)
-        } );
-
         try{
+            var response = await fetch( API_URL + '/v1/users/register', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(formData)
+            } );
+
             var content = await response.json();
             if(content.message){
                 return error(content);
@@ -27,13 +27,14 @@ export default class UserService{
     }
 
     async LogIn(formData, success, error){
-        var response = await fetch( API_URL + '/v1/users/login', {
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(formData)
-        } );
 
         try{
+            var response = await fetch( API_URL + '/v1/users/login', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(formData)
+            } );
+
             var content = await response.json();
             if(content.pwd || content.email){
                 return error(content);
@@ -55,12 +56,12 @@ export default class UserService{
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch( API_URL + '/v1/users/logout', {
-            ...publicRoute,
-            method: 'DELETE'
-        } );
-
         try{
+            var response = await fetch( API_URL + '/v1/users/logout', {
+                ...publicRoute,
+                method: 'DELETE'
+            } );
+
             var content = await response.json();
             if( content.message === "Log Out" ){
                 await SecureStore.deleteItemAsync('token');
@@ -76,13 +77,13 @@ export default class UserService{
     }
 
     async codeVerification(object, success, error){
-        var response = await fetch( API_URL + '/v1/users/verification', {
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(object)
-        } );
-
         try{
+            var response = await fetch( API_URL + '/v1/users/verification', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            } );
+
             var content = await response.json();
             if(content.error){
                 return success(content);

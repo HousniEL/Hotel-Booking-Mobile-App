@@ -4,7 +4,9 @@ import {
     ScrollView,
     TouchableHighlight,
     View,
-    Dimensions
+    Dimensions,
+    Text,
+    Alert
 } from 'react-native';
 import LessDetailResInfo from '../Reservation/LessDetailResInfo';
 
@@ -18,6 +20,8 @@ import MoreDetailResInfo from '../Reservation/MoreDetailResInfo';
 
 import Paginate from '../Paginate';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 var width = ( ( Dimensions.get('window').width ) >= 355 ) ? 355 : Dimensions.get('window').width;
 
 const Stack = createStackNavigator();
@@ -29,6 +33,8 @@ function ReservationList({ navigation, showHeader }) {
     const [twoColumns, setTwoColumns] = useState(false);
     const [paginate, setPaginate] = useState();
 
+    const [ warning, setWarning ] = useState();
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
     }, []);
@@ -36,7 +42,7 @@ function ReservationList({ navigation, showHeader }) {
     const { currentUser } = useAuth();
 
     useEffect(() => {
-
+        setWarning();
         var dim = (Dimensions.get('window').width - width*2);
         if( dim < 0 ){
             setTwoColumns(false);
@@ -46,15 +52,23 @@ function ReservationList({ navigation, showHeader }) {
 
         var bookingService = new BookingService();
         bookingService.getBookings({ user_id : currentUser.id }, (suc) => {
-            bookingService.getBookingsPerPage({ ids : suc.slice(0, 6) }, (suc) => {
-                setReservations(suc);
-                setRefreshing(false);
-            }, (err) => {
-                console.log(err);
-            })
-            setPaginate(<Paginate allIds={suc} setItems={setReservations} fetchIds={bookingService.getBookingsPerPage} perpage={6} />);
+            if( suc.length !== 0 ){
+                bookingService.getBookingsPerPage({ ids : suc.slice(0, 6) }, (suc) => {
+                    setReservations(suc);
+                }, (err) => {
+                    console.log(err);
+                })
+                setPaginate(<Paginate allIds={suc} setItems={setReservations} fetchIds={bookingService.getBookingsPerPage} perpage={6} />);
+            } else {
+                setReservations(" ");
+            }
+            setRefreshing(false);
         }, (err) => {
-            console.log('Err : ', err);
+            setRefreshing(false);
+            setReservations();
+            if( err.message === "Network request failed" ){
+                setWarning(' ');
+            }
         });
 
     }, [refreshing]);
@@ -81,7 +95,7 @@ function ReservationList({ navigation, showHeader }) {
                 }    
             >
                 {
-                    reservations ? (
+                    reservations && reservations !== " " && (
                     <View style={
                         { 
                             flex: 1, 
@@ -104,14 +118,38 @@ function ReservationList({ navigation, showHeader }) {
                             ) )
                         }
                     </View>
-                    ) : (
-                        <Loading />
+                    )
+                }
+                {   !reservations && !warning && <Loading />    }
+                {
+                    ( reservations && reservations === " " ) && (
+                        <View style={{ flexGrow: 1, alignItems: 'center', marginTop: '20%' }}>
+                            <MaterialCommunityIcons name='cancel' color={"#666"} size={30} />
+                            <Text style={{ color: "#666", fontSize: 21, fontWeight: '700' }}>EMPTY</Text>
+                        </View>
                     )
                     
                 }
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
-                    { paginate && paginate }
-                </View>
+                {
+                    paginate && (
+                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                            { paginate }
+                        </View>
+                    )
+                }
+                {
+                    warning && (
+                        <View style={{ flexGrow: 1, alignItems: 'center', paddingTop: '50%' }} >
+                            <MaterialCommunityIcons name={'wifi-off'} color="#666" size={32} />
+                            <Text style={{ marginTop: 5, fontSize: 22, fontWeight: '700', color: '#666'}}>
+                                Something went wrong!
+                            </Text>
+                            <Text style={{ marginTop: 20,  fontSize: 16, color: '#666'}}>
+                                Check if you are connected to internet.
+                            </Text>
+                        </View>
+                    )
+                }
             </ScrollView>
 
         </>

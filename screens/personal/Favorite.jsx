@@ -8,7 +8,8 @@ import {
     RefreshControl,
     TouchableHighlight,
     Dimensions,
-    ScrollView
+    ScrollView,
+    Alert
 } from 'react-native';
 
 import FavoriteService from '../../services/FavoriteService';
@@ -33,6 +34,8 @@ export default function Favorite({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const [twoColumns, setTwoColumns] = useState(false);
     const [paginate, setPaginate] = useState();
+
+    const [ warning, setWarning ] = useState();
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -65,7 +68,7 @@ export default function Favorite({ navigation }) {
     }
 
     useEffect( () => {
-
+        setWarning();
         var dim = (Dimensions.get('window').width - width*2);
         if( dim < 0 ){
             setTwoColumns(false);
@@ -75,15 +78,23 @@ export default function Favorite({ navigation }) {
 
         const favoriteService = new FavoriteService();
         favoriteService.listFavorites( { user_id : currentUser.id }, (suc) => {
-            favoriteService.getFavoritePerPage({ ids : suc.slice(0, 1) }, (suc) => {
-                setFavorites(suc);
-            }, (err) => {
-                console.log(err);
-            })
-            setPaginate(<Paginate allIds={suc} setItems={setFavorites} fetchIds={favoriteService.getFavoritePerPage} perpage={1} />)
+            if( suc.length !== 0 ){
+                favoriteService.getFavoritePerPage({ ids : suc.slice(0, 1) }, (suc) => {
+                    setFavorites(suc);
+                }, (err) => {
+                    console.log(err);
+                })
+                setPaginate(<Paginate allIds={suc} setItems={setFavorites} fetchIds={favoriteService.getFavoritePerPage} perpage={1} />)
+            } else {
+                setFavorites(' ');
+            }
             setRefreshing(false);
         }, (err) => {
-            console.log(err);
+            setRefreshing(false);
+            setFavorites();
+            if( err.message === "Network request failed" ){
+                setWarning(' ');
+            }
         });
     }, [refreshing] );
 
@@ -103,83 +114,106 @@ export default function Favorite({ navigation }) {
                         }
                     >
                         {
-                !favorites ? (
-                    <Loading />
-                ) : (
-                        <View style={{ flex: 1,
-                                    width: '100%', 
-                                    flexDirection: 'row', 
-                                    flexWrap: 'wrap',
-                                    justifyContent: twoColumns ? 'flex-start' : 'center'  }}>
-                            {
-                            favorites.map( (hotel, idx) => (
-                                <TouchableHighlight
-                                    key={idx}
-                                    underlayColor={"transparent"}
-                                    onPress={() => handleAdPressed(hotel.id)}
-                                    style={{ width: '100%' }}
-                                >
-                                    <View
-                                        style={styles.container}
-                                    >
-                                        <View style={{ width: "40%", height: null, flexDirection: 'row', alignItems: "center" }} >
-                                            <Image
-                                                resizeMethod={'auto'}
-                                                resizeMode={'cover'} 
-                                                style={styles.imageStyle}
-                                                source={{ uri : hotel.image.img1 }}
-                                            />
-                                            <View style={{ position: "absolute", bottom: 5, left: 5 }}>
-                                                <Rate value={hotel.Rate}/>
+                            !warning ? (
+                                <>
+                                    {
+                                        !favorites ? (
+                                            <Loading />
+                                        ) : (   
+                                                favorites !== " " ? (
+                                                    <View style={{ flex: 1,
+                                                            width: '100%', 
+                                                            flexDirection: 'row', 
+                                                            flexWrap: 'wrap',
+                                                            justifyContent: twoColumns ? 'flex-start' : 'center'  }}>
+                                                    {
+                                                        favorites.map( (hotel, idx) => (
+                                                            <TouchableHighlight
+                                                                key={idx}
+                                                                underlayColor={"transparent"}
+                                                                onPress={() => handleAdPressed(hotel.id)}
+                                                                style={{ width: '100%' }}
+                                                            >
+                                                                <View
+                                                                    style={styles.container}
+                                                                >
+                                                                    <View style={{ width: "40%", height: null, flexDirection: 'row', alignItems: "center" }} >
+                                                                        <Image
+                                                                            resizeMethod={'auto'}
+                                                                            resizeMode={'cover'} 
+                                                                            style={styles.imageStyle}
+                                                                            source={{ uri : hotel.image.img1 }}
+                                                                        />
+                                                                        <View style={{ position: "absolute", bottom: 5, left: 5 }}>
+                                                                            <Rate value={hotel.Rate}/>
+                                                                        </View>
+                                                                    </View>
+                                                                    <View
+                                                                        style={{
+                                                                            padding: 5
+                                                                        }}
+                                                                    >
+                                                                        <Text style={{fontSize: 18, fontWeight: '700', maxWidth: '65%', paddingHorizontal: 2, color: Global.black}}>
+                                                                            {hotel.Hotel_Name}
+                                                                        </Text>
+                                                                        <View style={{ flexDirection: 'row' }} >
+                                                                            {
+                                                                                getStars(hotel.Stars).map((value, idx) => (
+                                                                                    <MaterialCommunityIcons
+                                                                                        name='star'
+                                                                                        color={ value ? 'gold' : '#BBB'}
+                                                                                        size={16}
+                                                                                        key={idx.toString()}
+                                                                                    />
+                                                                                ))
+                                                                            }
+                                                                        </View>
+                                                                        <Text style={styles.servicesContainer} numberOfLines={3} >
+                                                                            {
+                                                                                getServices(hotel.Services).map( (value, idx) => (
+                                                                                    <View key={idx.toString()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                                        <MaterialCommunityIcons 
+                                                                                            name={servicesIcon.get(value)} 
+                                                                                            color={'#666'} 
+                                                                                            size={(value === "Free of charge cancellation") ? 14 : 12} 
+                                                                                            style={{ padding: 0 }} 
+                                                                                            />
+                                                                                        <Text style={{ color: '#666', fontSize: 14 }}>
+                                                                                            {' ' + value + '  '}
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                ) )
+                                                                            }
+                                                                        </Text>
+                                                                    </View>
+                                                                </View>
+                                                            </TouchableHighlight>
+                                                        ) )
+                                                    }
+                                                    </View>
+                                                ) : (
+                                                    <View style={{ flexGrow: 1, alignItems: 'center', marginTop: '20%' }}>
+                                                        <MaterialCommunityIcons name='cancel' color={"#666"} size={40} />
+                                                        <Text style={{ color: "#666", fontSize: 22, fontWeight: '700' }}>EMPTY</Text>
+                                                    </View>
+                                                )
+                                            )}
+                                            <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                                                { paginate && paginate }
                                             </View>
-                                        </View>
-                                        <View
-                                            style={{
-                                                padding: 5
-                                            }}
-                                        >
-                                            <Text style={{fontSize: 18, fontWeight: '700', maxWidth: '65%', paddingHorizontal: 2, color: Global.black}}>
-                                                {hotel.Hotel_Name}
-                                            </Text>
-                                            <View style={{ flexDirection: 'row' }} >
-                                                {
-                                                    getStars(hotel.Stars).map((value, idx) => (
-                                                        <MaterialCommunityIcons
-                                                            name='star'
-                                                            color={ value ? 'gold' : '#BBB'}
-                                                            size={16}
-                                                            key={idx.toString()}
-                                                        />
-                                                    ))
-                                                }
-                                            </View>
-                                            <Text style={styles.servicesContainer} numberOfLines={3} >
-                                                {
-                                                    getServices(hotel.Services).map( (value, idx) => (
-                                                        <View key={idx.toString()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                            <MaterialCommunityIcons 
-                                                                name={servicesIcon.get(value)} 
-                                                                color={'#666'} 
-                                                                size={(value === "Free of charge cancellation") ? 14 : 12} 
-                                                                style={{ padding: 0 }} 
-                                                                />
-                                                            <Text style={{ color: '#666', fontSize: 14 }}>
-                                                                {' ' + value + '  '}
-                                                            </Text>
-                                                        </View>
-                                                    ) )
-                                                }
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </TouchableHighlight>
-                            ) )
+                                </>
+                            ) : (
+                                <View style={{ flexGrow: 1, alignItems: 'center', paddingTop: '50%' }} >
+                                    <MaterialCommunityIcons name={'wifi-off'} color="#666" size={32} />
+                                    <Text style={{ marginTop: 5, fontSize: 22, fontWeight: '700', color: '#666'}}>
+                                        Something went wrong!
+                                    </Text>
+                                    <Text style={{ marginTop: 20,  fontSize: 16, color: '#666'}}>
+                                        Check if you are connected to internet.
+                                    </Text>
+                                </View>
+                            )
                         }
-                        </View>
-                        )}
-                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
-                            { paginate && paginate }
-                        </View>
                     </ScrollView>
         </>
     )

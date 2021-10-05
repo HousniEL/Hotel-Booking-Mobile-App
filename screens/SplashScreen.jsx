@@ -43,7 +43,6 @@ export default function Welcome({ handleSignIn }) {
         ]).start();
     }, []);
 
-
     const { setCurrentUser } = useAuth();
     
     async function check(){

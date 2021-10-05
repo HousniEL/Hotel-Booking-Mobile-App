@@ -21,13 +21,13 @@ export default class BookingService {
             Total_Amount : totalAmount
         }
 
-        var response = await fetch(API_URL + '/v1/book/add',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(bookedInfo)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/book/add',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(bookedInfo)
+            });
+
             var idBooking = await response.json();
             success(idBooking);
         } catch(err) {
@@ -45,13 +45,14 @@ export default class BookingService {
             rooms : setOfRooms
         }
 
-        var response = await fetch(API_URL + '/v1/book/bookedRooms',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(bookedRoom)
-        });
-
         try{
+
+            var response = await fetch(API_URL + '/v1/book/bookedRooms',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(bookedRoom)
+            });
+
             const detail = await response.json();
             success(detail);
         } catch(err) {
@@ -63,19 +64,19 @@ export default class BookingService {
     async sendEmail(object, success, error){
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch( API_URL + '/v1/book/status', {
-            ...publicRoute,
-            method : 'POST',
-            body : JSON.stringify(object)
-        } );
+        try{
+            var response = await fetch( API_URL + '/v1/book/status', {
+                ...publicRoute,
+                method : 'POST',
+                body : JSON.stringify(object)
+            } );
 
-        try {
             var detail = await response.json();
     
             if( detail.success ) return success('Email send');
             return error(detail);
         } catch(e) {
-            error(e.messsage);
+            error(e);
         }
 
 
@@ -84,13 +85,13 @@ export default class BookingService {
     async getBookings(userID, success, error){
         publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;
 
-        const response = await fetch(API_URL + '/v1/book/allReservations', {
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(userID)
-        })
+        try{
+            const response = await fetch(API_URL + '/v1/book/allReservations', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(userID)
+            })
 
-        try {
             const detail = await response.json();
             if( detail.message ){
                 return error(detail.message);
@@ -104,13 +105,13 @@ export default class BookingService {
 
     async getBookingsPerPage(ids, success, error) {
 
-        var response = await fetch(API_URL + '/v1/book/chunk',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(ids)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/book/chunk',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(ids)
+            });
+
             var detail = await response.json();
             if( detail.message ) return error(detail); 
             return success(detail);
@@ -123,13 +124,13 @@ export default class BookingService {
     async getBookingInfo(object, success, error){
         publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;
 
-        const response = await fetch(API_URL + '/v1/book/allInfo', {
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(object)
-        })
+        try{
+            const response = await fetch(API_URL + '/v1/book/allInfo', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            })
 
-        try {
             const detail = await response.json();
             if( detail.message ){
                 return error(detail.message);

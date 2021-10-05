@@ -89,10 +89,7 @@ export default function EmailVerification({ signed, route }) {
                 </View>
             </View>
             <Text style={styles.message}>
-                To use your account you should first validate it.
-            </Text>
-            <Text style={styles.message}>
-                Go check your inbox for a validation code.
+                To use your account you should first validate it. Go check your inbox for a validation code.
             </Text>
             <Input 
                 value={code + codeUnder}
@@ -148,22 +145,23 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#555',
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 50
     },
     inputcontainer: {
         borderColor: 'transparent',
         padding: 10,
-        height: 52,
+        height: 55,
         borderRadius: 25
     },
     input: {
-        color: '#777',
+        color: '#555',
         marginLeft: 2,
         fontSize: 18,
-        borderWidth: 1,
-        borderColor: 'gray',
+        backgroundColor: "#ccc",
+        borderRadius: 10,
         textAlign: 'center',
-        letterSpacing: 5
+        letterSpacing: 5,
+        height: 55
     },
     logoContainer: {
         width: '100%',
@@ -173,8 +171,8 @@ const styles = StyleSheet.create({
         marginBottom: '20%'
     },
     image: {
-        width: 40,
-        height: 40
+        width: 50,
+        height: 50
     },
     titleContainer: {
         flexDirection: 'column',

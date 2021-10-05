@@ -29,13 +29,13 @@ export default class CreditCardService {
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/credit/getLess',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(userID)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/credit/getLess',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(userID)
+            });
+
             var detail = await response.json();
             success(detail);
         } catch(err) {
@@ -48,13 +48,12 @@ export default class CreditCardService {
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/credit/getAll',{
-            ...publicRoute,
-            method: 'POST',
-            body: JSON.stringify(userID)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/credit/getAll',{
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(userID)
+            });
             var detail = await response.json();
             success(detail);
         } catch(err) {
@@ -67,13 +66,13 @@ export default class CreditCardService {
 
         publicRoute['headers']['Authorization'] = `Bearer ${ await SecureStore.getItemAsync('token') }`;
 
-        var response = await fetch(API_URL + '/v1/credit',{
-            ...publicRoute,
-            method: 'DELETE',
-            body: JSON.stringify(userID)
-        });
-
         try{
+            var response = await fetch(API_URL + '/v1/credit',{
+                ...publicRoute,
+                method: 'DELETE',
+                body: JSON.stringify(userID)
+            });
+
             var detail = await response.json();
             
             if(detail.message) return error(detail);

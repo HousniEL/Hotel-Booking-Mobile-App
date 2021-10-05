@@ -38,6 +38,7 @@ import { BookingProvider } from '../../contexts/BookingInfoContext';
 
 import HotelService from '../../services/HotelService';
 import Paginate from '../Paginate';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Stack = createStackNavigator();
 
@@ -70,6 +71,8 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
     const [twoColumns, setTwoColumns] = useState(false);
     const [paginate, setPaginate] = useState();
 
+    const [ warning, setWarning ] = useState();
+
     const [ dateString, setDateString ] = useState("From - To");
 
     // Contexts
@@ -79,7 +82,6 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
     const { toggleOverlay, updateSort } = useSort();
 
     useEffect(() => {
-
         var dim = (Dimensions.get('window').width - width*2);
         if( dim < 0 ){
             setTwoColumns(false);
@@ -114,6 +116,7 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
     }, [headerShown]);
 
     useEffect(() => {
+        setWarning();
         setHotels();
         var valueApp = [];
         for(let i = 0; i < rooms.length; i++){
@@ -131,7 +134,9 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
                 setPaginate(<Paginate allIds={response} setItems={setHotels} fetchIds={hotelService.getLessDetailHotelsPerPage} perpage={1} />)
             }
         }, (error) => {
-            console.log("Err : ", error);
+            if( error.message === "Network request failed" ){
+                setWarning(' ');
+            }
         });
         if(!isEmpty(generalFilter['search'])){
             setSearchValue(generalFilter['search'].value);
@@ -160,7 +165,7 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
             {
                 hotels && (
                     <Animated.View style={{
-                        position: 'absolute',
+                        position: "absolute",
                         top: 0,
                         left: 0,
                         right: 0,
@@ -253,57 +258,73 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
                     </Animated.View>
                 )
             }
-            <Animated.ScrollView
-                onScroll={(event) => {
-                    const scrolling = event.nativeEvent.contentOffset.y;
-                    if (scrolling > 300 ) {
-                        setHeaderShown(false);
-                    } else {
-                        setHeaderShown(true);
-                    }
-                }}
-                // onScroll will be fired every 16ms
-                scrollEventThrottle={16}
-                style={{ flex: 1 }}
-                contentContainerStyle={{ flexGrow: 1 }}
-            >
-                {
-                    hotels ? (
-                        <Animated.View style={
-                            {
-                                flex: 1,
-                                width: '100%', 
-                                flexDirection: 'row', 
-                                flexWrap: 'wrap',            
-                                paddingVertical:10,
-                                maxHeight: ( headerShown === true ) ? Dimensions.get('window').height - 174 : null,
-                                transform: [ { translateY: translationContent } ],
-                                justifyContent: twoColumns ? 'flex-start' : 'center' 
+            {
+                !warning ? (
+                    <Animated.ScrollView
+                        onScroll={(event) => {
+                            const scrolling = event.nativeEvent.contentOffset.y;
+                            if (scrolling > 300 ) {
+                                setHeaderShown(false);
+                            } else {
+                                setHeaderShown(true);
                             }
-                        }>
-                            {
-                                hotels.length !== 0 ? (
-                                    hotels.map((value, idx) => (
-                                        <LessDetail key={idx.toString()} hotel={value} navigation={navigation} isSignedIn={isSignedIn} />
-                                    ))
-                                ) : (
-                                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '40%' }}>
-                                        <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>Sorry,</Text>
-                                        <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>
-                                            There is no hotel suites these critics.
-                                        </Text>
+                        }}
+                        // onScroll will be fired every 16ms
+                        scrollEventThrottle={16}
+                        style={{ flex: 1, transform: [ { translateY: translationContent } ], }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                    >
+                        {
+                            hotels ? (
+                                <Animated.View style={
+                                    {
+                                        flex: 1,
+                                        width: '100%', 
+                                        flexDirection: 'row', 
+                                        flexWrap: 'wrap',            
+                                        paddingVertical: 10,
+                                        justifyContent: twoColumns ? 'flex-start' : 'center' 
+                                    }
+                                }>
+                                    {
+                                        hotels.length !== 0 ? (
+                                            [1, 2, 3, 4, 5, 6, 7].map( val => (
+                                                hotels.map((value, idx) => (
+                                                    <LessDetail key={idx.toString()} hotel={value} navigation={navigation} isSignedIn={isSignedIn} />
+                                                ))
+                                            ) )
+                                        ) : (
+                                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '40%' }}>
+                                                <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>Sorry,</Text>
+                                                <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>
+                                                    There is no hotel suites these critics.
+                                                </Text>
+                                            </View>
+                                        )
+                                    }
+                                </Animated.View>
+                            ) : (
+                                    <View style={{ position: 'absolute', width: "100%", height: '50%' }}>
+                                        <Loading />
                                     </View>
                                 )
                             }
-                        </Animated.View>
-                    ) : (
-                            <Loading />
-                        )
-                    }
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
-                    { paginate && paginate }
-                </View>
-            </Animated.ScrollView>
+                        <View style={{flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                            { paginate && paginate }
+                        </View>
+                    </Animated.ScrollView>
+                ) : (
+                    <View style={{ flexGrow: 1, alignItems: 'center', paddingTop: '50%' }} >
+                            <MaterialCommunityIcons name={'wifi-off'} color="#666" size={32} />
+                            <Text style={{ marginTop: 5, fontSize: 22, fontWeight: '700', color: '#666'}}>
+                                Something went wrong!
+                            </Text>
+                            <Text style={{ marginTop: 20,  fontSize: 16, color: '#666'}}>
+                                Check if you are connected to internet.
+                            </Text>
+                        </View>
+                )
+            }
             {
                 headerShown === false ? (
                     <View
