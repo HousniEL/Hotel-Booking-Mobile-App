@@ -11,7 +11,7 @@ export default function Verifying({ cancel, setCancel, sendCancel }) {
                 Verification Required
             </Text>
             <Text style={{ margin: 10, fontSize: 18, color: '#444', textAlign: 'center' }}>
-                If you are sure, you must tap "Continue" to confirm your decision.
+                Did you read the hotel cancellation policy?, if so and you are sure of your decision, you must tap "Continue" to confirm it.
             </Text>
             <View style={{ flexDirection: 'row', width: '100%', alignSelf: 'center', marginTop: 20 }}>
                 <Button 

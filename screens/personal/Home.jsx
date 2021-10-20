@@ -39,6 +39,7 @@ import { BookingProvider } from '../../contexts/BookingInfoContext';
 import HotelService from '../../services/HotelService';
 import Paginate from '../Paginate';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import HotelPolicies from '../HotelAd/HotelPolicies';
 
 const Stack = createStackNavigator();
 
@@ -397,6 +398,7 @@ export default function Home({ isSignedIn, globalNavigation, navigation, route }
                                                 </>
                                             )
                                         }
+                                        <Stack.Screen name="hotelPolicies" component={HotelPolicies} />
                                     </Stack.Navigator>
                                 </BookingProvider>
                             </SortProvider>

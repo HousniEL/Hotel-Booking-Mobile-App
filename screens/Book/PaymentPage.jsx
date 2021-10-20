@@ -39,19 +39,19 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     const [ duration, setDuration ] = useState();
 
     useEffect(() => {
-
-        setDuration(Math.floor(( new Date(bookInfo.Date_To) - new Date(bookInfo.Date_From) ) / ( 1000*24*60*60 ) ));
+        var duree = Math.floor(( new Date(bookInfo.Date_To) - new Date(bookInfo.Date_From) ) / ( 1000*24*60*60 ) );
+        setDuration(duree);
 
 
         const creditCardService = new CreditCardService();
         creditCardService.getLessCreditCardInfo({ 'user_id' : bookInfo.User_ID }, (response) => {
             if(!response.message){
+                setCardInfo(response);
                 var totalIni = 0;
                 bookInfo.table.map(val => {
-                    totalIni += Number( duration * val.price );
+                    totalIni += Number(duree) * Number(val.price);
                 })
                 setTotal(totalIni.toFixed(2));
-                setCardInfo(response);
             } else {
                 setCardInfo('nothing');
             }
@@ -112,7 +112,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
             done === true && <Success success={done} setSuccess={setDone} navigation={navigation} />
         }
         {
-            total && cardInfo ? (
+            total ? (
             <View style={{ flexGrow: 1, height: '100%' }}>
                 <View style={styles.bigContainer}>
                     <Text

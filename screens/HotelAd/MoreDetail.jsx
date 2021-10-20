@@ -28,6 +28,7 @@ import HotelService from '../../services/HotelService';
 import Hotel from '../../models/Hotel';
 
 import { Flow } from 'react-native-animated-spinkit';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function MoreDetail({ route, navigation, isSignedIn, globalNavigation }) {
 
@@ -267,6 +268,11 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                                         }}
                                         onPress={handleBook}
                                     />
+                                    <TouchableHighlight underlayColor={'transparent'} onPress={() => navigation.push('hotelPolicies', { hotelName : hotel.Hotel_Name })}>
+                                        <Text style={{ color: '#666', textDecorationLine: 'underline', marginTop: 10 }}>
+                                            Hotel Policies
+                                        </Text>
+                                    </TouchableHighlight>
                                 </View>
                             </View>
                         </View>
