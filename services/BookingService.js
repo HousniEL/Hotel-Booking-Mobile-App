@@ -142,4 +142,24 @@ export default class BookingService {
 
     }
 
+    async cancelBooking(object, success, error){
+        publicRoute['headers']['Authorization'] = `Bearer ${await SecureStore.getItemAsync('token')}`;
+
+        try{
+            const response = await fetch(API_URL + '/v1/book/cancel', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            })
+
+            const detail = await response.json();
+            if( detail.message ){
+                return error(detail.message);
+            }
+            return success();
+        } catch (e) {
+            return error(e);
+        }
+    }
+
 }

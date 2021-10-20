@@ -17,6 +17,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 const Root = createStackNavigator();
 
 import UserService from '../services/UserService';
+import ForgotPassword from './personal/ForgotPassword';
 
 export default function First(){
     
@@ -68,7 +69,8 @@ export default function First(){
                                     <Root.Screen  name="login">
                                         { (props) => <Login {...props} signed={signed} /> }
                                     </Root.Screen>
-                                    <Root.Screen  name="signup"  component={Signup} />
+                                    <Root.Screen  name="signup" component={Signup} />
+                                    <Root.Screen  name="forgotpassword" component={ForgotPassword} /> 
                                     <Root.Screen  name="verification">
                                         { (props) => <EmailVerification {...props} signed={signed} /> }
                                     </Root.Screen>

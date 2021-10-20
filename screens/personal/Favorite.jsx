@@ -80,6 +80,7 @@ export default function Favorite({ navigation }) {
         favoriteService.listFavorites( { user_id : currentUser.id }, (suc) => {
             if( suc.length !== 0 ){
                 favoriteService.getFavoritePerPage({ ids : suc.slice(0, 1) }, (suc) => {
+                    setRefreshing(false);
                     setFavorites(suc);
                 }, (err) => {
                     console.log(err);
@@ -88,7 +89,6 @@ export default function Favorite({ navigation }) {
             } else {
                 setFavorites(' ');
             }
-            setRefreshing(false);
         }, (err) => {
             setRefreshing(false);
             setFavorites();

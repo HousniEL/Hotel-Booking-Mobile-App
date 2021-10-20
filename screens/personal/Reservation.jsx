@@ -54,6 +54,7 @@ function ReservationList({ navigation, showHeader }) {
         bookingService.getBookings({ user_id : currentUser.id }, (suc) => {
             if( suc.length !== 0 ){
                 bookingService.getBookingsPerPage({ ids : suc.slice(0, 6) }, (suc) => {
+                    setRefreshing(false);
                     setReservations(suc);
                 }, (err) => {
                     console.log(err);
@@ -62,7 +63,6 @@ function ReservationList({ navigation, showHeader }) {
             } else {
                 setReservations(" ");
             }
-            setRefreshing(false);
         }, (err) => {
             setRefreshing(false);
             setReservations();

@@ -61,7 +61,9 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                 console.log(err);
             })
         }
+        return function(){};
     }, []);
+
 
     function handleFavorite(){
         var object = {
@@ -101,10 +103,10 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
             <StatusBar backgroundColor={Global.primary} />
             {
                 hotel ? (
-                    <ScrollView>
+                    <ScrollView nestedScrollEnabled={true}>
                         <View style={styles.container} >
                             <View style={{ alignItems: "center" }} >
-                                <ImageSlider images={hotel.getImages()} />
+                            <ImageSlider images={hotel.getImages()} />
                                 {
                                     isSignedIn && ( heartFilling === true || heartFilling === false ) && (
                                         <TouchableHighlight
@@ -229,10 +231,10 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
                                     <Text style={{color: "#666", fontSize: 15, marginBottom: 8}}>
                                         COORDINATES
                                     </Text>
+                                    <Map address={ hotel.Address + ', ' + hotel.City } />
                                     <Text style={{color: "#888", fontSize: 13, marginBottom: 8}} >
                                         { hotel.Address + ', ' + hotel.City }
                                     </Text>
-                                    <Map address={ hotel.Address + ', ' + hotel.City } />
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <MaterialCommunityIcons name="phone" color='#888' size={20} />
@@ -284,7 +286,6 @@ export default function MoreDetail({ route, navigation, isSignedIn, globalNaviga
         </>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         width: '100%',

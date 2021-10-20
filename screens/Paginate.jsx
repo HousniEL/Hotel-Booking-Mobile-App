@@ -39,7 +39,7 @@ export default function Paginate({ allIds, fetchIds, setItems, perpage }) {
 
 const styles = StyleSheet.create({
     ul: {
-        marginVertical: 30,
+        marginVertical: 10,
         justifyContent: 'center',
         flexDirection: 'row'
     },

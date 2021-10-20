@@ -71,6 +71,13 @@ export default function Login({ navigation, signed }) {
         setPwd(value);
         setPwdErr('');
     }
+
+    function handleForgotPassword(){
+
+        navigation.push('forgotpassword', {
+            insertedValue : email
+        });
+    }
     
     return (
         <>
@@ -148,7 +155,7 @@ export default function Login({ navigation, signed }) {
                     errorMessage={pwdErr}
                     errorStyle={styles.erroStyle}
                 />
-                <TouchableHighlight>
+                <TouchableHighlight underlayColor={'transparent'} onPress={handleForgotPassword} >
                     <Text
                         style={{
                             alignSelf: 'center',

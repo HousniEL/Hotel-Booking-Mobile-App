@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
         top: 80
     },
     image: {
-        width: 60,
-        height: 60
+        width: 57.5,
+        height: 57.5
     },
     titleContainer: {
         flexDirection: 'column',
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         height: 50
     },
     title: {
-        fontSize: 25,
+        fontSize: 22,
         fontWeight: "700",
         color: "white",
         borderColor: 'black',

@@ -98,4 +98,23 @@ export default class UserService{
 
     }
 
+    async sendResetRequest(object, success, error){
+        try{
+            var response = await fetch( API_URL + '/v1/users/sendreset', {
+                ...publicRoute,
+                method: 'POST',
+                body: JSON.stringify(object)
+            } );
+
+            var content = await response.json();
+            if(content.message){
+                return error(content);
+            }
+            return success();
+        } catch(e) {
+            return error(e);
+        }
+
+    }
+
 }

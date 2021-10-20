@@ -8,7 +8,8 @@ import Global from '../Global';
 const status = new Map([
     ['In Progress', { color: 'orange', icon: 'clock-outline' }],
     ['Accepted', { color: 'green', icon: 'check-bold' }],
-    ['Refused', { color: 'red', icon: 'close-thick' }]
+    ['Refused', { color: 'red', icon: 'close-thick' }],
+    ['Cancelled', { color: 'black', icon: 'cancel' }]
 ])
 
 export default function LessDetailResInfo({ resInfo }) {

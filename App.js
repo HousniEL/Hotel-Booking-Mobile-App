@@ -17,7 +17,6 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import First from './screens/FirstConnection';
 
 import 'react-native-gesture-handler';
-import Reviews from './screens/HotelAd/Reviews';
 
 export default function App() {
 

@@ -45,6 +45,7 @@ export default function CheckPage({ route, navigation }) {
 
 
     useEffect(() => {
+
         const ff = function(){
             resetRooms();
             if( !bookInfo ){

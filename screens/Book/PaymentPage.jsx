@@ -36,11 +36,21 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
     const [ check, setCheck ] = useState();
     const [ paymentType, setPaymentType ] = useState("");
     const [ done, setDone ] = useState(false);
+    const [ duration, setDuration ] = useState();
 
     useEffect(() => {
+
+        setDuration(Math.floor(( new Date(bookInfo.Date_To) - new Date(bookInfo.Date_From) ) / ( 1000*24*60*60 ) ));
+
+
         const creditCardService = new CreditCardService();
         creditCardService.getLessCreditCardInfo({ 'user_id' : bookInfo.User_ID }, (response) => {
             if(!response.message){
+                var totalIni = 0;
+                bookInfo.table.map(val => {
+                    totalIni += Number( duration * val.price );
+                })
+                setTotal(totalIni.toFixed(2));
                 setCardInfo(response);
             } else {
                 setCardInfo('nothing');
@@ -48,11 +58,6 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
         }, (error) => {
             console.log(error);
         });
-        var totalIni = 0;
-        bookInfo.table.map(val => {
-            totalIni += Number(val.price);
-        })
-        setTotal(totalIni.toFixed(2));
     }, [])
 
 
@@ -107,7 +112,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
             done === true && <Success success={done} setSuccess={setDone} navigation={navigation} />
         }
         {
-            cardInfo ? (
+            total && cardInfo ? (
             <View style={{ flexGrow: 1, height: '100%' }}>
                 <View style={styles.bigContainer}>
                     <Text
@@ -159,7 +164,12 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                                         { val.room.adults + ' adults, ' + val.room.childrens + ' childrens.'  }
                                     </Text>
                                 </View>
-                                <Text style={styles.price}>{ '$ ' + val.price }</Text>
+                                <View style={{ alignItems: 'flex-end', flexGrow: 1 }}>
+                                    <Text style={styles.price}>{ '$ ' +  Number( duration * val.price) }</Text>
+                                    <Text style={{ color: 'gray' }}>
+                                        { duration + ' x $' +  val.price  }
+                                    </Text>
+                                </View>
                             </View>
                         ) )
                     }
@@ -193,7 +203,7 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
                                 containerStyle={ styles.payNowContainerStyle }
                                 icon={ wait && paymentType && <Flow size={30} color='white' /> }
                                 onPress={ handlePayNow }
-                                disabled={wait}
+                                disabled={cardInfo === 'nothing' || wait}
                                 disabledStyle={{ backgroundColor: "#899B9A" }}
                                 disabledTitleStyle={{ color: '#bbb' }}
 

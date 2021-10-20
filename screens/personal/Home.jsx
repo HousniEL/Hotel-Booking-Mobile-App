@@ -295,9 +295,8 @@ function HomeMain({ navigation, isSignedIn, drawerRoute }) {
                                             ) )
                                         ) : (
                                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '40%' }}>
-                                                <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>Sorry,</Text>
                                                 <Text style={{ fontSize: 18, fontWeight: '700', color: '#777' }}>
-                                                    There is no hotel suites these critics.
+                                                    Sorry, There is no hotel suites these critics.
                                                 </Text>
                                             </View>
                                         )

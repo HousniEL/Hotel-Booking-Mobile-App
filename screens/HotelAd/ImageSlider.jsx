@@ -29,6 +29,7 @@ export default function ImageSlider({ images }) {
                 horizontal
                 style={styles.paginationContainer}
                 onScroll={handleImageSliding}
+                snapToInterval={width}
             >
                 {
                     images.map( (image, idx) => (

@@ -26,7 +26,7 @@ export default function Verifying({ cancel, setCancel, sendCancel }) {
                     containerStyle={{ width: "50%", alignSelf: 'center', borderRadius: 0   }}
                     buttonStyle={{ width: "100%", borderTopColor: '#ddd', borderTopWidth: 1, backgroundColor: 'transparent', borderRadius: 0  }}
                     titleStyle={{ color: Global.tabactive, fontSize: 18 }}
-                    onPress={() => { sendCancel(); }}
+                    onPress={() => { setCancel(); sendCancel(); }}
                 />
             </View>
         </Overlay>

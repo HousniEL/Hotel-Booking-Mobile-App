@@ -29,9 +29,21 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
     const [ bookingInfo, setBookingInfo ] = useState();
     const [ reservationDate, setReservationDate ] = useState();
     const [ cancel, setCancel ] = useState();
+    const [ duration, setDuration ] = useState();
+    const [ wait, setWait ] = useState(false);
 
     function hanldeCancel(){
-        console.log('cancel');
+        const bookingService = new BookingService();
+        const object = {
+            user_id : currentUser.id,
+            booking_id : booking_id
+        }
+        bookingService.cancelBooking(object, () => {
+            showHeader(true);
+            navigation.pop();
+        }, (err) => {
+            console.log(err);
+        });
     }
 
     useEffect(() => {
@@ -42,6 +54,7 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
         }
         bookingService.getBookingInfo(object, (suc) => {
             if( suc.created_at ){
+                setDuration(Math.floor(( new Date(suc.Date_To) - new Date(suc.Date_From) ) / ( 1000*24*60*60 )));
                 setBookingInfo(suc);
                 const reservationDateTable = suc.created_at.split('T');
                 setReservationDate(reservationDateTable[0] + ' ' + reservationDateTable[1].split('.')[0]) ;
@@ -88,9 +101,9 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
                             </View>
                             <View style={ styles.content }>
                                 <Text style={ styles.contentTitle }>Duration stay</Text>
-                                <Text style={ styles.contentContent }>{ Math.floor(( new Date(bookingInfo.Date_To) - new Date(bookingInfo.Date_From) ) / ( 1000*24*60*60 ) ) + ' days' }</Text>
+                                <Text style={ styles.contentContent }>{ duration + ' days' }</Text>
                             </View>
-                            <Table bookedRooms={ bookingInfo.bookedRooms } total={ bookingInfo.totalAmount } />
+                            <Table bookedRooms={ bookingInfo.bookedRooms } duration={duration} total={ bookingInfo.totalAmount } />
                             <View style={ styles.content }>
                                 <Text style={ styles.contentTitle }>Reservation date</Text>
                                 <Text style={ styles.contentContent }>{ reservationDate }</Text>
@@ -101,18 +114,18 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
                             </View>
                         </View>
                         {
-                            bookingInfo.Status !== "Refused" && (
+                            bookingInfo.Status !== "Refused" && bookingInfo.Status !== "Cancelled" && (
                                 <View style={{ flexGrow: 1, alignItems: 'center', justifyContent: 'flex-end', padding: 10 }}>
                                     <Button
                                         title="Cancel"
                                         containerStyle={{ width: '45%', maxWidth: 355 }}
                                         buttonStyle={{ backgroundColor: "rgb(201, 41, 41)", height: 40 }}
-                                        titleStyle={ !cancel ? null : { display: 'none' } }
-                                        icon={ cancel && <Flow size={30} color='white' /> }
-                                        disabled={cancel}
+                                        titleStyle={ !wait ? null : { display: 'none' } }
+                                        icon={ wait && <Flow size={30} color='white' /> }
+                                        disabled={wait}
                                         disabledStyle={{ backgroundColor: "rgb(201, 41, 41)" }}
                                         disabledTitleStyle={{ color: '#bbb' }}
-                                        onPress={() => setCancel(true)}
+                                        onPress={() => { setWait(true), setCancel(true) }}
                                     />
                                 </View>
                             )
@@ -130,7 +143,7 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
 
 };
 
-function Table({ bookedRooms, total }){
+function Table({ bookedRooms, duration, total }){
 
     var rooms = bookedRooms.map( val => {
         return val['type'];  
@@ -166,10 +179,10 @@ function Table({ bookedRooms, total }){
                 <Text style={[ styles.columnHeader, { borderTopRightRadius: 3 } ]}>Price</Text>
                 {
                     prices.map( (val, idx) => (
-                        <Text key={idx} style={ styles.columnContent }>{ '$ ' + val }</Text>
+                        <Text key={idx} style={ styles.columnContent }>{ duration  + ' x $' + val }</Text>
                     ) )
                 }
-                <Text style={[ styles.columnContent, { fontWeight: '700' } ]}>{ '$ ' + total }</Text>
+                <Text style={[ styles.columnContent, { fontWeight: '700' } ]}>{ '$' + total }</Text>
             </View>
         </View>
     )
