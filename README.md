@@ -10,6 +10,7 @@
   <img src="./assets/pages/2.jpg" width="200" height="450" altr="Sign In Screen" style="border: 1px solid gray;">
   <img src="./assets/pages/7.jpg" width="200" height="450" altr="Sign Up Screen" style="border: 1px solid gray;">
   <img src="./assets/pages/9.jpg" width="200" height="450" altr="Sign Up Screen" style="border: 1px solid gray;">
+  <img src="./assets/pages/10.jpg" width="200" height="450" altr="Sign Up Screen" style="border: 1px solid gray;">
   <img src="./assets/pages/8.jpg" width="200" height="450" altr="Sign Up Screen" style="border: 1px solid gray;">
   <img src="./assets/pages/3.jpg" width="200" height="450" altr="Sign Up Screen" style="border: 1px solid gray;">
   <img src="./assets/pages/4.jpg" width="200" height="450" altr="Sign Up Screen" style="border: 1px solid gray;">
