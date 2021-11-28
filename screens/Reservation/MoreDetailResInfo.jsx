@@ -17,8 +17,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { useAuth } from '../../contexts/AuthContext';
 import Loading from '../Loading';
-import Verifying from './Verifying';
-import { Flow } from 'react-native-animated-spinkit';
 
 export default function MoreDetailResInfo({ navigation, route, showHeader }){
 
@@ -28,23 +26,8 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
 
     const [ bookingInfo, setBookingInfo ] = useState();
     const [ reservationDate, setReservationDate ] = useState();
-    const [ cancel, setCancel ] = useState();
     const [ duration, setDuration ] = useState();
-    const [ wait, setWait ] = useState(false);
 
-    function hanldeCancel(){
-        const bookingService = new BookingService();
-        const object = {
-            user_id : currentUser.id,
-            booking_id : booking_id
-        }
-        bookingService.cancelBooking(object, () => {
-            showHeader(true);
-            navigation.pop();
-        }, (err) => {
-            console.log(err);
-        });
-    }
 
     useEffect(() => {
         const bookingService = new BookingService();
@@ -76,7 +59,7 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
                             underlayColor={'transparent'}
                             style={{
                                 paddingVertical: 15,
-                                paddingLeft: 10,
+                                paddingLeft: 15,
                                 width: '10%',
                             }}
                             onPress={() => { showHeader(true); navigation.pop(); } }
@@ -120,18 +103,10 @@ export default function MoreDetailResInfo({ navigation, route, showHeader }){
                                         title="Cancel"
                                         containerStyle={{ width: '45%', maxWidth: 355 }}
                                         buttonStyle={{ backgroundColor: "rgb(201, 41, 41)", height: 40 }}
-                                        titleStyle={ !wait ? null : { display: 'none' } }
-                                        icon={ wait && <Flow size={30} color='white' /> }
-                                        disabled={wait}
-                                        disabledStyle={{ backgroundColor: "rgb(201, 41, 41)" }}
-                                        disabledTitleStyle={{ color: '#bbb' }}
-                                        onPress={() => { setWait(true), setCancel(true) }}
+                                        onPress={() => { navigation.push('cancel', { hotelName : bookingInfo.Hotel_Name, booking_id : booking_id }) }}
                                     />
                                 </View>
                             )
-                        }
-                        {
-                            cancel === true && <Verifying cancel={cancel} setCancel={setCancel} sendCancel={hanldeCancel} />
                         }
                     </>
                 ) : (

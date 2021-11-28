@@ -17,10 +17,12 @@ import Loading from '../Loading';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import MoreDetailResInfo from '../Reservation/MoreDetailResInfo';
+import CancellationPolicy from '../Reservation/CancellationPolicy';
 
 import Paginate from '../Paginate';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Cancel from '../Reservation/Cancel';
 
 var width = ( ( Dimensions.get('window').width ) >= 355 ) ? 355 : Dimensions.get('window').width;
 
@@ -169,6 +171,8 @@ export default function Reservation({ showHeader }){
             <Stack.Screen name='reservation'>
                 { props => <MoreDetailResInfo {...props} showHeader={showHeader} /> }
             </Stack.Screen>
+            <Stack.Screen name="cancellationpolicy" component={CancellationPolicy} />
+            <Stack.Screen name="cancel" component={Cancel} />
         </Stack.Navigator>
     )
 }

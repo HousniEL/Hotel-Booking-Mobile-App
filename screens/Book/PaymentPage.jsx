@@ -42,19 +42,18 @@ export default function PaymentPage({ navigation, route, drawerNavigation }) {
         var duree = Math.floor(( new Date(bookInfo.Date_To) - new Date(bookInfo.Date_From) ) / ( 1000*24*60*60 ) );
         setDuration(duree);
 
-
         const creditCardService = new CreditCardService();
         creditCardService.getLessCreditCardInfo({ 'user_id' : bookInfo.User_ID }, (response) => {
             if(!response.message){
                 setCardInfo(response);
-                var totalIni = 0;
-                bookInfo.table.map(val => {
-                    totalIni += Number(duree) * Number(val.price);
-                })
-                setTotal(totalIni.toFixed(2));
             } else {
                 setCardInfo('nothing');
             }
+            var totalIni = 0;
+            bookInfo.table.map(val => {
+                totalIni += Number(duree) * Number(val.price);
+            })
+            setTotal(totalIni.toFixed(2));
         }, (error) => {
             console.log(error);
         });

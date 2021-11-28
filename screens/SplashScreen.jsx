@@ -19,7 +19,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Flow } from 'react-native-animated-spinkit';
 
 export default function Welcome({ handleSignIn }) {
-    const translationLeft = React.useRef(new Animated.Value(Number(70))).current;
+    const translationLeft = React.useRef(new Animated.Value(Number(60))).current;
     const titleOpacity = React.useRef(new Animated.Value(Number(0))).current;
 
     const [ show, setShow ] = React.useState(true);
@@ -74,8 +74,8 @@ export default function Welcome({ handleSignIn }) {
                 <Animated.View style={{ flexDirection: 'row', alignItems: 'center', marginTop: Dimensions.get('window').height/3 }}>
                     <Animated.Image 
                         style={{
-                            width: 65,
-                            height: 65,
+                            width: 55,
+                            height: 55,
                             transform: [
                                 { 
                                     translateX: translationLeft 
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: '700',
         color: 'white',
         marginLeft: 10

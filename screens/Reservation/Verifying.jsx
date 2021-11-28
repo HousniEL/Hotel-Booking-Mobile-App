@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { Overlay, Button } from 'react-native-elements';
 import Global from '../Global';
 
-export default function Verifying({ cancel, setCancel, sendCancel }) {
+export default function Verifying({ cancel, setWait, setCancel, sendCancel }) {
 
     return (
         <Overlay isVisible={cancel} overlayStyle={{ width: '90%', maxWidth: 400, padding: 0, borderRadius: 5 }}>
@@ -19,7 +19,7 @@ export default function Verifying({ cancel, setCancel, sendCancel }) {
                     containerStyle={{ width: "50%", alignSelf: 'center' , borderRadius: 0   }}
                     buttonStyle={{ width: "100%", borderTopColor: '#ddd', borderTopWidth: 1, borderEndColor: '#ddd', borderRightWidth: 1, backgroundColor: 'transparent', borderRadius: 0 }}
                     titleStyle={{ color: 'tomato', fontSize: 18 }}
-                    onPress={() => { setCancel() } }
+                    onPress={() => { setCancel(); setWait(false); } }
                 />
                 <Button 
                     title='Continue'

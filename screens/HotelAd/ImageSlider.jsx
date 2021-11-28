@@ -26,10 +26,10 @@ export default function ImageSlider({ images }) {
             <ScrollView
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
-                horizontal
+                horizontal={true}
                 style={styles.paginationContainer}
                 onScroll={handleImageSliding}
-                snapToInterval={width}
+                disableIntervalMomentum={ true }
             >
                 {
                     images.map( (image, idx) => (

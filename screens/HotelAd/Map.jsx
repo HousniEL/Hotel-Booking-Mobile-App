@@ -79,10 +79,6 @@ Map.prototype = {
 }
 
 /*
-<Marker
-                        coordinate={marker.coordinate}
-                        pinColor={marker.color}
-                    />
     <MapView
         provider={provider}
         style={{height: 200}}

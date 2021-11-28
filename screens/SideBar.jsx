@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         color: "#444",
         borderColor: 'black',
-        marginLeft: 10
+        marginLeft: 5
     },
     divider: {
         marginVertical: 20, 

@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { cancellationNoshow, reservation } from './policies';
+import { cancellationNoshow } from '../HotelAd/policies';
 
-export default function HotelPolicies({ navigation, route }) {
+export default function CancellationPolicy({ navigation, route }) {
 
     const { hotelName } = route.params;
 
@@ -22,7 +22,7 @@ export default function HotelPolicies({ navigation, route }) {
                     underlayColor={'transparent'}
                     onPress={() => { navigation.pop() }}
                 >
-                    <View style={{ width:35, height:35, padding: 5 }}>
+                    <View style={{ width: 35, height: 35, padding: 5 }}>
                         <MaterialCommunityIcons 
                             name={"arrow-left"} 
                             color={"#222"}
@@ -31,16 +31,10 @@ export default function HotelPolicies({ navigation, route }) {
                     </View>
                 </TouchableHighlight>
                 <Text style={ styles.hotelNameStyle }>
-                    { hotelName }
+                    { hotelName + '\n'}
                 </Text>
+                <Text style={ styles.policy }>Cancellation/No-Show Policy</Text>
                 <View>
-                   <Text style={ styles.policy }>Reservation Policy</Text>
-                   <Text style={ styles.policyDetail }>
-                        { reservation }
-                   </Text>
-                </View>
-                <View>
-                   <Text style={ styles.policy }>Cancellation/No-Show Policy</Text>
                    <Text style={ styles.policyDetail }>
                         { cancellationNoshow }
                    </Text>
@@ -56,9 +50,10 @@ const styles = StyleSheet.create({
     },
     hotelNameStyle: {
         marginTop: '10%',
-        marginBottom: '5%',
+        marginBottom: 0,
         textAlign: 'center',
         fontSize: 25,
+        height: 30,
         color: "#444",
         textDecorationLine: 'underline',
         fontWeight: '700'
@@ -67,8 +62,10 @@ const styles = StyleSheet.create({
         fontSize: 19,
         color: "#555",
         fontWeight: '700',
-        marginTop: 30,
-        marginBottom: 10
+        textAlign: 'center',
+        marginTop: 0,
+        marginBottom: 30,
+        textDecorationLine: 'none'
     },
     policyDetail: {
         fontSize: 16,
